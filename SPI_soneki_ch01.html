@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 損益算① 割合・%・小数と基本計算</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.bar-genka{background:#2980b9;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
+.bar-rieki{background:#e67e22;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.8;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+</style>
+</head>
+<body>
+<header class="site-header">
+  <span class="logo">GAMBA</span><span class="logo-sep">|</span>
+  <span class="logo-sub">SPI 非言語 ／ 損益算① 割合・%・小数と基本計算</span>
+</header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>演習問題<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>確認問題<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+
+<!-- ========== 解説タブ ========== -->
+<div class="page active" id="page-ex">
+  <div class="page-hdr">
+    <div class="page-hdr-icon icon-ex">解</div>
+    <div class="page-hdr-body">
+      <div class="page-hdr-title">損益算① ─ 割合・%・小数と基本計算</div>
+      <div class="page-hdr-desc">SPI 非言語 ／ まずは「割合」から丁寧に学びましょう。</div>
+    </div>
+  </div>
+
+  <!-- ============ SECTION 1 ============ -->
+  <div class="card">
+    <div class="sec-head"><span class="sec-num">1</span>割合・%・小数って何ですか？</div>
+    <div class="body-text">
+      「割合（わりあい）」とは、<strong>「あるものが、もとの数の何倍か（何分の何か）」</strong>を表す数のことです。<br>
+      日常でよく耳にする「20%オフ」「3割引き」「0.2」という言葉は、<strong>すべて同じことを表す3つの言い方</strong>です。
+    </div>
+    <div class="teal-box">
+      <strong>💡 身近な例で考えてみましょう</strong>
+      100円のお菓子が「20%オフ」になっていたとします。<br>
+      これは「100円のうち20円を引く」という意味です。<br>
+      引く20円は　→　100円 × <span class="hl-t">0.20</span>　で求められます。この「0.20」が「割合（小数）」です。
+    </div>
+    <div class="body-text">
+      <strong>割合には3つの書き方があります。</strong>どれも同じ意味ですが、問題によって使い分けられています。すべてスムーズに変換できるようにしておきましょう。
+    </div>
+    <table class="kansan-table">
+      <tr><th>日本語（割・分）</th><th>%（パーセント）</th><th>小数</th></tr>
+      <tr><td><strong>1 割</strong></td><td class="hi">10%</td><td class="hig">0.1</td></tr>
+      <tr><td><strong>1 割 5 分</strong></td><td class="hi">15%</td><td class="hig">0.15</td></tr>
+      <tr><td><strong>2 割</strong></td><td class="hi">20%</td><td class="hig">0.2</td></tr>
+      <tr><td><strong>2 割 5 分</strong></td><td class="hi">25%</td><td class="hig">0.25</td></tr>
+      <tr><td><strong>3 割</strong></td><td class="hi">30%</td><td class="hig">0.3</td></tr>
+    </table>
+    <div class="point-box">
+      <strong>🔑 換算のルール（これだけ覚えましょう！）</strong>
+      ① <strong>% → 小数</strong>：数字を100で割るだけです！　例）20% ÷ 100 ＝ 0.20<br>
+      ② <strong>小数 → %</strong>：数字を100倍するだけです！　例）0.15 × 100 ＝ 15%<br>
+      ③ <strong>「○割△分」→ 小数</strong>：「0.○△」と読むだけです！　例）2割5分 ＝ 0.25
+    </div>
+    <div class="pink-box">
+      <strong>⚠️ よくある間違いに注意しましょう</strong>
+      「1割5分」を 0.15 ではなく 0.105 や 1.5 と書いてしまう人がいます。<br>
+      「割」は小数点第1位、「分」は小数点第2位に対応しています。<br>
+      1割5分 → 0 . <strong>1</strong> <strong>5</strong>　　2割 → 0 . <strong>2</strong> 0　　5分 → 0 . 0 <strong>5</strong>
+    </div>
+  </div>
+
+  <!-- ミニテスト① -->
+  <div class="mini-card">
+    <div class="mini-section-label">ミニテスト① 換算の確認</div>
+    <div class="mini-q">【問1】「2割5分」を小数で表すと何になりますか？</div>
+    <div class="mini-choices" id="mch-m1">
+      <button class="mch" onclick="miniAns('m1',0,1)"><span class="mcnum">ア</span>0.025</button>
+      <button class="mch" onclick="miniAns('m1',1,1)"><span class="mcnum">イ</span>0.25</button>
+      <button class="mch" onclick="miniAns('m1',2,1)"><span class="mcnum">ウ</span>2.5</button>
+      <button class="mch" onclick="miniAns('m1',3,1)"><span class="mcnum">エ</span>25</button>
+    </div>
+    <div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　「○割△分 → 0.○△」のルールで、2割5分 ＝ <strong>0.25</strong> です。</div>
+    <div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　「2割」＝0.2、「5分」＝0.05、合わせて <strong>0.25</strong> です。「○割△分 → 0.○△」と覚えましょう。</div>
+    <div class="mini-q" style="margin-top:1rem;">【問2】「15%」を小数で表すと何になりますか？</div>
+    <div class="mini-choices" id="mch-m2">
+      <button class="mch" onclick="miniAns('m2',0,3)"><span class="mcnum">ア</span>1.5</button>
+      <button class="mch" onclick="miniAns('m2',1,3)"><span class="mcnum">イ</span>150</button>
+      <button class="mch" onclick="miniAns('m2',2,3)"><span class="mcnum">ウ</span>0.015</button>
+      <button class="mch" onclick="miniAns('m2',3,3)"><span class="mcnum">エ</span>0.15</button>
+    </div>
+    <div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　% → 小数は「÷ 100」するだけです。15 ÷ 100 ＝ <strong>0.15</strong></div>
+    <div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　% を小数に直すには「÷ 100」します。15 ÷ 100 ＝ <strong>0.15</strong> です。</div>
+  </div>
+
+  <!-- ============ SECTION 2 ============ -->
+  <div class="card">
+    <div class="sec-head"><span class="sec-num">2</span>損益の「仕組み」を図で理解しましょう</div>
+    <div class="body-text">
+      お店が商品を売るときの流れを考えてみましょう。<br>
+      まずお店は業者から商品を<strong>「原価（げんか）」＝仕入れ値</strong>で仕入れます。<br>
+      そこに<strong>「利益（りえき）＝もうけ」</strong>を上乗せして<strong>「定価（ていか）」</strong>として棚に並べます。<br>
+      値引きをした場合の実際に売れた金額が<strong>「売値（うりね）」</strong>です。
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-title">📊 定価の内訳イメージ（原価に20%の利益を乗せた場合）</div>
+      <div class="bar-row">
+        <div class="bar-genka" style="width:83%;">原価（仕入れ値）</div>
+        <div class="bar-rieki" style="width:17%;">利益</div>
+      </div>
+      <div style="font-size:11px;color:var(--text2);padding:2px 0;">← この全体が「定価」です ─────────────────────→</div>
+    </div>
+    <div class="formula-box">
+      <div class="f-title">🔑 基本の公式（まずこの3つを覚えましょう）</div>
+      <div class="formula-line"><span class="f-key">公式①</span><span class="f-eq">定価 ＝ 原価 ＋ 利益</span></div>
+      <div class="formula-line"><span class="f-key">公式②</span><span class="f-eq">利益 ＝ 原価 × 利益率（小数）</span></div>
+      <div class="formula-line"><span class="f-key">公式③</span><span class="f-eq">定価 ＝ 原価 × （1 ＋ 利益率）</span></div>
+      <div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">
+        ※ 公式③は公式①と②を合体させたものです。慣れたら公式③一発で解けます。<br>
+        ※「利益率」とは「原価のうち何%が利益か」という割合のことです。
+      </div>
+    </div>
+    <div class="teal-box">
+      <strong>💡 公式③の意味をことばで理解しましょう</strong>
+      「原価の20%の利益を乗せる」とは……<br>
+      原価の 100%（もとの値段）＋ 原価の 20%（利益）＝ 原価の 120%<br>
+      つまり、原価 × 1.20 ＝ 定価 となります。<br>
+      「1 ＋ 利益率」の「1」は「原価そのもの（100%）」を表しているのです。
+    </div>
+  </div>
+
+  <!-- ミニテスト② -->
+  <div class="mini-card">
+    <div class="mini-section-label">ミニテスト② 損益の仕組み確認</div>
+    <div class="mini-q">【問3】原価が600円で利益が120円のとき、定価はいくらですか？</div>
+    <div class="mini-choices" id="mch-m3">
+      <button class="mch" onclick="miniAns('m3',0,3)"><span class="mcnum">ア</span>600円</button>
+      <button class="mch" onclick="miniAns('m3',1,3)"><span class="mcnum">イ</span>680円</button>
+      <button class="mch" onclick="miniAns('m3',2,3)"><span class="mcnum">ウ</span>700円</button>
+      <button class="mch" onclick="miniAns('m3',3,3)"><span class="mcnum">エ</span>720円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m3-ok">✅ 正解です！　公式① 定価 ＝ 原価 ＋ 利益 ＝ 600 ＋ 120 ＝ <strong>720円</strong></div>
+    <div class="mini-fb" id="mfb-m3-ng">❌ 惜しい！　「定価 ＝ 原価 ＋ 利益」ですから、600 ＋ 120 ＝ <strong>720円</strong> です。</div>
+    <div class="mini-q" style="margin-top:1rem;">【問4】原価が500円で利益率が20%（0.20）のとき、利益はいくらですか？</div>
+    <div class="mini-choices" id="mch-m4">
+      <button class="mch" onclick="miniAns('m4',0,0)"><span class="mcnum">ア</span>100円</button>
+      <button class="mch" onclick="miniAns('m4',1,0)"><span class="mcnum">イ</span>120円</button>
+      <button class="mch" onclick="miniAns('m4',2,0)"><span class="mcnum">ウ</span>150円</button>
+      <button class="mch" onclick="miniAns('m4',3,0)"><span class="mcnum">エ</span>200円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m4-ok">✅ 正解です！　公式② 利益 ＝ 原価 × 利益率 ＝ 500 × 0.20 ＝ <strong>100円</strong></div>
+    <div class="mini-fb" id="mfb-m4-ng">❌ 惜しい！　公式② 利益 ＝ 原価 × 利益率 です。500 × 0.20 ＝ <strong>100円</strong> ですよ。</div>
+  </div>
+
+  <!-- ============ SECTION 3 ============ -->
+  <div class="card">
+    <div class="sec-head"><span class="sec-num">3</span>例題 A ─ 原価の20%の利益を計算してみましょう</div>
+    <div class="q-text">原価が <strong>500円</strong> の商品に、原価の <strong>20%</strong> の利益を見込んで定価をつけました。<br>（1）利益はいくらですか？　（2）定価はいくらですか？</div>
+    <div class="body-text">「原価の20%の利益」とは「仕入れ値の20%分だけ上乗せしてもうける」という意味です。まず利益を計算してから定価を求めましょう。</div>
+    <div id="exA-s0" class="exp-box" style="display:none">
+      <h4>STEP 1　利益を計算します（公式②）</h4>
+      <p>利益 ＝ 原価 × 利益率
+　　 ＝ 500 × 0.20　　← 20% を小数にすると 0.20 です
+　　 ＝ <strong>100 円</strong></p>
+    </div>
+    <div id="exA-s1" class="exp-box blue" style="display:none">
+      <h4>STEP 2　定価を計算します（公式①）</h4>
+      <p>定価 ＝ 原価 ＋ 利益
+　　 ＝ 500 ＋ 100
+　　 ＝ <strong>600 円</strong></p>
+    </div>
+    <div id="exA-s2" class="exp-box amber" style="display:none">
+      <h4>💡 慣れたら1ステップで解く方法（公式③）</h4>
+      <p>定価 ＝ 原価 × （1 ＋ 利益率）
+　　 ＝ 500 × （1 ＋ 0.20）
+　　 ＝ 500 × 1.20
+　　 ＝ <strong>600 円</strong>
+
+「1.20 倍する」＝「20%増し」という意味です。
+最初は2ステップで、慣れたら1.20倍で一発計算しましょう。</p>
+    </div>
+    <button class="reveal-btn" id="rb-exA" onclick="reveal('exA',3)">STEP 1 を見る ▼</button>
+    <div id="exA-fin" style="display:none">
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row">
+        <button class="abc-btn abc-A" id="exA-kA" onclick="setMark('exAk','A')">✅ A<span>わかった</span></button>
+        <button class="abc-btn abc-B" id="exA-kB" onclick="setMark('exAk','B')">📖 B<span>解説でわかった</span></button>
+        <button class="abc-btn abc-C" id="exA-kC" onclick="setMark('exAk','C')">❓ C<span>まだ不安</span></button>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ミニテスト③ -->
+  <div class="mini-card">
+    <div class="mini-section-label">ミニテスト③ 利益・定価の計算</div>
+    <div class="mini-q">【問5】原価が<strong>800円</strong>の商品に、原価の<strong>25%</strong>の利益を見込みました。利益はいくらですか？</div>
+    <div class="mini-choices" id="mch-m5">
+      <button class="mch" onclick="miniAns('m5',0,1)"><span class="mcnum">ア</span>160円</button>
+      <button class="mch" onclick="miniAns('m5',1,1)"><span class="mcnum">イ</span>200円</button>
+      <button class="mch" onclick="miniAns('m5',2,1)"><span class="mcnum">ウ</span>240円</button>
+      <button class="mch" onclick="miniAns('m5',3,1)"><span class="mcnum">エ</span>250円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m5-ok">✅ 正解です！　利益 ＝ 800 × 0.25 ＝ <strong>200円</strong></div>
+    <div class="mini-fb" id="mfb-m5-ng">❌ 惜しい！　25% ＝ 0.25 です。800 × 0.25 ＝ <strong>200円</strong> になります。</div>
+    <div class="mini-q" style="margin-top:1rem;">【問6】原価が<strong>800円</strong>の商品に、原価の<strong>25%</strong>の利益を見込んで定価をつけました。定価はいくらですか？</div>
+    <div class="mini-choices" id="mch-m6">
+      <button class="mch" onclick="miniAns('m6',0,2)"><span class="mcnum">ア</span>900円</button>
+      <button class="mch" onclick="miniAns('m6',1,2)"><span class="mcnum">イ</span>960円</button>
+      <button class="mch" onclick="miniAns('m6',2,2)"><span class="mcnum">ウ</span>1000円</button>
+      <button class="mch" onclick="miniAns('m6',3,2)"><span class="mcnum">エ</span>1050円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m6-ok">✅ 正解です！　定価 ＝ 800 × 1.25 ＝ 800 ＋ 200 ＝ <strong>1000円</strong></div>
+    <div class="mini-fb" id="mfb-m6-ng">❌ 惜しい！　定価 ＝ 原価 × (1＋0.25) ＝ 800 × 1.25 ＝ <strong>1000円</strong> です。</div>
+  </div>
+
+  <!-- ============ SECTION 4 ============ -->
+  <div class="card">
+    <div class="sec-head"><span class="sec-num">4</span>値引き（割引）の計算をマスターしましょう</div>
+    <div class="body-text">
+      「3割引き」「10%引き」という表現をよく見かけますね。これは「定価から○%分を安くして売る」という意味です。<br>
+      値引き後の売値を求める公式を覚えましょう。
+    </div>
+    <div class="formula-box">
+      <div class="f-title">🔑 値引きの公式</div>
+      <div class="formula-line"><span class="f-key">公式④</span><span class="f-eq">値引き額 ＝ 定価 × 値引き率</span></div>
+      <div class="formula-line"><span class="f-key">公式⑤</span><span class="f-eq">売値 ＝ 定価 × （1 − 値引き率）</span></div>
+    </div>
+    <div class="teal-box">
+      <strong>💡 「1 − 値引き率」のカラクリを理解しましょう</strong>
+      定価を「100%」と考えると……<br>
+      10%引き → 残りは 100% − 10% ＝ 90% → 定価 × <span class="hl-t">0.90</span><br>
+      3割引き → 残りは 100% − 30% ＝ 70% → 定価 × <span class="hl-t">0.70</span><br>
+      20%引き → 残りは 100% − 20% ＝ 80% → 定価 × <span class="hl-t">0.80</span><br>
+      「値引き後に何%残るか」を考えるとスムーズに解けます！
+    </div>
+    <div class="body-text"><strong>【例題 C】定価2000円の商品を10%引きで売りました。売値はいくらですか？</strong></div>
+    <div id="exC-s0" class="exp-box" style="display:none">
+      <h4>STEP 1　値引き額を求めます（公式④）</h4>
+      <p>値引き額 ＝ 定価 × 値引き率
+　　　　 ＝ 2000 × 0.10　← 10% ＝ 0.10
+　　　　 ＝ <strong>200 円</strong></p>
+    </div>
+    <div id="exC-s1" class="exp-box blue" style="display:none">
+      <h4>STEP 2　売値を求めます（公式⑤）</h4>
+      <p>売値 ＝ 定価 × （1 − 値引き率）
+　　 ＝ 2000 × （1 − 0.10）
+　　 ＝ 2000 × 0.90
+　　 ＝ <strong>1800 円</strong>
+
+または：売値 ＝ 定価 − 値引き額 ＝ 2000 − 200 ＝ 1800円 ✓</p>
+    </div>
+    <button class="reveal-btn" id="rb-exC" onclick="reveal('exC',2)">STEP 1 を見る ▼</button>
+    <div id="exC-fin" style="display:none">
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row">
+        <button class="abc-btn abc-A" id="exC-kA" onclick="setMark('exCk','A')">✅ A<span>わかった</span></button>
+        <button class="abc-btn abc-B" id="exC-kB" onclick="setMark('exCk','B')">📖 B<span>解説でわかった</span></button>
+        <button class="abc-btn abc-C" id="exC-kC" onclick="setMark('exCk','C')">❓ C<span>まだ不安</span></button>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ミニテスト④ -->
+  <div class="mini-card">
+    <div class="mini-section-label">ミニテスト④ 値引きの計算</div>
+    <div class="mini-q">【問7】定価<strong>3000円</strong>の商品を<strong>2割引き</strong>で売りました。値引き額はいくらですか？</div>
+    <div class="mini-choices" id="mch-m7">
+      <button class="mch" onclick="miniAns('m7',0,3)"><span class="mcnum">ア</span>200円</button>
+      <button class="mch" onclick="miniAns('m7',1,3)"><span class="mcnum">イ</span>400円</button>
+      <button class="mch" onclick="miniAns('m7',2,3)"><span class="mcnum">ウ</span>500円</button>
+      <button class="mch" onclick="miniAns('m7',3,3)"><span class="mcnum">エ</span>600円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m7-ok">✅ 正解です！　2割引き ＝ 0.20 引き。値引き額 ＝ 3000 × 0.20 ＝ <strong>600円</strong></div>
+    <div class="mini-fb" id="mfb-m7-ng">❌ 惜しい！　2割 ＝ 0.20 ですよ。値引き額 ＝ 3000 × 0.20 ＝ <strong>600円</strong> です。</div>
+    <div class="mini-q" style="margin-top:1rem;">【問8】定価<strong>3000円</strong>の商品を<strong>2割引き</strong>で売りました。売値はいくらですか？</div>
+    <div class="mini-choices" id="mch-m8">
+      <button class="mch" onclick="miniAns('m8',0,1)"><span class="mcnum">ア</span>2100円</button>
+      <button class="mch" onclick="miniAns('m8',1,1)"><span class="mcnum">イ</span>2400円</button>
+      <button class="mch" onclick="miniAns('m8',2,1)"><span class="mcnum">ウ</span>2500円</button>
+      <button class="mch" onclick="miniAns('m8',3,1)"><span class="mcnum">エ</span>2600円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m8-ok">✅ 正解です！　2割引き後は「80%残る」ので、3000 × 0.80 ＝ <strong>2400円</strong></div>
+    <div class="mini-fb" id="mfb-m8-ng">❌ 惜しい！　2割引き後は「80%残る」ので、3000 × (1−0.20) ＝ 3000 × 0.80 ＝ <strong>2400円</strong> です。</div>
+  </div>
+
+  <!-- ============ SECTION 5 ============ -->
+  <div class="card">
+    <div class="sec-head"><span class="sec-num">5</span>「逆算」─ 定価から原価を求めましょう</div>
+    <div class="body-text">
+      これまでは「原価 → 定価」という方向で計算してきました。<br>
+      でもSPIでは「定価がわかっているとき、原価はいくら？」という<strong>逆算の問題</strong>も出てきます。<br>
+      難しくありません！公式③を「逆に使う」だけです。
+    </div>
+    <div class="teal-box">
+      <strong>💡 逆算の考え方</strong>
+      公式③は「定価 ＝ 原価 × (1＋利益率)」でしたね。<br>
+      これを「原価」について解くと……<br>
+      　原価 × (1＋利益率) ＝ 定価<br>
+      　原価 ＝ 定価 ÷ (1＋利益率)<br>
+      「÷（割り算）」に変えるだけです！　掛け算と割り算は逆の関係にあります。
+    </div>
+    <div class="formula-box">
+      <div class="f-title">🔑 逆算の公式</div>
+      <div class="formula-line"><span class="f-key">公式⑥</span><span class="f-eq">原価 ＝ 定価 ÷ （1 ＋ 利益率）</span></div>
+    </div>
+    <div class="body-text"><strong>【例題 D】15%の利益を見込んでつけた定価が184円でした。原価はいくらですか？</strong></div>
+    <div id="exD-s0" class="exp-box" style="display:none">
+      <h4>STEP 1　公式⑥を使います</h4>
+      <p>原価 ＝ 定価 ÷ （1 ＋ 利益率）
+　　 ＝ 184 ÷ （1 ＋ 0.15）
+　　 ＝ 184 ÷ 1.15</p>
+    </div>
+    <div id="exD-s1" class="exp-box blue" style="display:none">
+      <h4>STEP 2　計算します</h4>
+      <p>184 ÷ 1.15 ＝ <strong>160 円</strong>
+
+【確かめ算】160 × 1.15 ＝ 160 ＋ 24 ＝ 184 ✓
+（確かめ算をする習慣をつけましょう！）</p>
+    </div>
+    <div id="exD-s2" class="exp-box amber" style="display:none">
+      <h4>💡 「方程式」で解く方法（公式を忘れたときの保険）</h4>
+      <p>原価を <span class="hl-x">x 円</span> とおきます。
+　x × 1.15 ＝ 184　（定価の式を立てます）
+　x ＝ 184 ÷ 1.15 ＝ <strong>160 円</strong>
+
+公式⑥を覚えていれば公式⑥を、忘れたときはこの方程式で解いても全く同じ答えになります。どちらでも大丈夫です。</p>
+    </div>
+    <button class="reveal-btn" id="rb-exD" onclick="reveal('exD',3)">STEP 1 を見る ▼</button>
+    <div id="exD-fin" style="display:none">
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row">
+        <button class="abc-btn abc-A" id="exD-kA" onclick="setMark('exDk','A')">✅ A<span>わかった</span></button>
+        <button class="abc-btn abc-B" id="exD-kB" onclick="setMark('exDk','B')">📖 B<span>解説でわかった</span></button>
+        <button class="abc-btn abc-C" id="exD-kC" onclick="setMark('exDk','C')">❓ C<span>まだ不安</span></button>
+      </div></div>
+      <button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:1.4rem;">演習問題へ進む →</button>
+    </div>
+  </div>
+
+  <!-- ミニテスト⑤ -->
+  <div class="mini-card">
+    <div class="mini-section-label">ミニテスト⑤ 逆算の確認</div>
+    <div class="mini-q">【問9】原価の<strong>20%</strong>の利益を乗せてつけた定価が<strong>600円</strong>でした。原価はいくらですか？</div>
+    <div class="mini-choices" id="mch-m9">
+      <button class="mch" onclick="miniAns('m9',0,0)"><span class="mcnum">ア</span>500円</button>
+      <button class="mch" onclick="miniAns('m9',1,0)"><span class="mcnum">イ</span>480円</button>
+      <button class="mch" onclick="miniAns('m9',2,0)"><span class="mcnum">ウ</span>520円</button>
+      <button class="mch" onclick="miniAns('m9',3,0)"><span class="mcnum">エ</span>550円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m9-ok">✅ 正解です！　原価 ＝ 600 ÷ 1.20 ＝ <strong>500円</strong>　確かめ：500 × 1.20 ＝ 600 ✓</div>
+    <div class="mini-fb" id="mfb-m9-ng">❌ 惜しい！　原価 ＝ 定価 ÷ (1＋利益率) ＝ 600 ÷ 1.20 ＝ <strong>500円</strong> です。</div>
+    <div class="mini-q" style="margin-top:1rem;">【問10】原価の<strong>15%</strong>の利益を乗せてつけた定価が<strong>460円</strong>でした。原価はいくらですか？</div>
+    <div class="mini-choices" id="mch-m10">
+      <button class="mch" onclick="miniAns('m10',0,2)"><span class="mcnum">ア</span>360円</button>
+      <button class="mch" onclick="miniAns('m10',1,2)"><span class="mcnum">イ</span>380円</button>
+      <button class="mch" onclick="miniAns('m10',2,2)"><span class="mcnum">ウ</span>400円</button>
+      <button class="mch" onclick="miniAns('m10',3,2)"><span class="mcnum">エ</span>420円</button>
+    </div>
+    <div class="mini-fb" id="mfb-m10-ok">✅ 正解です！　原価 ＝ 460 ÷ 1.15 ＝ <strong>400円</strong>　確かめ：400 × 1.15 ＝ 460 ✓</div>
+    <div class="mini-fb" id="mfb-m10-ng">❌ 惜しい！　原価 ＝ 460 ÷ (1＋0.15) ＝ 460 ÷ 1.15 ＝ <strong>400円</strong> です。</div>
+  </div>
+
+</div><!-- /page-ex -->
+
+
+<!-- ========== 演習タブ ========== -->
+<div class="page" id="page-pr">
+  <div class="page-hdr">
+    <div class="page-hdr-icon icon-pr">演</div>
+    <div class="page-hdr-body"><div class="page-hdr-title">演習問題</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！</div></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div>
+    <div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div>
+  </div>
+
+  <!-- 演習 第1問 -->
+  <div class="prob-n"><span class="n n-pr">1</span><span>演習 第1問</span></div>
+  <div class="card">
+    <div class="clabel pr">演習 第1問　基本①</div>
+    <div class="q-text">原価が <strong>400円</strong> の商品に、原価の <strong>25%</strong> の利益を見込んで定価をつけました。定価はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button>
+    <div class="hint-box" id="h1">定価 ＝ 原価 × (1＋利益率) を使いましょう。25% ＝ 0.25 なので 1＋0.25 ＝ 1.25 です。</div>
+    <div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div>
+    <div class="choices" id="ch-q1">
+      <button class="ch" onclick="ans('q1',0,2)"><span class="cnum">1</span>450円</button>
+      <button class="ch" onclick="ans('q1',1,2)"><span class="cnum">2</span>480円</button>
+      <button class="ch" onclick="ans('q1',2,2)"><span class="cnum">3</span>500円</button>
+      <button class="ch" onclick="ans('q1',3,2)"><span class="cnum">4</span>520円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！すばらしい！<span class="fb-sub">400 × 1.25 ＝ 500円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">定価 ＝ 原価 × (1＋利益率) を使いましょう</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div>
+    <div id="q1-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>定価 ＝ 400 × (1＋0.25) ＝ 400 × 1.25 ＝ <strong>500円</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-q1">
+    <div class="clabel kai">段階解説</div>
+    <div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　利益率を小数に変換します</h4><p>25% ÷ 100 ＝ 0.25</p></div>
+    <div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　公式③を使います</h4><p>定価 ＝ 400 × (1＋0.25) ＝ 400 × 1.25</p></div>
+    <div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　計算します</h4><p>400 × 1.25 ＝ 400 ＋ 100 ＝ <strong>500円</strong></p></div>
+    <button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button>
+    <div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 演習 第2問 -->
+  <div class="prob-n"><span class="n n-pr">2</span><span>演習 第2問</span></div>
+  <div class="card">
+    <div class="clabel pr">演習 第2問　基本②</div>
+    <div class="q-text">原価が <strong>600円</strong> の商品に、原価の <strong>3割</strong> の利益を見込んで定価をつけました。定価はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button>
+    <div class="hint-box" id="h2">「3割」を小数に直しましょう。3割 ＝ 0.30 です。定価 ＝ 原価 × (1＋0.30) ＝ 原価 × 1.30 で求められます。</div>
+    <div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div>
+    <div class="choices" id="ch-q2">
+      <button class="ch" onclick="ans('q2',0,3)"><span class="cnum">1</span>720円</button>
+      <button class="ch" onclick="ans('q2',1,3)"><span class="cnum">2</span>750円</button>
+      <button class="ch" onclick="ans('q2',2,3)"><span class="cnum">3</span>770円</button>
+      <button class="ch" onclick="ans('q2',3,3)"><span class="cnum">4</span>780円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">600 × 1.30 ＝ 780円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">3割 ＝ 0.30 です。600 × 1.30 を計算しましょう。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div>
+    <div id="q2-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>3割 ＝ 0.30。定価 ＝ 600 × (1＋0.30) ＝ 600 × 1.30 ＝ <strong>780円</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-q2">
+    <div class="clabel kai">段階解説</div>
+    <div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　「3割」を小数に変換します</h4><p>3割 ＝ 0.30　（「割」は小数点第1位に対応します）</p></div>
+    <div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　定価を計算します</h4><p>定価 ＝ 600 × (1＋0.30) ＝ 600 × 1.30</p></div>
+    <div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　計算します</h4><p>600 × 1.30 ＝ 600 ＋ 180 ＝ <strong>780円</strong></p></div>
+    <button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button>
+    <div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 演習 第3問 -->
+  <div class="prob-n"><span class="n n-pr">3</span><span>演習 第3問</span></div>
+  <div class="card">
+    <div class="clabel pr">演習 第3問　値引き</div>
+    <div class="q-text">定価が <strong>2400円</strong> の商品を <strong>1割5分引き</strong> で売りました。売値はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button>
+    <div class="hint-box" id="h3">「1割5分」＝ 0.15 です。売値 ＝ 定価 × (1−値引き率) ＝ 2400 × (1−0.15) ＝ 2400 × 0.85 を計算しましょう。</div>
+    <div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div>
+    <div class="choices" id="ch-q3">
+      <button class="ch" onclick="ans('q3',0,1)"><span class="cnum">1</span>1920円</button>
+      <button class="ch" onclick="ans('q3',1,1)"><span class="cnum">2</span>2040円</button>
+      <button class="ch" onclick="ans('q3',2,1)"><span class="cnum">3</span>2100円</button>
+      <button class="ch" onclick="ans('q3',3,1)"><span class="cnum">4</span>2160円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">2400 × 0.85 ＝ 2040円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">1割5分 ＝ 0.15 なので、2400 × (1−0.15) ＝ 2400 × 0.85 です。</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div>
+    <div id="q3-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>1割5分引き ＝ 0.15 引き。売値 ＝ 2400 × (1−0.15) ＝ 2400 × 0.85 ＝ <strong>2040円</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-q3">
+    <div class="clabel kai">段階解説</div>
+    <div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　「1割5分」を小数に変換します</h4><p>1割5分 ＝ 0.15</p></div>
+    <div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　売値を計算します</h4><p>売値 ＝ 2400 × (1−0.15) ＝ 2400 × 0.85</p></div>
+    <div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　計算します</h4><p>2400 × 0.85
+＝ 2400 × 0.80 ＋ 2400 × 0.05
+＝ 1920 ＋ 120
+＝ <strong>2040円</strong></p></div>
+    <button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button>
+    <div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 演習 第4問 -->
+  <div class="prob-n"><span class="n n-pr">4</span><span>演習 第4問</span></div>
+  <div class="card">
+    <div class="clabel pr">演習 第4問　2段階計算</div>
+    <div class="q-text">原価が <strong>1500円</strong> の商品に、原価の <strong>20%</strong> の利益を見込んで定価をつけました。しかし売れなかったので、定価の <strong>10%引き</strong> で売りました。売値はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button>
+    <div class="hint-box" id="h4">2ステップで解きましょう。①定価 ＝ 原価 × 1.20　②売値 ＝ 定価 × 0.90　順番に計算しましょう。</div>
+    <div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div>
+    <div class="choices" id="ch-q4">
+      <button class="ch" onclick="ans('q4',0,1)"><span class="cnum">1</span>1560円</button>
+      <button class="ch" onclick="ans('q4',1,1)"><span class="cnum">2</span>1620円</button>
+      <button class="ch" onclick="ans('q4',2,1)"><span class="cnum">3</span>1680円</button>
+      <button class="ch" onclick="ans('q4',3,1)"><span class="cnum">4</span>1710円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">定価1800円 × 0.90 ＝ 1620円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">まず定価を求め、そこから値引きを計算しましょう。</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div>
+    <div id="q4-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>①定価 ＝ 1500 × 1.20 ＝ 1800円　②売値 ＝ 1800 × 0.90 ＝ <strong>1620円</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-q4">
+    <div class="clabel kai">段階解説</div>
+    <div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　定価を求めます</h4><p>定価 ＝ 原価 × (1＋0.20) ＝ 1500 × 1.20 ＝ <strong>1800円</strong></p></div>
+    <div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　売値を求めます（10%引き）</h4><p>売値 ＝ 定価 × (1−0.10) ＝ 1800 × 0.90 ＝ <strong>1620円</strong></p></div>
+    <div id="q4-s2" class="exp-box amber" style="display:none"><h4>💡 確かめましょう</h4><p>実際の利益 ＝ 1620 − 1500 ＝ 120円（黒字です）
+値引きしなければ300円の利益でしたが、
+10%引きにしたため120円の利益になりました。</p></div>
+    <button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button>
+    <div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 演習 第5問 -->
+  <div class="prob-n"><span class="n n-pr">5</span><span>演習 第5問</span></div>
+  <div class="card">
+    <div class="clabel pr">演習 第5問　利益額</div>
+    <div class="q-text">原価が <strong>2000円</strong> の商品に、原価の <strong>15%</strong> の利益を見込んで定価をつけ、定価どおりで売れました。利益はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button>
+    <div class="hint-box" id="h5">利益 ＝ 原価 × 利益率 で求められます。15% ＝ 0.15 です。2000 × 0.15 を計算しましょう。</div>
+    <div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div>
+    <div class="choices" id="ch-q5">
+      <button class="ch" onclick="ans('q5',0,2)"><span class="cnum">1</span>250円</button>
+      <button class="ch" onclick="ans('q5',1,2)"><span class="cnum">2</span>280円</button>
+      <button class="ch" onclick="ans('q5',2,2)"><span class="cnum">3</span>300円</button>
+      <button class="ch" onclick="ans('q5',3,2)"><span class="cnum">4</span>320円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！完璧です！<span class="fb-sub">2000 × 0.15 ＝ 300円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">利益 ＝ 原価 × 利益率 です。2000 × 0.15 を計算しましょう。</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div>
+    <div id="q5-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>利益 ＝ 原価 × 利益率 ＝ 2000 × 0.15 ＝ <strong>300円</strong>　（定価 ＝ 2000 ＋ 300 ＝ 2300円）</div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-q5">
+    <div class="clabel kai">段階解説</div>
+    <div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　利益率を小数に変換します</h4><p>15% ÷ 100 ＝ 0.15</p></div>
+    <div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　利益を計算します（公式②）</h4><p>利益 ＝ 原価 × 利益率 ＝ 2000 × 0.15 ＝ <strong>300円</strong></p></div>
+    <div id="q5-s2" class="exp-box amber" style="display:none"><h4>💡 参考：定価も確認しましょう</h4><p>定価 ＝ 原価 ＋ 利益 ＝ 2000 ＋ 300 ＝ 2300円
+または：定価 ＝ 2000 × 1.15 ＝ 2300円</p></div>
+    <button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button>
+    <div id="q5-fin" style="display:none">
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5k','C')">❓ C<span>わからなかった</span></button></div></div>
+      <button class="next-page-btn cf" onclick="switchTab('cf')" style="margin-top:1rem;">確認問題へ進む →</button>
+    </div>
+  </div>
+
+  <div id="done-pr" style="display:none;align-items:center;gap:8px;background:#e6faf3;border:2px solid var(--teal);border-radius:12px;padding:12px 16px;margin-top:.5rem;">
+    <span style="font-size:1.5rem;">✅</span><span style="font-size:13px;font-weight:700;color:var(--teal);">演習問題 全5問 完了！確認問題に挑戦しましょう。</span>
+  </div>
+</div>
+
+
+<!-- ========== 確認タブ ========== -->
+<div class="page" id="page-cf">
+  <div class="page-hdr">
+    <div class="page-hdr-icon icon-cf">確</div>
+    <div class="page-hdr-body"><div class="page-hdr-title">確認問題</div><div class="page-hdr-desc">SPI本番レベルで挑戦しましょう！全6問</div></div>
+  </div>
+  <div class="prog-wrap">
+    <div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div>
+    <div class="pb-txt" id="pb-cf-txt">0 / 6 完了</div>
+  </div>
+
+  <!-- 確認 第1問 -->
+  <div class="prob-n"><span class="n n-cf">1</span><span>確認 第1問</span></div>
+  <div class="card">
+    <div class="clabel cf">確認 第1問　逆算①</div>
+    <div class="q-text">ある商品に原価の <strong>15%</strong> の利益を見込んで定価をつけました。その定価が <strong>920円</strong> でした。この商品の原価はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('hc1')">💡 ヒントを見る</button>
+    <div class="hint-box" id="hc1">原価 ＝ 定価 ÷ (1＋利益率) を使います。1＋0.15 ＝ 1.15 で割りましょう。</div>
+    <div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div>
+    <div class="choices" id="ch-qc1">
+      <button class="ch" onclick="ans('qc1',0,2)"><span class="cnum">1</span>760円</button>
+      <button class="ch" onclick="ans('qc1',1,2)"><span class="cnum">2</span>780円</button>
+      <button class="ch" onclick="ans('qc1',2,2)"><span class="cnum">3</span>800円</button>
+      <button class="ch" onclick="ans('qc1',3,2)"><span class="cnum">4</span>820円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">920 ÷ 1.15 ＝ 800円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">原価 ＝ 定価 ÷ (1＋利益率) ＝ 920 ÷ 1.15 です。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div>
+    <div id="qc1-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>原価 ＝ 920 ÷ 1.15 ＝ <strong>800円</strong>　確かめ：800 × 1.15 ＝ 920 ✓</div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-qc1">
+    <div class="clabel kai">段階解説</div>
+    <div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　公式⑥を使います</h4><p>原価 ＝ 定価 ÷ (1＋利益率) ＝ 920 ÷ 1.15</p></div>
+    <div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>920 ÷ 1.15 ＝ <strong>800円</strong>（方程式：x × 1.15 ＝ 920 → x ＝ 800）</p></div>
+    <div id="qc1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>800 × 1.15 ＝ 800 ＋ 120 ＝ 920円 ✓　答えは定価より必ず小さくなります。</p></div>
+    <button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',3)">STEP 1 を見る ▼</button>
+    <div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 確認 第2問 -->
+  <div class="prob-n"><span class="n n-cf">2</span><span>確認 第2問</span></div>
+  <div class="card">
+    <div class="clabel cf">確認 第2問　逆算②</div>
+    <div class="q-text">ある商品に原価の <strong>20%</strong> の利益を見込んで定価をつけました。定価が <strong>1440円</strong> でした。原価はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('hc2')">💡 ヒントを見る</button>
+    <div class="hint-box" id="hc2">原価 ＝ 定価 ÷ (1＋利益率) です。1＋0.20 ＝ 1.20 で割りましょう。</div>
+    <div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div>
+    <div class="choices" id="ch-qc2">
+      <button class="ch" onclick="ans('qc2',0,1)"><span class="cnum">1</span>1100円</button>
+      <button class="ch" onclick="ans('qc2',1,1)"><span class="cnum">2</span>1200円</button>
+      <button class="ch" onclick="ans('qc2',2,1)"><span class="cnum">3</span>1250円</button>
+      <button class="ch" onclick="ans('qc2',3,1)"><span class="cnum">4</span>1300円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">1440 ÷ 1.20 ＝ 1200円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">原価 ＝ 1440 ÷ 1.20 ＝ 1200円 です。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div>
+    <div id="qc2-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>原価 ＝ 1440 ÷ 1.20 ＝ <strong>1200円</strong>　確かめ：1200 × 1.20 ＝ 1440 ✓</div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-qc2">
+    <div class="clabel kai">段階解説</div>
+    <div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　公式⑥を使います</h4><p>原価 ＝ 定価 ÷ (1＋0.20) ＝ 1440 ÷ 1.20</p></div>
+    <div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>1440 ÷ 1.20 ＝ 14400 ÷ 12 ＝ <strong>1200円</strong></p></div>
+    <div id="qc2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>1200 × 1.20 ＝ 1200 ＋ 240 ＝ 1440円 ✓</p></div>
+    <button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',3)">STEP 1 を見る ▼</button>
+    <div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 確認 第3問 -->
+  <div class="prob-n"><span class="n n-cf">3</span><span>確認 第3問</span></div>
+  <div class="card">
+    <div class="clabel cf">確認 第3問　2段階＋逆算</div>
+    <div class="q-text">ある商品に原価の <strong>25%</strong> の利益を見込んで定価をつけ、さらに定価の <strong>20%引き</strong> で売りました。売値が <strong>2000円</strong> でした。原価はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('hc3')">💡 ヒントを見る</button>
+    <div class="hint-box" id="hc3">売値 ＝ 原価 × 1.25 × 0.80 です。2000 ＝ 原価 × 1.00 なので、原価 ＝ 2000 ÷ (1.25 × 0.80) ＝ 2000 ÷ 1.00 で計算できます。</div>
+    <div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 4分以内</span></div></div>
+    <div class="choices" id="ch-qc3">
+      <button class="ch" onclick="ans('qc3',0,3)"><span class="cnum">1</span>1800円</button>
+      <button class="ch" onclick="ans('qc3',1,3)"><span class="cnum">2</span>1900円</button>
+      <button class="ch" onclick="ans('qc3',2,3)"><span class="cnum">3</span>1950円</button>
+      <button class="ch" onclick="ans('qc3',3,3)"><span class="cnum">4</span>2000円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！すばらしい！<span class="fb-sub">1.25 × 0.80 ＝ 1.00 なので原価 ＝ 2000円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">売値 ＝ 原価 × 1.25 × 0.80 ＝ 原価 × 1.00 です。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div>
+    <div id="qc3-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>売値 ＝ 原価 × 1.25 × 0.80 ＝ 原価 × 1.00。よって原価 ＝ 2000 ÷ 1.00 ＝ <strong>2000円</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-qc3">
+    <div class="clabel kai">段階解説</div>
+    <div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　売値の式を立てます</h4><p>売値 ＝ 原価 × (1＋0.25) × (1−0.20)
+　　 ＝ 原価 × 1.25 × 0.80</p></div>
+    <div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　掛け算をまとめます</h4><p>1.25 × 0.80 ＝ 1.00
+つまり売値 ＝ 原価 × 1.00 ＝ 原価 そのものです！</p></div>
+    <div id="qc3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　原価を求めます</h4><p>原価 × 1.00 ＝ 2000
+原価 ＝ <strong>2000円</strong>
+
+💡「25%増し → 20%引き」は元の価格に戻る、という面白い問題です。</p></div>
+    <button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',3)">STEP 1 を見る ▼</button>
+    <div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 確認 第4問 -->
+  <div class="prob-n"><span class="n n-cf">4</span><span>確認 第4問</span></div>
+  <div class="card">
+    <div class="clabel cf">確認 第4問　値引き逆算</div>
+    <div class="q-text">ある商品を定価の <strong>2割引き</strong> で売ったところ、売値が <strong>3600円</strong> でした。定価はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('hc4')">💡 ヒントを見る</button>
+    <div class="hint-box" id="hc4">売値 ＝ 定価 × (1−値引き率) です。2割引き ＝ 0.20 引きなので、3600 ＝ 定価 × 0.80 です。定価 ＝ 3600 ÷ 0.80 で求められます。</div>
+    <div id="tc4" class="timer-wrap"><div class="timer-ring" id="ring-qc4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div>
+    <div class="choices" id="ch-qc4">
+      <button class="ch" onclick="ans('qc4',0,2)"><span class="cnum">1</span>4200円</button>
+      <button class="ch" onclick="ans('qc4',1,2)"><span class="cnum">2</span>4320円</button>
+      <button class="ch" onclick="ans('qc4',2,2)"><span class="cnum">3</span>4500円</button>
+      <button class="ch" onclick="ans('qc4',3,2)"><span class="cnum">4</span>4800円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-qc4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">3600 ÷ 0.80 ＝ 4500円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-qc4"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">定価 ＝ 売値 ÷ (1−値引き率) ＝ 3600 ÷ 0.80 です。</span></span><button class="reset-btn" onclick="resetQ('qc4')">🔄 もう一度</button></div>
+    <div id="qc4-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>定価 ＝ 売値 ÷ (1−値引き率) ＝ 3600 ÷ 0.80 ＝ <strong>4500円</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc4-mA" onclick="setMark('qc4m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc4-mB" onclick="setMark('qc4m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc4-mC" onclick="setMark('qc4m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-qc4"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-qc4">
+    <div class="clabel kai">段階解説</div>
+    <div id="qc4-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>売値 ＝ 定価 × (1−0.20) ＝ 定価 × 0.80
+3600 ＝ 定価 × 0.80</p></div>
+    <div id="qc4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　定価を求めます（逆算）</h4><p>定価 ＝ 3600 ÷ 0.80 ＝ <strong>4500円</strong></p></div>
+    <div id="qc4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>4500 × 0.80 ＝ 3600円 ✓</p></div>
+    <button class="reveal-btn" id="rb-qc4" onclick="reveal('qc4',3)">STEP 1 を見る ▼</button>
+    <div id="qc4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc4-kA" onclick="setMark('qc4k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc4-kB" onclick="setMark('qc4k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc4-kC" onclick="setMark('qc4k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 確認 第5問 -->
+  <div class="prob-n"><span class="n n-cf">5</span><span>確認 第5問</span></div>
+  <div class="card">
+    <div class="clabel cf">確認 第5問　利益率を求める</div>
+    <div class="q-text">原価が <strong>800円</strong> の商品を <strong>1040円</strong> で売りました。利益率は原価の何%ですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('hc5')">💡 ヒントを見る</button>
+    <div class="hint-box" id="hc5">まず利益（もうけ）を計算しましょう。利益 ＝ 売値 − 原価 です。次に「利益 ÷ 原価 × 100」で利益率（%）が求められます。</div>
+    <div id="tc5" class="timer-wrap"><div class="timer-ring" id="ring-qc5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div>
+    <div class="choices" id="ch-qc5">
+      <button class="ch" onclick="ans('qc5',0,2)"><span class="cnum">1</span>20%</button>
+      <button class="ch" onclick="ans('qc5',1,2)"><span class="cnum">2</span>25%</button>
+      <button class="ch" onclick="ans('qc5',2,2)"><span class="cnum">3</span>30%</button>
+      <button class="ch" onclick="ans('qc5',3,2)"><span class="cnum">4</span>35%</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-qc5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">利益240円 ÷ 原価800円 ＝ 0.30 ＝ 30% ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-qc5"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">利益 ＝ 1040−800 ＝ 240円。240 ÷ 800 ＝ 0.30 ＝ 30%です。</span></span><button class="reset-btn" onclick="resetQ('qc5')">🔄 もう一度</button></div>
+    <div id="qc5-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>利益 ＝ 1040 − 800 ＝ 240円。利益率 ＝ 240 ÷ 800 ＝ 0.30 ＝ <strong>30%</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc5-mA" onclick="setMark('qc5m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc5-mB" onclick="setMark('qc5m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc5-mC" onclick="setMark('qc5m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-qc5"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-qc5">
+    <div class="clabel kai">段階解説</div>
+    <div id="qc5-s0" class="exp-box" style="display:none"><h4>STEP 1　利益を求めます</h4><p>利益 ＝ 売値 − 原価 ＝ 1040 − 800 ＝ 240円</p></div>
+    <div id="qc5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　利益率を求めます</h4><p>利益率 ＝ 利益 ÷ 原価 ＝ 240 ÷ 800 ＝ 0.30</p></div>
+    <div id="qc5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　%に直します</h4><p>0.30 × 100 ＝ <strong>30%</strong></p></div>
+    <button class="reveal-btn" id="rb-qc5" onclick="reveal('qc5',3)">STEP 1 を見る ▼</button>
+    <div id="qc5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc5-kA" onclick="setMark('qc5k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc5-kB" onclick="setMark('qc5k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc5-kC" onclick="setMark('qc5k','C')">❓ C<span>わからなかった</span></button></div></div></div>
+  </div>
+
+  <hr class="prob-divider">
+
+  <!-- 確認 第6問 -->
+  <div class="prob-n"><span class="n n-cf">6</span><span>確認 第6問</span></div>
+  <div class="card">
+    <div class="clabel cf">確認 第6問　総合問題</div>
+    <div class="q-text">原価が <strong>1000円</strong> の商品に原価の <strong>3割</strong> の利益を見込んで定価をつけました。売れなかったので定価の <strong>1割引き</strong> で売りました。実際の利益はいくらですか？</div>
+    <button class="hint-toggle" onclick="toggleHint('hc6')">💡 ヒントを見る</button>
+    <div class="hint-box" id="hc6">①定価 ＝ 1000 × 1.30　②売値 ＝ 定価 × 0.90　③実際の利益 ＝ 売値 − 原価　の順で計算しましょう。</div>
+    <div id="tc6" class="timer-wrap"><div class="timer-ring" id="ring-qc6"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 4分以内</span></div></div>
+    <div class="choices" id="ch-qc6">
+      <button class="ch" onclick="ans('qc6',0,0)"><span class="cnum">1</span>170円</button>
+      <button class="ch" onclick="ans('qc6',1,0)"><span class="cnum">2</span>200円</button>
+      <button class="ch" onclick="ans('qc6',2,0)"><span class="cnum">3</span>230円</button>
+      <button class="ch" onclick="ans('qc6',3,0)"><span class="cnum">4</span>270円</button>
+    </div>
+    <div class="fb-ok" id="fb-ok-qc6"><span class="fb-icon">🎉</span><span class="fb-text">正解！完璧です！<span class="fb-sub">売値1170円 − 原価1000円 ＝ 170円 ✓</span></span></div>
+    <div class="fb-ng" id="fb-ng-qc6"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">定価1300円 → 1割引き → 1170円。利益 ＝ 1170−1000 ＝ 170円です。</span></span><button class="reset-btn" onclick="resetQ('qc6')">🔄 もう一度</button></div>
+    <div id="qc6-res" style="display:none">
+      <div class="point-box"><strong>解法のカギ</strong>定価 ＝ 1000 × 1.30 ＝ 1300円　売値 ＝ 1300 × 0.90 ＝ 1170円　利益 ＝ 1170 − 1000 ＝ <strong>170円</strong></div>
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc6-mA" onclick="setMark('qc6m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc6-mB" onclick="setMark('qc6m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc6-mC" onclick="setMark('qc6m','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+  <div class="connector" id="cn-qc6"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+  <div class="card kai-card" id="kai-qc6">
+    <div class="clabel kai">段階解説</div>
+    <div id="qc6-s0" class="exp-box" style="display:none"><h4>STEP 1　定価を求めます</h4><p>3割 ＝ 0.30。定価 ＝ 1000 × (1＋0.30) ＝ 1000 × 1.30 ＝ <strong>1300円</strong></p></div>
+    <div id="qc6-s1" class="exp-box blue" style="display:none"><h4>STEP 2　売値を求めます</h4><p>1割引き ＝ 0.10 引き。売値 ＝ 1300 × (1−0.10) ＝ 1300 × 0.90 ＝ <strong>1170円</strong></p></div>
+    <div id="qc6-s2" class="exp-box amber" style="display:none"><h4>STEP 3　実際の利益を求めます</h4><p>実際の利益 ＝ 売値 − 原価 ＝ 1170 − 1000 ＝ <strong>170円</strong>
+（3割の利益を見込んだのに1割引きで売ったので、利益は300円から170円に減りました）</p></div>
+    <button class="reveal-btn" id="rb-qc6" onclick="reveal('qc6',3)">STEP 1 を見る ▼</button>
+    <div id="qc6-fin" style="display:none">
+      <div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc6-kA" onclick="setMark('qc6k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc6-kB" onclick="setMark('qc6k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc6-kC" onclick="setMark('qc6k','C')">❓ C<span>わからなかった</span></button></div></div>
+    </div>
+  </div>
+
+  <div id="done-cf" style="display:none;align-items:center;gap:8px;background:#e6faf3;border:2px solid var(--teal);border-radius:12px;padding:12px 16px;margin-top:.5rem;">
+    <span style="font-size:1.5rem;">🏆</span><span style="font-size:13px;font-weight:700;color:var(--teal);">確認問題 全6問 完了！第1単元クリアです！</span>
+  </div>
+  <div class="unit-nav" id="unit-nav" style="display:flex;margin-top:1.2rem;">
+    <div class="unit-nav-row">
+      <a href="SPI_soneki_ch02.html" class="unav-btn unav-next">次：値引き・割引の計算 →</a>
+    </div>
+  </div>
+</div>
+
+</main>
+<script>
+const TMAX=240;
+const answered={};
+const stepRev={exA:0,exC:0,exD:0,q1:0,q2:0,q3:0,q4:0,q5:0,qc1:0,qc2:0,qc3:0,qc4:0,qc5:0,qc6:0};
+const timers={};
+const miniAnswered={};
+// 演習IDs / 確認IDs
+const PR_IDS=['q1','q2','q3','q4','q5'];
+const CF_IDS=['qc1','qc2','qc3','qc4','qc5','qc6'];
+const PR_NEXT={'q1':'q2','q2':'q3','q3':'q4','q4':'q5'};
+let pracDone=0,cfDone=0;
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered.q1)startTimer('q1');
+  if(tab==='cf'&&!answered.qc1)startTimer('qc1');
+}
+
+function _timerId(qid){
+  // タイマーDOM id: 演習は t1～t5、確認は tc1～tc6
+  if(PR_IDS.includes(qid))return 't'+qid.slice(1);
+  if(CF_IDS.includes(qid))return 't'+qid; // tc1 等
+  return null;
+}
+
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tid=_timerId(qid);
+    const tw=tid?document.getElementById(tid):null;
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/TMAX,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.className='tfg'+(pct>.8?' warn':'');
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=`${m}:${String(s).padStart(2,'0')}`;
+    if(msg){
+      if(sec<60)msg.innerHTML='自力で考えましょう。<span class="goal">目標内</span>';
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  var isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  var fbOk=document.getElementById('mfb-'+qid+'-ok');
+  var fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';} _launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  var isOk=(idx===correct);
+  var tid=_timerId(qid);
+  var tw=tid?document.getElementById(tid):null;
+  if(tw)tw.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  var fbOk=document.getElementById('fb-ok-'+qid);
+  var fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+  // 演習プログレス
+  if(PR_IDS.includes(qid)){
+    pracDone++;
+    document.getElementById('pb-pr').style.width=(pracDone/5*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / 5 完了';
+    if(pracDone===5){var d=document.getElementById('done-pr');if(d)d.style.display='flex';}
+    var nx=PR_NEXT[qid];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+  // 確認プログレス
+  if(CF_IDS.includes(qid)){
+    cfDone++;
+    document.getElementById('pb-cf').style.width=(cfDone/6*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / 6 完了';
+    if(cfDone===6){
+      var d=document.getElementById('done-cf');if(d)d.style.display='flex';
+      var un=document.getElementById('unit-nav');if(un)un.style.display='flex';
+    }
+    var cfNext={qc1:'qc2',qc2:'qc3',qc3:'qc4',qc4:'qc5',qc5:'qc6'};
+    var nx2=cfNext[qid];
+    if(nx2&&!answered[nx2])setTimeout(()=>startTimer(nx2),300);
+  }
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid];
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]++;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if(stepRev[qid]>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+stepRev[qid]+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  const base=prefix.slice(0,prefix.length-1);
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(base+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(PR_IDS.includes(qid)){
+    if(pracDone>0)pracDone--;
+    document.getElementById('pb-pr').style.width=(pracDone/5*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / 5 完了';
+    var d=document.getElementById('done-pr');if(d)d.style.display='none';
+  }
+  if(CF_IDS.includes(qid)){
+    if(cfDone>0)cfDone--;
+    document.getElementById('pb-cf').style.width=(cfDone/6*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / 6 完了';
+    var d=document.getElementById('done-cf');if(d)d.style.display='none';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  var tid=_timerId(qid);var tw=tid?document.getElementById(tid):null;if(tw)tw.style.display='flex';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  startTimer(qid);
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 非言語 損益算 単元一覧</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;
+  --bd:#d6d2c8;--bd2:#bcb8ae;
+  --pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;
+  --tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;
+  --text:#1a1814;--text2:#58544c;--text3:#98948c;
+  --r:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+
+/* ヘッダー */
+.site-header{
+  background:var(--sf);border-bottom:1px solid var(--bd);
+  padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;
+  position:sticky;top:0;z-index:100;
+}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.1rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+
+/* ページ見出し */
+.page-title-block{
+  background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:1.2rem 1.4rem;margin-bottom:1.6rem;
+  display:flex;align-items:center;gap:14px;
+}
+.ptb-icon{
+  width:48px;height:48px;border-radius:10px;
+  background:var(--pink);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;font-weight:700;flex-shrink:0;
+}
+.ptb-body{}
+.ptb-label{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:3px;}
+.ptb-title{font-size:17px;font-weight:700;color:var(--text);}
+.ptb-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.6;}
+
+/* 科目バナー */
+.subject-banner{
+  background:linear-gradient(120deg,#1B2A4A,#2055b0);
+  border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;
+  display:flex;align-items:center;gap:12px;
+}
+.sb-icon{font-size:1.6rem;}
+.sb-text{color:#fff;}
+.sb-text .sb-label{font-size:10px;opacity:.7;letter-spacing:.1em;}
+.sb-text .sb-name{font-size:16px;font-weight:700;}
+.sb-text .sb-count{font-size:12px;opacity:.8;margin-top:2px;}
+
+/* 全体進捗バー */
+.overall-prog{
+  background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);
+  padding:.9rem 1.3rem;margin-bottom:1.4rem;
+}
+.op-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
+.op-label{font-size:12px;font-weight:700;color:var(--text2);}
+.op-count{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.op-bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.op-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:4px;transition:width .6s ease;width:0%;}
+
+/* 単元カード */
+.unit-list{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.6rem;}
+.unit-card{
+  background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);
+  text-decoration:none;color:var(--text);
+  display:flex;align-items:center;gap:14px;
+  padding:1rem 1.2rem;
+  transition:all .18s;
+  position:relative;overflow:hidden;
+}
+.unit-card:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(32,85,176,.10);transform:translateY(-1px);}
+.unit-card.done{border-color:var(--teal);}
+.unit-card.locked{opacity:.55;cursor:default;pointer-events:none;}
+
+/* 番号バッジ */
+.uc-num{
+  width:40px;height:40px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;font-weight:700;flex-shrink:0;
+  font-family:'DM Mono',monospace;
+}
+.uc-num.c1{background:#fde8eb;color:var(--pink);}
+.uc-num.c2{background:var(--bl);color:var(--blue);}
+.uc-num.c3{background:var(--tl);color:var(--teal);}
+.uc-num.c4{background:var(--al);color:var(--amber);}
+.uc-num.c5{background:#f8f0ff;color:#6b21a8;}
+.uc-num.c6{background:#f0f8ef;color:#166534;}
+
+/* 本文 */
+.uc-body{flex:1;min-width:0;}
+.uc-category{font-size:10px;color:var(--text3);letter-spacing:.07em;margin-bottom:2px;}
+.uc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.uc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.uc-tag{
+  font-size:10px;font-weight:700;border-radius:20px;
+  padding:2px 8px;letter-spacing:.04em;white-space:nowrap;
+}
+.tag-pink{background:var(--pl);color:var(--pink);}
+.tag-blue{background:var(--bl);color:var(--blue);}
+.tag-teal{background:var(--tl);color:var(--teal);}
+.tag-amber{background:var(--al);color:var(--amber);}
+.tag-gray{background:var(--sf2);color:var(--text2);}
+
+/* 右側メタ */
+.uc-meta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.uc-status{
+  font-size:11px;font-weight:700;border-radius:20px;
+  padding:3px 10px;white-space:nowrap;
+}
+.status-new{background:var(--pl);color:var(--pink);}
+.status-done{background:var(--tl);color:var(--teal);}
+.status-locked{background:var(--sf2);color:var(--text3);}
+.uc-arrow{font-size:16px;color:var(--bd2);transition:color .15s;}
+.unit-card:hover .uc-arrow{color:var(--blue);}
+
+/* チェック済みストライプ */
+.unit-card.done::before{
+  content:'';position:absolute;top:0;left:0;width:4px;height:100%;
+  background:var(--teal);border-radius:var(--r) 0 0 var(--r);
+}
+
+/* 難易度バー */
+.uc-diff{display:flex;gap:2px;align-items:center;}
+.diff-dot{width:8px;height:8px;border-radius:50%;}
+.diff-dot.on-1{background:var(--pink);}
+.diff-dot.on-2{background:var(--amber);}
+.diff-dot.on-3{background:#6b21a8;}
+.diff-dot.off{background:var(--bd);}
+
+/* セクション見出し */
+.section-head{
+  font-size:11px;font-weight:700;color:var(--text3);
+  letter-spacing:.1em;margin:1.4rem 0 .6rem;
+  display:flex;align-items:center;gap:8px;
+}
+.section-head::after{content:'';flex:1;height:1px;background:var(--bd);}
+
+/* 学習のコツカード */
+.tips-card{
+  background:var(--tl);border:1.5px solid #8ecfc3;
+  border-radius:var(--r);padding:1.1rem 1.3rem;margin-bottom:1.4rem;
+}
+.tips-title{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.08em;margin-bottom:.7rem;}
+.tips-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.tips-list li{font-size:13px;color:#0a6b54;line-height:1.7;display:flex;gap:8px;}
+.tips-list li::before{content:'✓';font-weight:700;flex-shrink:0;}
+
+/* 試験情報バッジ */
+.exam-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem;}
+.exam-badge{
+  background:var(--sf);border:1px solid var(--bd);border-radius:8px;
+  padding:.55rem .9rem;font-size:12px;color:var(--text2);
+  display:flex;align-items:center;gap:6px;
+}
+.exam-badge .eb-icon{font-size:1rem;}
+.exam-badge strong{color:var(--text);font-weight:700;}
+
+/* フッター */
+.index-footer{
+  text-align:center;padding:1.5rem 1rem;
+  font-size:12px;color:var(--text3);line-height:1.8;
+  border-top:1px solid var(--bd);margin-top:2rem;
+}
+
+/* ── ABC チェックパネル ── */
+.abc-panel{
+  display:flex;align-items:center;gap:7px;
+  padding:.65rem 1.2rem;
+  border-top:1px solid var(--bd);
+  background:var(--sf2);
+  border-radius:0 0 calc(var(--r) - 2px) calc(var(--r) - 2px);
+  flex-wrap:wrap;
+}
+.abc-panel-lbl{
+  font-size:10px;color:var(--text3);font-weight:700;
+  letter-spacing:.06em;white-space:nowrap;margin-right:2px;
+}
+.abc-btn-idx{
+  padding:4px 12px;border-radius:20px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  border:1.5px solid;font-family:'Noto Sans JP',sans-serif;
+  transition:all .15s;white-space:nowrap;
+  background:var(--sf);
+}
+.abc-btn-idx.btn-a{border-color:var(--teal);color:var(--teal);}
+.abc-btn-idx.btn-a.on{background:var(--teal);color:#fff;}
+.abc-btn-idx.btn-b{border-color:var(--blue);color:var(--blue);}
+.abc-btn-idx.btn-b.on{background:var(--blue);color:#fff;}
+.abc-btn-idx.btn-c{border-color:var(--pink);color:var(--pink);}
+.abc-btn-idx.btn-c.on{background:var(--pink);color:#fff;}
+.abc-clear{
+  margin-left:auto;font-size:10px;color:var(--text3);
+  background:none;border:none;cursor:pointer;
+  font-family:'Noto Sans JP',sans-serif;padding:2px 4px;
+  text-decoration:underline;
+}
+.abc-clear:hover{color:var(--pink);}
+
+/* カードにabc-panelが入るので構造を縦積みに変更 */
+.unit-card{
+  padding:0;
+  flex-direction:column;
+  align-items:stretch;
+  overflow:visible;
+}
+.uc-main{
+  display:flex;align-items:center;gap:14px;
+  padding:1rem 1.2rem .85rem;
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="logo">GAMBA</span>
+  <span class="logo-sep">|</span>
+  <span class="logo-sub">SPI 非言語 ／ 損益算</span>
+</header>
+
+<main>
+
+  <!-- ページタイトル -->
+  <div class="page-title-block">
+    <div class="ptb-icon">損</div>
+    <div class="ptb-body">
+      <div class="ptb-label">SPI 非言語問題</div>
+      <div class="ptb-title">損益算 完全マスターコース</div>
+      <div class="ptb-desc">基本計算から最難関パターンまで全6単元・段階学習</div>
+    </div>
+  </div>
+
+  <!-- 試験情報 -->
+  <div class="exam-badges">
+    <div class="exam-badge"><span class="eb-icon">🖥️</span><strong>テストセンター</strong>対応</div>
+    <div class="exam-badge"><span class="eb-icon">📄</span><strong>ペーパーテスト</strong>対応</div>
+    <div class="exam-badge"><span class="eb-icon">📚</span>全 <strong>6</strong> 単元</div>
+    <div class="exam-badge"><span class="eb-icon">❓</span>問題数 <strong>180問</strong>+</div>
+  </div>
+
+  <!-- 全体進捗 -->
+  <div class="overall-prog">
+    <div class="op-head">
+      <span class="op-label">📊 学習進捗</span>
+      <span class="op-count" id="prog-count">0 / 6 単元</span>
+    </div>
+    <div class="op-bar"><div class="op-fill" id="prog-fill"></div></div>
+  </div>
+
+  <!-- 学習のコツ -->
+  <div class="tips-card">
+    <div class="tips-title">💡 このコースの学習順序について</div>
+    <ul class="tips-list">
+      <li>①〜③を順番に学ぶと公式・逆算・方程式の基礎が固まります。</li>
+      <li>④〜⑤で「金額なし」の難問パターンに対応できるようになります。</li>
+      <li>⑥の総仕上げで本番レベルの実戦力を養いましょう。</li>
+    </ul>
+  </div>
+
+  <!-- ── 基礎編 ── -->
+  <div class="section-head">基礎編</div>
+  <div class="unit-list">
+
+    <!-- ch01 -->
+    <a class="unit-card" href="SPI_soneki_ch01.html" id="card-ch01">
+      <div class="uc-main">
+        <div class="uc-num c1">01</div>
+        <div class="uc-body">
+          <div class="uc-category">SPI 非言語 ／ 損益算</div>
+          <div class="uc-title">割合・%・小数と基本計算</div>
+          <div class="uc-tags">
+            <span class="uc-tag tag-pink">換算</span>
+            <span class="uc-tag tag-blue">定価・原価</span>
+            <span class="uc-tag tag-teal">利益計算</span>
+            <span class="uc-tag tag-amber">逆算入門</span>
+          </div>
+        </div>
+        <div class="uc-meta">
+          <div class="uc-diff" title="難易度">
+            <div class="diff-dot on-1"></div>
+            <div class="diff-dot off"></div>
+            <div class="diff-dot off"></div>
+          </div>
+          <span class="uc-status status-new" id="st-ch01">スタート</span>
+          <span class="uc-arrow">›</span>
+        </div>
+      </div>
+      <div class="abc-panel" onclick="event.preventDefault()">
+        <span class="abc-panel-lbl">理解度：</span>
+        <button class="abc-btn-idx btn-a" id="abc-ch01-A" onclick="setIdx('ch01','A')">✅ A わかった</button>
+        <button class="abc-btn-idx btn-b" id="abc-ch01-B" onclick="setIdx('ch01','B')">📖 B 復習必要</button>
+        <button class="abc-btn-idx btn-c" id="abc-ch01-C" onclick="setIdx('ch01','C')">❓ C 繰り返し必要</button>
+        <button class="abc-clear" onclick="clearIdx('ch01')">クリア</button>
+      </div>
+    </a>
+
+    <!-- ch02 -->
+    <a class="unit-card" href="SPI_soneki_ch02.html" id="card-ch02">
+      <div class="uc-main">
+        <div class="uc-num c2">02</div>
+        <div class="uc-body">
+          <div class="uc-category">SPI 非言語 ／ 損益算</div>
+          <div class="uc-title">値引き・割引の応用計算</div>
+          <div class="uc-tags">
+            <span class="uc-tag tag-pink">値引き計算</span>
+            <span class="uc-tag tag-blue">損益分岐</span>
+            <span class="uc-tag tag-teal">売値逆算</span>
+            <span class="uc-tag tag-amber">目標定価</span>
+          </div>
+        </div>
+        <div class="uc-meta">
+          <div class="uc-diff" title="難易度">
+            <div class="diff-dot on-1"></div>
+            <div class="diff-dot on-1"></div>
+            <div class="diff-dot off"></div>
+          </div>
+          <span class="uc-status status-new" id="st-ch02">スタート</span>
+          <span class="uc-arrow">›</span>
+        </div>
+      </div>
+      <div class="abc-panel" onclick="event.preventDefault()">
+        <span class="abc-panel-lbl">理解度：</span>
+        <button class="abc-btn-idx btn-a" id="abc-ch02-A" onclick="setIdx('ch02','A')">✅ A わかった</button>
+        <button class="abc-btn-idx btn-b" id="abc-ch02-B" onclick="setIdx('ch02','B')">📖 B 復習必要</button>
+        <button class="abc-btn-idx btn-c" id="abc-ch02-C" onclick="setIdx('ch02','C')">❓ C 繰り返し必要</button>
+        <button class="abc-clear" onclick="clearIdx('ch02')">クリア</button>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ── 標準編 ── -->
+  <div class="section-head">標準編</div>
+  <div class="unit-list">
+
+    <!-- ch03 -->
+    <a class="unit-card" href="SPI_soneki_ch03.html" id="card-ch03">
+      <div class="uc-main">
+        <div class="uc-num c3">03</div>
+        <div class="uc-body">
+          <div class="uc-category">SPI 非言語 ／ 損益算</div>
+          <div class="uc-title">逆算・方程式パターン</div>
+          <div class="uc-tags">
+            <span class="uc-tag tag-teal">方程式</span>
+            <span class="uc-tag tag-blue">xとおく</span>
+            <span class="uc-tag tag-pink">複合条件</span>
+            <span class="uc-tag tag-amber">利益率を求める</span>
+          </div>
+        </div>
+        <div class="uc-meta">
+          <div class="uc-diff" title="難易度">
+            <div class="diff-dot on-2"></div>
+            <div class="diff-dot on-2"></div>
+            <div class="diff-dot off"></div>
+          </div>
+          <span class="uc-status status-new" id="st-ch03">スタート</span>
+          <span class="uc-arrow">›</span>
+        </div>
+      </div>
+      <div class="abc-panel" onclick="event.preventDefault()">
+        <span class="abc-panel-lbl">理解度：</span>
+        <button class="abc-btn-idx btn-a" id="abc-ch03-A" onclick="setIdx('ch03','A')">✅ A わかった</button>
+        <button class="abc-btn-idx btn-b" id="abc-ch03-B" onclick="setIdx('ch03','B')">📖 B 復習必要</button>
+        <button class="abc-btn-idx btn-c" id="abc-ch03-C" onclick="setIdx('ch03','C')">❓ C 繰り返し必要</button>
+        <button class="abc-clear" onclick="clearIdx('ch03')">クリア</button>
+      </div>
+    </a>
+
+    <!-- ch04 -->
+    <a class="unit-card" href="SPI_soneki_ch04.html" id="card-ch04">
+      <div class="uc-main">
+        <div class="uc-num c4">04</div>
+        <div class="uc-body">
+          <div class="uc-category">SPI 非言語 ／ 損益算</div>
+          <div class="uc-title">比例・割合のみパターン（仮置き）</div>
+          <div class="uc-tags">
+            <span class="uc-tag tag-amber">仮置き</span>
+            <span class="uc-tag tag-pink">金額なし</span>
+            <span class="uc-tag tag-teal">個数計算</span>
+            <span class="uc-tag tag-blue">商品比較</span>
+          </div>
+        </div>
+        <div class="uc-meta">
+          <div class="uc-diff" title="難易度">
+            <div class="diff-dot on-2"></div>
+            <div class="diff-dot on-2"></div>
+            <div class="diff-dot off"></div>
+          </div>
+          <span class="uc-status status-new" id="st-ch04">スタート</span>
+          <span class="uc-arrow">›</span>
+        </div>
+      </div>
+      <div class="abc-panel" onclick="event.preventDefault()">
+        <span class="abc-panel-lbl">理解度：</span>
+        <button class="abc-btn-idx btn-a" id="abc-ch04-A" onclick="setIdx('ch04','A')">✅ A わかった</button>
+        <button class="abc-btn-idx btn-b" id="abc-ch04-B" onclick="setIdx('ch04','B')">📖 B 復習必要</button>
+        <button class="abc-btn-idx btn-c" id="abc-ch04-C" onclick="setIdx('ch04','C')">❓ C 繰り返し必要</button>
+        <button class="abc-clear" onclick="clearIdx('ch04')">クリア</button>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ── 応用編 ── -->
+  <div class="section-head">応用編</div>
+  <div class="unit-list">
+
+    <!-- ch05 -->
+    <a class="unit-card" href="SPI_soneki_ch05.html" id="card-ch05">
+      <div class="uc-main">
+        <div class="uc-num c5">05</div>
+        <div class="uc-body">
+          <div class="uc-category">SPI 非言語 ／ 損益算</div>
+          <div class="uc-title">金額なし・割合だけで解くパターン</div>
+          <div class="uc-tags">
+            <span class="uc-tag tag-pink">等式チェーン</span>
+            <span class="uc-tag tag-blue">定価倍率</span>
+            <span class="uc-tag tag-teal">定価基準利益率</span>
+            <span class="uc-tag tag-amber">最難関</span>
+          </div>
+        </div>
+        <div class="uc-meta">
+          <div class="uc-diff" title="難易度">
+            <div class="diff-dot on-3"></div>
+            <div class="diff-dot on-3"></div>
+            <div class="diff-dot on-3"></div>
+          </div>
+          <span class="uc-status status-new" id="st-ch05">スタート</span>
+          <span class="uc-arrow">›</span>
+        </div>
+      </div>
+      <div class="abc-panel" onclick="event.preventDefault()">
+        <span class="abc-panel-lbl">理解度：</span>
+        <button class="abc-btn-idx btn-a" id="abc-ch05-A" onclick="setIdx('ch05','A')">✅ A わかった</button>
+        <button class="abc-btn-idx btn-b" id="abc-ch05-B" onclick="setIdx('ch05','B')">📖 B 復習必要</button>
+        <button class="abc-btn-idx btn-c" id="abc-ch05-C" onclick="setIdx('ch05','C')">❓ C 繰り返し必要</button>
+        <button class="abc-clear" onclick="clearIdx('ch05')">クリア</button>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ── 総仕上げ ── -->
+  <div class="section-head">総仕上げ</div>
+  <div class="unit-list">
+
+    <!-- ch06 -->
+    <a class="unit-card" href="SPI_soneki_ch06.html" id="card-ch06">
+      <div class="uc-main">
+        <div class="uc-num c6">06</div>
+        <div class="uc-body">
+          <div class="uc-category">SPI 非言語 ／ 損益算</div>
+          <div class="uc-title">総仕上げ・実戦問題集</div>
+          <div class="uc-tags">
+            <span class="uc-tag tag-teal">まとめシート</span>
+            <span class="uc-tag tag-blue">実戦8問</span>
+            <span class="uc-tag tag-amber">総合8問</span>
+            <span class="uc-tag tag-pink">スコア判定</span>
+          </div>
+        </div>
+        <div class="uc-meta">
+          <div class="uc-diff" title="難易度">
+            <div class="diff-dot on-3"></div>
+            <div class="diff-dot on-3"></div>
+            <div class="diff-dot on-3"></div>
+          </div>
+          <span class="uc-status status-new" id="st-ch06">スタート</span>
+          <span class="uc-arrow">›</span>
+        </div>
+      </div>
+      <div class="abc-panel" onclick="event.preventDefault()">
+        <span class="abc-panel-lbl">理解度：</span>
+        <button class="abc-btn-idx btn-a" id="abc-ch06-A" onclick="setIdx('ch06','A')">✅ A わかった</button>
+        <button class="abc-btn-idx btn-b" id="abc-ch06-B" onclick="setIdx('ch06','B')">📖 B 復習必要</button>
+        <button class="abc-btn-idx btn-c" id="abc-ch06-C" onclick="setIdx('ch06','C')">❓ C 繰り返し必要</button>
+        <button class="abc-clear" onclick="clearIdx('ch06')">クリア</button>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- 単元一覧表 -->
+  <div class="section-head">単元内容一覧</div>
+  <div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin-bottom:1.4rem;">
+    <table style="width:100%;border-collapse:collapse;font-size:13px;">
+      <thead>
+        <tr style="background:var(--pink);color:#fff;">
+          <th style="padding:9px 12px;text-align:center;width:44px;">単元</th>
+          <th style="padding:9px 12px;text-align:left;">タイトル</th>
+          <th style="padding:9px 12px;text-align:center;width:60px;">解説</th>
+          <th style="padding:9px 12px;text-align:center;width:60px;">演習</th>
+          <th style="padding:9px 12px;text-align:center;width:60px;">確認</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="background:#fff;">
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:var(--pink);">①</td>
+          <td style="padding:9px 12px;">割合・%・小数と基本計算</td>
+          <td style="padding:9px 12px;text-align:center;">4節</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--blue);font-weight:700;">5問</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--amber);font-weight:700;">6問</td>
+        </tr>
+        <tr style="background:var(--sf2);">
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:var(--blue);">②</td>
+          <td style="padding:9px 12px;">値引き・割引の応用計算</td>
+          <td style="padding:9px 12px;text-align:center;">4節</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--blue);font-weight:700;">5問</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--amber);font-weight:700;">6問</td>
+        </tr>
+        <tr style="background:#fff;">
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:var(--teal);">③</td>
+          <td style="padding:9px 12px;">逆算・方程式パターン</td>
+          <td style="padding:9px 12px;text-align:center;">4節</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--blue);font-weight:700;">5問</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--amber);font-weight:700;">6問</td>
+        </tr>
+        <tr style="background:var(--sf2);">
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:var(--amber);">④</td>
+          <td style="padding:9px 12px;">比例・割合のみパターン（仮置き）</td>
+          <td style="padding:9px 12px;text-align:center;">4節</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--blue);font-weight:700;">5問</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--amber);font-weight:700;">6問</td>
+        </tr>
+        <tr style="background:#fff;">
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:#6b21a8;">⑤</td>
+          <td style="padding:9px 12px;">金額なし・割合だけで解くパターン</td>
+          <td style="padding:9px 12px;text-align:center;">4節</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--blue);font-weight:700;">5問</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--amber);font-weight:700;">6問</td>
+        </tr>
+        <tr style="background:var(--sf2);">
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:#166534;">⑥</td>
+          <td style="padding:9px 12px;">総仕上げ・実戦問題集</td>
+          <td style="padding:9px 12px;text-align:center;">まとめ</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--blue);font-weight:700;">8問</td>
+          <td style="padding:9px 12px;text-align:center;color:var(--amber);font-weight:700;">8問</td>
+        </tr>
+        <tr style="background:var(--tl);">
+          <td colspan="2" style="padding:9px 12px;font-weight:700;color:var(--teal);">合計</td>
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:var(--teal);">24節+</td>
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:var(--teal);">33問</td>
+          <td style="padding:9px 12px;text-align:center;font-weight:700;color:var(--teal);">38問</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ミニテスト総数の補足 -->
+  <div style="background:var(--al);border:1px solid #e0c888;border-radius:var(--r);padding:.9rem 1.2rem;margin-bottom:1.6rem;font-size:13px;color:var(--amber);line-height:1.9;">
+    <strong style="display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;">📝 ミニテストについて</strong>
+    各単元の解説カードには <strong>2問ずつのミニテスト</strong> が付いています（①〜⑤は各8問）。<br>
+    解説を読んだ直後に確認できるので、理解度チェックに活用してください。
+  </div>
+
+  <div class="index-footer">
+    GAMBA ／ 江原予備校<br>
+    SPI 非言語 損益算 完全マスターコース
+  </div>
+
+</main>
+
+<script>
+const UNITS = ['ch01','ch02','ch03','ch04','ch05','ch06'];
+const LS_PREFIX = 'spi_soneki_';
+
+// ── ABC チェックを保存して表示を更新 ──
+function setIdx(chId, mark) {
+  const cur = localStorage.getItem(LS_PREFIX + chId + '_mark');
+  // 同じボタンを押したらトグル（クリア）
+  if (cur === mark) {
+    localStorage.removeItem(LS_PREFIX + chId + '_mark');
+    renderCard(chId, null);
+  } else {
+    localStorage.setItem(LS_PREFIX + chId + '_mark', mark);
+    // 訪問済みフラグも立てる
+    localStorage.setItem(LS_PREFIX + chId, '1');
+    renderCard(chId, mark);
+  }
+  updateOverall();
+}
+
+// ── ABC チェックをクリア ──
+function clearIdx(chId) {
+  localStorage.removeItem(LS_PREFIX + chId + '_mark');
+  renderCard(chId, localStorage.getItem(LS_PREFIX + chId) ? 'visited' : null);
+  updateOverall();
+}
+
+// ── カード表示を更新 ──
+function renderCard(chId, state) {
+  const card = document.getElementById('card-' + chId);
+  const st   = document.getElementById('st-' + chId);
+  // ABCボタンの on クラスをリセット
+  ['A','B','C'].forEach(x => {
+    const btn = document.getElementById('abc-' + chId + '-' + x);
+    if (btn) btn.classList.remove('on');
+  });
+  // カードのボーダー色クラスをリセット
+  if (card) card.classList.remove('done', 'mark-b', 'mark-c');
+
+  const mark = localStorage.getItem(LS_PREFIX + chId + '_mark');
+  const visited = localStorage.getItem(LS_PREFIX + chId);
+
+  if (mark === 'A') {
+    const btn = document.getElementById('abc-' + chId + '-A');
+    if (btn) btn.classList.add('on');
+    if (card) card.classList.add('done');
+    if (st)   { st.textContent = '✅ A わかった'; st.className = 'uc-status status-done'; }
+  } else if (mark === 'B') {
+    const btn = document.getElementById('abc-' + chId + '-B');
+    if (btn) btn.classList.add('on');
+    if (card) card.style.borderColor = 'var(--blue)';
+    if (st)   { st.textContent = '📖 B 復習必要'; st.className = 'uc-status'; st.style.cssText='background:var(--bl);color:var(--blue);border-radius:20px;padding:3px 10px;font-size:11px;font-weight:700;'; }
+  } else if (mark === 'C') {
+    const btn = document.getElementById('abc-' + chId + '-C');
+    if (btn) btn.classList.add('on');
+    if (card) card.style.borderColor = 'var(--pink)';
+    if (st)   { st.textContent = '❓ C 繰り返し必要'; st.className = 'uc-status status-new'; }
+  } else if (visited) {
+    if (card) { card.style.borderColor = ''; }
+    if (st)   { st.textContent = '学習済'; st.className = 'uc-status status-done'; }
+  } else {
+    if (card) { card.style.borderColor = ''; }
+    if (st)   { st.textContent = 'スタート'; st.className = 'uc-status status-new'; }
+  }
+}
+
+// ── 全体進捗バーを更新 ──
+function updateOverall() {
+  let done = 0;
+  UNITS.forEach(id => {
+    if (localStorage.getItem(LS_PREFIX + id) || localStorage.getItem(LS_PREFIX + id + '_mark')) done++;
+  });
+  document.getElementById('prog-count').textContent = done + ' / 6 単元';
+  document.getElementById('prog-fill').style.width = (done / 6 * 100) + '%';
+}
+
+// ── 初期化：ページロード時に保存済み状態を復元 ──
+UNITS.forEach(chId => {
+  renderCard(chId, localStorage.getItem(LS_PREFIX + chId + '_mark'));
+});
+updateOverall();
+
+// ── 単元ページへ遷移時に訪問フラグを記録 ──
+document.querySelectorAll('.unit-card').forEach(card => {
+  card.addEventListener('click', function(e) {
+    // abc-panel のクリックは除外（event.preventDefault済み）
+    if (e.defaultPrevented) return;
+    const href = this.getAttribute('href') || '';
+    const m = href.match(/ch0(\d)/);
+    if (m) {
+      const chId = 'ch0' + m[1];
+      localStorage.setItem(LS_PREFIX + chId, '1');
+    }
+  });
+});
+</script>
+</body>
+</html>
