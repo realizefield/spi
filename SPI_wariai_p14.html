@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 割合・比 パターン14 比を使った文章題（差・和・倍）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tfg.danger{stroke:var(--pink);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.timer-msg .goal.danger{color:var(--pink);font-weight:700;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.85;line-height:1.7;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.unav-idx{background:#fff;border-color:#bcb8ae;color:#58544c;}
+.unav-idx:hover{border-color:#2055b0;color:#2055b0;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+
+/* ── 追加：分数・図・制限時間つき確認問題 ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.3;margin:0 3px;font-size:.92em;font-weight:inherit;}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px;}
+.frac>span:last-child{padding:1px 4px 0;}
+.diagram{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.7rem .6rem .5rem;margin:.9rem 0;overflow-x:auto;}
+.diagram svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto;}
+.diagram .cap{font-size:12px;color:var(--text2);text-align:center;margin-top:.35rem;line-height:1.7;}
+.cf-cover{background:var(--al);border:2px dashed #e0c888;border-radius:12px;padding:1.4rem 1rem;text-align:center;margin-bottom:.6rem;}
+.cf-cover-txt{font-size:13px;color:var(--amber);margin-bottom:.8rem;}
+.cf-cover-txt strong{font-size:16px;}
+.start-btn{background:var(--amber);color:#fff;border:none;border-radius:10px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .15s;}
+.start-btn:hover{background:#8a4e00;}
+.result-card{background:linear-gradient(120deg,#1B2A4A,#2055b0);color:#fff;border-radius:var(--r);padding:1.3rem 1.5rem;margin-top:1.4rem;}
+.rc-title{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.8;margin-bottom:.5rem;}
+.rc-score{font-size:26px;font-weight:700;margin-bottom:.4rem;}
+.rc-msg{font-size:13px;line-height:1.9;opacity:.95;}
+.formula-box .f-eq .frac{margin:0 2px;}
+.exp-box p .frac{font-size:.95em;}
+@media (max-width:480px){.choices,.mini-choices{grid-template-columns:1fr;}.tab-btn{padding:.7rem .8rem;}.card{padding:1.2rem 1.1rem;}.sec-head{margin:-1.2rem -1.1rem 1.1rem;}}
+
+</style>
+</head>
+<body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI 非言語 ／ 割合・比　パターン14　比を使った文章題（差・和・倍）</span></header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>実践演習<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>総合確認<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">パターン14 ─ 比を使った文章題（差・和・倍）</div><div class="page-hdr-desc">「差が8」「合計が720」「片方が60」のように、比のほかに1つだけ情報が与えられる問題です。どの情報が、比のどの部分にあたるのかを見つけて、1個ぶんを求めます。</div></div></div><div class="card"><div class="sec-head"><span class="sec-num">1</span>【ポイント】 わかっている量が、比の何個ぶんかを見つけます</div><div class="body-text">p13では、全体（比の合計にあたる量）が与えられていました。このパターンでは、与えられる量が<strong>差</strong>や<strong>片方の量</strong>のこともあります。どの場合も、<strong>「与えられた量」と「それが比の何個ぶんにあたるか」を対応させて、1個ぶんを求める</strong>のが基本です。</div><div class="formula-box"><div class="f-title">🔑 このパターンのポイント</div><div class="formula-line"><span class="f-key">差がわかる</span><span class="f-eq">1個ぶん ＝ 差 ÷ 比の差　（3：5 の比の差は 5－3＝2）</span></div><div class="formula-line"><span class="f-key">和（全体）がわかる</span><span class="f-eq">1個ぶん ＝ 和 ÷ 比の和　（3：5 の比の和は 3＋5＝8）</span></div><div class="formula-line"><span class="f-key">片方がわかる</span><span class="f-eq">1個ぶん ＝ わかっている量 ÷ その比の数</span></div><div class="formula-line"><span class="f-key">同じ数だけ増減</span><span class="f-eq">2人とも同じだけふえる（へる）と、<strong>差は変わらない</strong></span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 求めた1個ぶんに、比の数をかければ、ほしい量が出ます。</div></div><div class="pink-box"><strong>⚠️ よくある間違い</strong>「A：B ＝ 3：5 で、差が8」のとき、8 ÷ 3 や 8 ÷ 5 としてしまう間違いです。<br>差の8は、BがAより多い部分です。それは、比の数 <strong>5 と 3 の「差」の 2 個ぶん</strong>にあたります。<br>（正しくは 8 ÷ 2 ＝ 4 が1個ぶん。A＝12、B＝20 で、20－12＝8 と合います。）</div></div><div class="card"><div class="sec-head"><span class="sec-num">2</span>【解説①】 「差が与えられた」とき</div><div class="body-text">次の問題を考えます。<br><strong>「AとBの比が 3：5 で、BはAより 8 大きい。AとBはそれぞれいくつか。」</strong><br>3：5 は、Aが□の3個ぶん、Bが□の5個ぶんという意味でした。図にします。</div><div class="diagram"><svg viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">A：3個ぶん</text><rect x="10.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="226.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">B：5個ぶん</text><rect x="10.0" y="74" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="74" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="226.0" y="74" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="334.0" y="74" width="108.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="388.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="442.0" y="74" width="108.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="496.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text></svg><div class="cap">BがAより多い部分（橙色の2個ぶん）が「差」です。比の差 5－3＝2 にあたる量が、問題文の「差」＝8 と一致します。</div></div><div class="body-text">図のように、BがAより多い部分は、□の 5－3＝<strong>2個ぶん</strong>です。<br>問題文には「BはAより8大きい」とあります。つまり<strong>□2個ぶん ＝ 8</strong>です。ここから1個ぶんが出ます。</div><div class="diagram"><svg viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">A：3個ぶん ＝ 4 × 3 ＝ 12</text><rect x="10.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text><rect x="118.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text><rect x="226.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">B：5個ぶん ＝ 4 × 5 ＝ 20</text><rect x="10.0" y="74" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text><rect x="118.0" y="74" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text><rect x="226.0" y="74" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text><rect x="334.0" y="74" width="108.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="388.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text><rect x="442.0" y="74" width="108.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="496.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">4</text></svg><div class="cap">橙色の2個ぶんが 8 なので、1個ぶんは 8 ÷ 2 ＝ 4。あとは A＝4×3＝12、B＝4×5＝20 です。（20－12＝8 ✓）</div></div><div class="body-text">① 比の差　　　5 － 3 ＝ 2<br>② 1個ぶん　　8 ÷ 2 ＝ 4<br>③ A　4 × 3 ＝ <strong>12</strong>　　B　4 × 5 ＝ <strong>20</strong><br>④ 確かめ　20 － 12 ＝ 8 ✓　　12：20 ＝ 3：5（4でわる）✓</div><div class="point-box"><strong>📌 思い出そう：わり算の答えの確かめ</strong>8 ÷ 2 ＝ 4 は、「4 × 2 ＝ 8」で確かめられます。<br>数が大きくなっても同じです。たとえば 900 ÷ 3 ＝ 300 は、「300 × 3 ＝ 900」で確かめます。</div></div><div class="card"><div class="sec-head"><span class="sec-num">3</span>【解説②】 「和が与えられた」「片方が与えられた」とき</div><div class="body-text"><strong>和が与えられた場合</strong>は、p13と同じです。「全体」＝「和」＝「比の合計にあたる量」と読みかえます。<br>例：「A：B ＝ 2：3 で、AとBの和が 25」→ 比の和 2＋3＝5、1個ぶん 25÷5＝5、A＝10、B＝15。</div><div class="body-text"><strong>片方の量が与えられた場合</strong>は、その量が「比の何個ぶん」かを見つけ、直接わります。<br>例：「A：B ＝ 2：5 で、A が 6」→ Aは2個ぶんで 6。1個ぶん 6÷2＝3。B＝3×5＝15。</div><table class="kansan-table"><tr><th>問題文に…</th><th>対応させる比の数</th><th>1個ぶんの求め方</th></tr><tr><td>差が 8</td><td>比の差（5－3＝2）</td><td class="hi">8 ÷ 2</td></tr><tr><td>和が 25</td><td>比の和（2＋3＝5）</td><td class="hi">25 ÷ 5</td></tr><tr><td>Aが 6</td><td>Aの比の数（2）</td><td class="hi">6 ÷ 2</td></tr><tr><td>Bが 15</td><td>Bの比の数（5）</td><td class="hi">15 ÷ 5</td></tr></table><div class="teal-box"><strong>💡 3つのとき、どれを使うか迷ったら</strong>問題文の「与えられた量」に印をつけて、<strong>「これは、比の数のどこにあたるか？」</strong>と自分に聞いてください。<br>・「〜より多い」「〜との差」→ 比の差<br>・「合わせて」「合計」「全部で」→ 比の和<br>・「Aは〜」「Bは〜」→ そのものの比の数<br>1個ぶんが出れば、あとは「1個ぶん × 比の数」で、どの量でも出せます。</div><div class="pink-box"><strong>⚠️ 比が簡単でないときは、先に簡単にします</strong>「15：25」のように約分できる比は、先に「3：5」に直してから、上の手順に進みます（p11）。<br>直さないまま「差は 25－15＝10」としても、答えは同じになりますが、数が大きくなり、ミスが増えます。</div></div><div class="card"><div class="sec-head"><span class="sec-num">4</span>【解説③】 「同じ数だけ増減する」とき、差は変わらない</div><div class="body-text">ここからは少し発展的な内容です。1つずつ確かめていきます。<br>AさんとBさんの所持金が 300円と 200円（比は 3：2）のとき、2人とも <strong>100円ずつもらった</strong>とします。</div><div class="diagram"><svg viewBox="0 0 600 242" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">はじめ　A：3個ぶん</text><rect x="10.0" y="18" width="405.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="212.5" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">300円</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">はじめ　B：2個ぶん</text><rect x="10.0" y="74" width="270.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="145.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">200円</text><text x="0" y="122" font-size="12" font-weight="700" fill="#58544c">100円ずつふえたあと　A</text><rect x="10.0" y="130" width="405.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="212.5" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">300円</text><rect x="415.0" y="130" width="135.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="482.5" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">＋100</text><text x="0" y="178" font-size="12" font-weight="700" fill="#58544c">100円ずつふえたあと　B</text><rect x="10.0" y="186" width="270.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="145.0" y="207" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">200円</text><rect x="280.0" y="186" width="135.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="347.5" y="207" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">＋100</text></svg><div class="cap">2人とも同じ金額（100円）ふえたので、AとBの差（100円）は、はじめもあとも変わりません。</div></div><table class="kansan-table"><tr><th></th><th>A</th><th>B</th><th>比</th><th>差</th><th>和</th></tr><tr><td>はじめ</td><td>300円</td><td>200円</td><td>3：2</td><td class="hi">100円</td><td>500円</td></tr><tr><td>100円ずつふえたあと</td><td>400円</td><td>300円</td><td>4：3</td><td class="hi">100円</td><td>700円</td></tr></table><div class="teal-box"><strong>💡 変わるもの、変わらないもの</strong>2人が同じだけふえても（へっても）、<strong>差は変わりません</strong>。図で、2人の帯に同じ長さが加わるだけだからです。<br>一方、<strong>比（3：2 → 4：3）も、和（500円 → 700円）も変わります</strong>。<br>この問題では、「差は変わらない」ことを、手がかりにします。</div><div class="body-text"><strong>使い方の手順</strong>は、次のとおりです。<br>① はじめの比の差と、あとの比の差を、それぞれ求める。<br>② 差は同じ量なので、<strong>比の数を何倍かして、差を同じ数にそろえる</strong>（p12：比の性質）。<br>③ そろえたあとの比で、はじめとあとの同じ人の「個数の変化」を見る。それが、ふえた（へった）量にあたる。</div><div class="point-box"><strong>📌 思い出そう：比の数を何倍かする</strong>比の両方に同じ数をかけても、比は変わりません（p12）。<br>例）2：1 ＝ 4：2 ＝ 6：3　（2倍、3倍しても同じ比です）<br>「差をそろえる」ときは、比の差を同じ数にするために、比を何倍かします。</div></div><div class="card"><div class="sec-head"><span class="sec-num">5</span>【例題】 「差」「和」「片方」「増減」を1題ずつ</div><div class="clabel ex" style="margin-top:.4rem">例題 1　差が与えられた場合</div><div class="q-text">AさんとBさんの所持金の比は <strong>4：7</strong> で、BさんはAさんより <strong>900円</strong> 多く持っています。Bさんの所持金は何円ですか？</div><div class="diagram"><svg viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">Aさん：4個ぶん</text><rect x="10.0" y="18" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="48.6" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="87.1" y="18" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="125.7" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="164.3" y="18" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="202.9" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="241.4" y="18" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">Bさん：7個ぶん</text><rect x="10.0" y="74" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="48.6" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="87.1" y="74" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="125.7" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="164.3" y="74" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="202.9" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="241.4" y="74" width="77.1" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="318.6" y="74" width="77.1" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="357.1" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="395.7" y="74" width="77.1" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="434.3" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="472.9" y="74" width="77.1" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="511.4" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text></svg><div class="cap">橙色の3個ぶん（7－4）が、BさんがAさんより多い 900円 にあたります。</div></div><div class="body-text">「BさんはAさんより900円多い」は、差が与えられているという意味です。差は、比の何個ぶんにあたるでしょうか。</div><div id="ex1-s0" class="exp-box" style="display:none"><h4>STEP 1　比の差を求めます</h4><p>7 － 4 ＝ <strong>3</strong>　→　差の900円は、3個ぶんにあたります。</p></div><div id="ex1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>900 ÷ 3 ＝ <strong>300（円）</strong></p></div><div id="ex1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　Bさんの所持金を求めます（比の数は 7）</h4><p>300 × 7 ＝ <strong>2100円</strong>
+（Aさんは 300 × 4 ＝ 1200円）</p></div><div id="ex1-s3" class="exp-box" style="display:none"><h4>STEP 4　確かめます</h4><p>2100 － 1200 ＝ 900 ✓
+1200：2100 ＝ 4：7 になっているか　→　300でわると 4：7 ✓</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',4)">STEP 1 を見る ▼</button><div id="ex1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 2　和が与えられた場合</div><div class="q-text">ある町の大人と子どもの人数の比は <strong>7：3</strong> で、合わせて<strong>2000人</strong>です。大人は、子どもより何人多いですか？</div><div class="diagram"><svg viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">大人：7個ぶん</text><rect x="10.0" y="18" width="54.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="37.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="64.0" y="18" width="54.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="91.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="18" width="54.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="145.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="172.0" y="18" width="54.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="199.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="226.0" y="18" width="54.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="253.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="280.0" y="18" width="54.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="307.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="334.0" y="18" width="54.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="361.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">子ども：3個ぶん</text><rect x="10.0" y="74" width="54.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="37.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="64.0" y="74" width="54.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="91.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="74" width="54.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="145.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text></svg><div class="cap">合わせて 7＋3＝10個ぶんが 2000人 です。</div></div><div class="body-text">「合わせて2000人」は和が与えられています。まず1個ぶんを出し、そのあと、差を求めます。</div><div id="ex2-s0" class="exp-box" style="display:none"><h4>STEP 1　比の和を求めます</h4><p>7 ＋ 3 ＝ <strong>10</strong>　→　2000人は10個ぶんです。</p></div><div id="ex2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>2000 ÷ 10 ＝ <strong>200（人）</strong></p></div><div id="ex2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　大人と子どもの人数を求めます</h4><p>大人：200 × 7 ＝ 1400人
+子ども：200 × 3 ＝ 600人</p></div><div id="ex2-s3" class="exp-box" style="display:none"><h4>STEP 4　差を求めます</h4><p>1400 － 600 ＝ <strong>800人</strong>
+（別解：比の差 7－3＝4個ぶんなので、200 × 4 ＝ 800人 ✓　　確かめ：1400＋600＝2000 ✓）</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',4)">STEP 1 を見る ▼</button><div id="ex2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 3　片方の量が与えられた場合</div><div class="q-text">料理の生地に、砂糖と小麦粉を <strong>3：8</strong> の比で入れます。小麦粉を<strong>240g</strong>使うとき、砂糖は何g必要ですか？</div><div class="body-text">「小麦粉を240g」は、片方の量が与えられているという意味です。小麦粉は比の何個ぶんでしょうか。</div><div id="ex3-s0" class="exp-box" style="display:none"><h4>STEP 1　与えられた量と、比の数を対応させます</h4><p>小麦粉の比の数は 8。<strong>240g ＝ 8個ぶん</strong></p></div><div id="ex3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>240 ÷ 8 ＝ <strong>30（g）</strong></p></div><div id="ex3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　砂糖を求めます（比の数は 3）</h4><p>30 × 3 ＝ <strong>90g</strong></p></div><div id="ex3-s3" class="exp-box" style="display:none"><h4>STEP 4　確かめます</h4><p>90：240 を 30 でわると 3：8 ✓
+（別解：比例式 3：8 ＝ x：240 → 8 × x ＝ 3 × 240 ＝ 720 → x ＝ 90 ✓）</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',4)">STEP 1 を見る ▼</button><div id="ex3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 4　同じ数だけへった場合（発展）</div><div class="q-text">AさんとBさんの所持金の比は <strong>5：3</strong> でした。2人とも<strong>400円</strong>ずつ使ったところ、所持金の比は <strong>2：1</strong> になりました。はじめ、Aさんは何円持っていましたか？</div><div class="diagram"><svg viewBox="0 0 600 242" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">はじめ　A：5個ぶん</text><rect x="10.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="226.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="334.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="388.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="442.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="496.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">はじめ　B：3個ぶん</text><rect x="10.0" y="74" width="108.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="74" width="108.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="226.0" y="74" width="108.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><text x="0" y="122" font-size="12" font-weight="700" fill="#58544c">400円使ったあと　A：4個ぶん（2：1 を2倍）</text><rect x="10.0" y="130" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="130" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="226.0" y="130" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="334.0" y="130" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="388.0" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><text x="0" y="178" font-size="12" font-weight="700" fill="#58544c">400円使ったあと　B：2個ぶん（2：1 を2倍）</text><rect x="10.0" y="186" width="108.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="64.0" y="207" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text><rect x="118.0" y="186" width="108.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="172.0" y="207" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">□</text></svg><div class="cap">はじめの差は 5－3＝2 個ぶん。あとの比 2：1 の差は 1 ですが、比の数を2倍して 4：2 にすると差が 2 になり、はじめの差と同じ「2個ぶん」でそろいます。</div></div><div class="body-text">2人とも同じ400円へったので、<strong>AさんとBさんの差は、はじめもあとも同じ</strong>です。この差を手がかりにします。</div><div id="ex4-s0" class="exp-box" style="display:none"><h4>STEP 1　はじめとあとの、比の差を調べます</h4><p>はじめ 5：3　→　差は 5 － 3 ＝ 2
+あと　 2：1　→　差は 2 － 1 ＝ 1
+差は同じ金額なのに、比の差が 2 と 1 で、そろっていません。</p></div><div id="ex4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの比を2倍して、差をそろえます</h4><p>あと 2：1 ＝ 4：2（2倍）　→　差は 4 － 2 ＝ 2
+これで、はじめもあとも「差が2個ぶん」になりました。</p></div><div id="ex4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　Aさんの変化から、1個ぶんを求めます</h4><p>Aさんは、はじめ5個ぶん、あとは4個ぶんです。
+5個ぶん － 4個ぶん ＝ 1個ぶん ＝ 使った400円
+つまり、<strong>1個ぶん ＝ 400円</strong></p></div><div id="ex4-s3" class="exp-box" style="display:none"><h4>STEP 4　はじめのAさんを求めます</h4><p>400 × 5 ＝ <strong>2000円</strong>
+（Bさんは 400 × 3 ＝ 1200円）</p></div><div id="ex4-s4" class="exp-box blue" style="display:none"><h4>STEP 5　確かめます</h4><p>あと：Aさん 2000－400＝1600円、Bさん 1200－400＝800円
+1600：800 ＝ 2：1 ✓　　差は 2000－1200＝800、1600－800＝800 で同じ ✓</p></div><button class="reveal-btn" id="rb-ex4" onclick="reveal('ex4',5)">STEP 1 を見る ▼</button><div id="ex4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex4-kA" onclick="setMark('ex4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex4-kB" onclick="setMark('ex4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex4-kC" onclick="setMark('ex4-k','C')">❓ C<span>まだ不安</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト 差・和・片方</div><div class="mini-q">AさんとBさんの貯金の比は <strong>2：5</strong> で、Bさんのほうが<strong>1500円</strong>多いです。Aさんの貯金は何円ですか？</div><div class="mini-choices" id="mch-m1"><button class="mch" onclick="miniAns('m1',0,1)"><span class="mcnum">ア</span>500円</button><button class="mch" onclick="miniAns('m1',1,1)"><span class="mcnum">イ</span>1000円</button><button class="mch" onclick="miniAns('m1',2,1)"><span class="mcnum">ウ</span>2500円</button><button class="mch" onclick="miniAns('m1',3,1)"><span class="mcnum">エ</span>3000円</button></div><div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　比の差 5－2＝3 が1500円。1個ぶん 500円。Aさん 500×2＝<strong>1000円</strong></div><div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　差の1500円は、比の差 5－2＝3個ぶんです。1個ぶん 1500÷3＝500円。Aさんは 500×2＝<strong>1000円</strong>。（2500円はBさんの貯金です）</div><div class="mini-q" style="margin-top:1rem;">赤いペンキと白いペンキを <strong>3：4</strong> の比で混ぜます。赤を<strong>45mL</strong>使うとき、白は何mL必要ですか？</div><div class="mini-choices" id="mch-m2"><button class="mch" onclick="miniAns('m2',0,1)"><span class="mcnum">ア</span>30mL</button><button class="mch" onclick="miniAns('m2',1,1)"><span class="mcnum">イ</span>60mL</button><button class="mch" onclick="miniAns('m2',2,1)"><span class="mcnum">ウ</span>75mL</button><button class="mch" onclick="miniAns('m2',3,1)"><span class="mcnum">エ</span>105mL</button></div><div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　赤は3個ぶんで45mL。1個ぶん 45÷3＝15mL。白 15×4＝<strong>60mL</strong></div><div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　赤の45mLは、比の数3（3個ぶん）にあたります。1個ぶん 45÷3＝15mL。白は 15×4＝<strong>60mL</strong>。（75mLは 15×5、105mLは全体です）</div></div><button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:.6rem;">実践演習へ進む →</button></div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">実践演習</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！　ヒントも使えます。全5問</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div><div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div></div><div class="prob-n"><span class="n n-pr">1</span><span>実践演習 第1問</span></div><div class="card"><div class="clabel pr">実践演習 第1問　差が与えられた</div><div class="q-text">ある部活の1年生と2年生の人数の比は <strong>2：5</strong> で、2年生は1年生より<strong>15人</strong>多いです。2年生は何人ですか？</div><button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button><div class="hint-box" id="h1">比の差は 5－2＝3。これが15人にあたります。15÷3 で1個ぶんを出し、2年生の比の数5をかけます。</div><div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,2)"><span class="cnum">1</span>10人</button><button class="ch" onclick="ans('q1',1,2)"><span class="cnum">2</span>15人</button><button class="ch" onclick="ans('q1',2,2)"><span class="cnum">3</span>25人</button><button class="ch" onclick="ans('q1',3,2)"><span class="cnum">4</span>35人</button></div><div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">15 ÷ 3 ＝ 5、5 × 5 ＝ 25人 ✓</span></span></div><div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">差の15人は、比の差 5－2＝3個ぶんにあたります。</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div><div id="q1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>比の差 3 ＝ 15人。1個ぶん 5人。2年生 5×5＝<strong>25人</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q1"><div class="clabel kai">段階解説</div><div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　比の差を求めます</h4><p>5 － 2 ＝ 3　→　3個ぶんが15人</p></div><div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>15 ÷ 3 ＝ 5（人）</p></div><div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　2年生の人数を求めます</h4><p>5 × 5 ＝ <strong>25人</strong>
+確かめ：1年生 5×2＝10人。25－10＝15 ✓</p></div><button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button><div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">2</span><span>実践演習 第2問</span></div><div class="card"><div class="clabel pr">実践演習 第2問　和が与えられた</div><div class="q-text">AさんとBさんの貯金の合計は<strong>8000円</strong>で、その比は <strong>3：7</strong> です。Bさんの貯金は何円ですか？</div><button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button><div class="hint-box" id="h2">「合計」は比の和にあたります。3＋7＝10 で8000をわって1個ぶんを出し、Bさんの比の数7をかけます。</div><div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,3)"><span class="cnum">1</span>2400円</button><button class="ch" onclick="ans('q2',1,3)"><span class="cnum">2</span>3200円</button><button class="ch" onclick="ans('q2',2,3)"><span class="cnum">3</span>4800円</button><button class="ch" onclick="ans('q2',3,3)"><span class="cnum">4</span>5600円</button></div><div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">8000 ÷ 10 ＝ 800、800 × 7 ＝ 5600円 ✓</span></span></div><div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">比の和は 3＋7＝10。1個ぶんは 8000÷10＝800円です。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div><div id="q2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>比の和 10。1個ぶん 800円。Bさん 800×7＝<strong>5600円</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q2"><div class="clabel kai">段階解説</div><div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　比の和を求めます</h4><p>3 ＋ 7 ＝ 10</p></div><div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>8000 ÷ 10 ＝ 800（円）</p></div><div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　Bさんの貯金を求めます</h4><p>800 × 7 ＝ <strong>5600円</strong>
+確かめ：Aさんは 800×3＝2400円。2400＋5600＝8000 ✓</p></div><button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button><div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">3</span><span>実践演習 第3問</span></div><div class="card"><div class="clabel pr">実践演習 第3問　片方が与えられた</div><div class="q-text">果汁飲料の原液と水を <strong>2：9</strong> の比で混ぜます。原液を<strong>40mL</strong>使うとき、水は何mL必要ですか？</div><button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button><div class="hint-box" id="h3">原液の比の数は2で、それが40mLです。40÷2 で1個ぶんを出し、水の比の数9をかけます。</div><div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,0)"><span class="cnum">1</span>180mL</button><button class="ch" onclick="ans('q3',1,0)"><span class="cnum">2</span>80mL</button><button class="ch" onclick="ans('q3',2,0)"><span class="cnum">3</span>200mL</button><button class="ch" onclick="ans('q3',3,0)"><span class="cnum">4</span>220mL</button></div><div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">40 ÷ 2 ＝ 20、20 × 9 ＝ 180mL ✓</span></span></div><div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">原液（比の数2）が40mLなので、1個ぶんは 40÷2＝20mLです。</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div><div id="q3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>原液2個ぶん＝40mL。1個ぶん 20mL。水 20×9＝<strong>180mL</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q3"><div class="clabel kai">段階解説</div><div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　与えられた量と比の数を対応させます</h4><p>原液：2個ぶん ＝ 40mL</p></div><div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>40 ÷ 2 ＝ 20（mL）</p></div><div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　水の量を求めます</h4><p>20 × 9 ＝ <strong>180mL</strong>
+確かめ：40：180 を 20 でわると 2：9 ✓</p></div><button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button><div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">4</span><span>実践演習 第4問</span></div><div class="card"><div class="clabel pr">実践演習 第4問　差が与えられた（標準）</div><div class="q-text">スマートフォンの月間データ使用量が、AさんとBさんで <strong>7：4</strong> の比でした。Aさんは、Bさんより<strong>6GB</strong>多く使っています。Aさんの使用量は何GBですか？</div><button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button><div class="hint-box" id="h4">差の6GBは、比の差 7－4＝3 にあたります。6÷3 で1個ぶん。Aさんの比の数は7です。</div><div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,1)"><span class="cnum">1</span>8GB</button><button class="ch" onclick="ans('q4',1,1)"><span class="cnum">2</span>14GB</button><button class="ch" onclick="ans('q4',2,1)"><span class="cnum">3</span>12GB</button><button class="ch" onclick="ans('q4',3,1)"><span class="cnum">4</span>22GB</button></div><div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">6 ÷ 3 ＝ 2、2 × 7 ＝ 14GB ✓</span></span></div><div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">差の6GBは、3個ぶんです。1個ぶんは 6÷3＝2GBです。</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div><div id="q4-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>比の差 3 ＝ 6GB。1個ぶん 2GB。Aさん 2×7＝<strong>14GB</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q4"><div class="clabel kai">段階解説</div><div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　比の差を求めます</h4><p>7 － 4 ＝ 3　→　3個ぶんが6GB</p></div><div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>6 ÷ 3 ＝ 2（GB）</p></div><div id="q4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　Aさんの使用量を求めます</h4><p>2 × 7 ＝ <strong>14GB</strong>
+確かめ：Bさんは 2×4＝8GB。14－8＝6 ✓</p></div><button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button><div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">5</span><span>実践演習 第5問</span></div><div class="card"><div class="clabel pr">実践演習 第5問　3つの比と差</div><div class="q-text">ある会社の3つの支店A・B・Cの売上の比は <strong>2：3：5</strong> で、CはAより<strong>90万円</strong>多いです。3つの支店の売上の合計は何万円ですか？</div><button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button><div class="hint-box" id="h5">CとAの差にあたる比の数は 5－2＝3。90÷3 で1個ぶん。合計は、比の和 2＋3＋5＝10 個ぶんです。</div><div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,2)"><span class="cnum">1</span>90万円</button><button class="ch" onclick="ans('q5',1,2)"><span class="cnum">2</span>270万円</button><button class="ch" onclick="ans('q5',2,2)"><span class="cnum">3</span>300万円</button><button class="ch" onclick="ans('q5',3,2)"><span class="cnum">4</span>450万円</button></div><div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">90 ÷ 3 ＝ 30、30 × 10 ＝ 300万円 ✓</span></span></div><div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">「CとAの差」は 5－2＝3個ぶんです。合計は10個ぶんです。</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div><div id="q5-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>差 3個ぶん＝90万円。1個ぶん 30万円。合計 30×10＝<strong>300万円</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q5"><div class="clabel kai">段階解説</div><div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　1個ぶんを求めます</h4><p>CとAの比の差 5－2＝3　→　3個ぶんが90万円
+90 ÷ 3 ＝ 30（万円）</p></div><div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　合計を求めます</h4><p>比の和 2＋3＋5＝10
+30 × 10 ＝ <strong>300万円</strong></p></div><div id="q5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>A 60万円、B 90万円、C 150万円。C－A ＝ 90 ✓　60＋90＋150 ＝ 300 ✓</p></div><button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button><div id="q5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div id="pr-done" style="display:none"><div class="teal-box" style="margin-top:1.4rem"><strong>🎉 実践演習 完了！</strong>おつかれさまでした。次はいよいよ総合確認です。ここからは制限時間があります。解き方を思い出しながら、落ち着いて挑戦しましょう。</div><button class="next-page-btn cf" onclick="switchTab('cf')">総合確認へ進む →</button></div></div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">総合確認（制限時間つき）</div><div class="page-hdr-desc">SPI本番のつもりで挑戦しましょう。全3問・ヒントなし。「スタート」を押すとカウントダウンが始まり、時間切れになると自動で締め切られます。</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div><div class="pb-txt" id="pb-cf-txt">0 / 3 完了</div></div><div class="teal-box"><strong>💡 はじめに</strong>時間切れになっても、点数が下がるだけで何も困りません。落ち着いて、解説で「どこに時間がかかったか」を確認し、もう一度挑戦すれば大丈夫です。わからない問題で粘りすぎず、「やり方を思い出せない」と感じたら、いったん解説を見て覚えるのも立派な勉強です。</div><div class="prob-n"><span class="n n-cf">1</span><span>総合確認 第1問</span></div><div class="card"><div class="clabel cf">総合確認 第1問　差が与えられた</div><div class="cf-cover" id="cover-qc1"><div class="cf-cover-txt">制限時間：<strong>2分</strong></div><button class="start-btn" onclick="startCf('qc1')">▶ 第1問をスタート</button></div><div id="body-qc1" style="display:none"><div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分</span></div></div><div class="q-text">AさんとBさんの貯金の比は <strong>5：8</strong> で、Bさんのほうが<strong>4500円</strong>多いです。Bさんの貯金は何円ですか？</div><div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,3)"><span class="cnum">1</span>7500円</button><button class="ch" onclick="ans('qc1',1,3)"><span class="cnum">2</span>9000円</button><button class="ch" onclick="ans('qc1',2,3)"><span class="cnum">3</span>4500円</button><button class="ch" onclick="ans('qc1',3,3)"><span class="cnum">4</span>12000円</button><button class="ch" onclick="ans('qc1',4,3)"><span class="cnum">5</span>19500円</button></div></div><div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">4500 ÷ 3 ＝ 1500、1500 × 8 ＝ 12000円 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">差の4500円は、比の差 8－5＝3個ぶんです。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc1"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div id="qc1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>比の差 3個ぶん＝4500円。1個ぶん 1500円。Bさん 1500×8＝<strong>12000円</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc1"><div class="clabel kai">段階解説</div><div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　1個ぶんを求めます</h4><p>比の差 8－5＝3　→　4500 ÷ 3 ＝ 1500（円）</p></div><div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　Bさんの貯金を求めます</h4><p>1500 × 8 ＝ <strong>12000円</strong>
+（確かめ：Aさんは 1500×5＝7500円。12000－7500＝4500 ✓）</p></div><button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',2)">STEP 1 を見る ▼</button><div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">2</span><span>総合確認 第2問</span></div><div class="card"><div class="clabel cf">総合確認 第2問　和が与えられた（簡単にしてから）</div><div class="cf-cover" id="cover-qc2"><div class="cf-cover-txt">制限時間：<strong>2分</strong></div><button class="start-btn" onclick="startCf('qc2')">▶ 第2問をスタート</button></div><div id="body-qc2" style="display:none"><div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分</span></div></div><div class="q-text">あるアンケートで、賛成と反対の人数の比は <strong>12：8</strong> で、回答者は合わせて<strong>300人</strong>でした。賛成は何人ですか？</div><div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,0)"><span class="cnum">1</span>180人</button><button class="ch" onclick="ans('qc2',1,0)"><span class="cnum">2</span>120人</button><button class="ch" onclick="ans('qc2',2,0)"><span class="cnum">3</span>150人</button><button class="ch" onclick="ans('qc2',3,0)"><span class="cnum">4</span>200人</button><button class="ch" onclick="ans('qc2',4,0)"><span class="cnum">5</span>240人</button></div></div><div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">12：8 ＝ 3：2。300 ÷ 5 ＝ 60、60 × 3 ＝ 180人 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">12：8 を 4 でわると 3：2。比の和は 5 です。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc2"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div id="qc2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>12：8 ＝ 3：2。1個ぶん 60人。賛成 60×3＝<strong>180人</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc2"><div class="clabel kai">段階解説</div><div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　比を簡単にします</h4><p>12 ÷ 4 ＝ 3、8 ÷ 4 ＝ 2　→　3：2</p></div><div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>比の和 3＋2＝5
+300 ÷ 5 ＝ 60（人）</p></div><div id="qc2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　賛成の人数を求めます</h4><p>60 × 3 ＝ <strong>180人</strong>
+（確かめ：反対は 60×2＝120人。180＋120＝300 ✓）</p></div><button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',3)">STEP 1 を見る ▼</button><div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">3</span><span>総合確認 第3問</span></div><div class="card"><div class="clabel cf">総合確認 第3問　同じ数だけふえたとき</div><div class="cf-cover" id="cover-qc3"><div class="cf-cover-txt">制限時間：<strong>4分</strong></div><button class="start-btn" onclick="startCf('qc3')">▶ 第3問をスタート</button></div><div id="body-qc3" style="display:none"><div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">4:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 4分</span></div></div><div class="q-text">AさんとBさんの所持金の比は <strong>4：7</strong> でした。2人とも<strong>300円</strong>ずつもらったところ、比は <strong>2：3</strong> になりました。はじめのBさんの所持金は何円ですか？</div><div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,2)"><span class="cnum">1</span>600円</button><button class="ch" onclick="ans('qc3',1,2)"><span class="cnum">2</span>900円</button><button class="ch" onclick="ans('qc3',2,2)"><span class="cnum">3</span>1050円</button><button class="ch" onclick="ans('qc3',3,2)"><span class="cnum">4</span>1350円</button><button class="ch" onclick="ans('qc3',4,2)"><span class="cnum">5</span>1500円</button></div></div><div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">あとの比 2：3 ＝ 6：9。Aは4個ぶん→6個ぶんで2個ぶん＝300円。1個ぶん150円、B 150×7＝1050円 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">差は変わりません。はじめの差は 7－4＝3、あとの 2：3 の差は 1 なので、あとの比を3倍して 6：9（差3）にそろえます。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc3"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div id="qc3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>あとの比を3倍して 6：9。Aは 4→6 で2個ぶんふえて300円。1個ぶん150円。はじめのB 150×7＝<strong>1050円</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc3"><div class="clabel kai">段階解説</div><div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　差をそろえます</h4><p>はじめ 4：7 → 差は 3
+あと　 2：3 → 差は 1　→　3倍して 6：9（差は3）</p></div><div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　1個ぶんを求めます</h4><p>Aさんは、4個ぶんから6個ぶんに、2個ぶんふえました。それが300円です。
+300 ÷ 2 ＝ 150（円）</p></div><div id="qc3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　はじめのBさんを求めます</h4><p>150 × 7 ＝ <strong>1050円</strong>
+確かめ：はじめ A 600円・B 1050円（600：1050 ＝ 4：7 ✓）。300円ずつもらうと 900円・1350円で、900：1350 ＝ 2：3 ✓</p></div><button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',3)">STEP 1 を見る ▼</button><div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="result-card" id="cf-result" style="display:none"><div class="rc-title">📊 総合確認の結果</div><div class="rc-score" id="rc-score"></div><div class="rc-msg" id="rc-msg"></div></div><div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a href="SPI_wariai_index.html" class="unav-btn unav-idx">☰ 単元一覧へ</a><a href="SPI_wariai_p15.html" class="unav-btn unav-next">次：パターン15 割合と比のむすびつき（％と比） →</a></div></div></div>
+</main>
+<script>
+const CFG={"key": "spi_wariai_p14", "PR": ["q1", "q2", "q3", "q4", "q5"], "CF": ["qc1", "qc2", "qc3"], "LIM": {"qc1": 120, "qc2": 120, "qc3": 240}, "GOAL": {"q1": "2分", "q2": "2分", "q3": "2分", "q4": "3分", "q5": "3分"}};
+const answered={};
+const timers={};
+const miniAnswered={};
+const stepRev={};
+const cfRes={};
+const cfSecs={};
+const pageSeen={};
+let pracDone=0,cfDone=0,cfOk=0;
+
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered[CFG.PR[0]])startTimer(CFG.PR[0]);
+}
+
+/* ───── 演習：経過時間を表示するタイマー（目安のみ） ───── */
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tw=document.getElementById('t'+qid.slice(1));
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/240,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(pct>.8?' warn':''));
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=m+':'+String(s).padStart(2,'0');
+    if(msg){
+      const goal=msg.querySelector('.goal');const g=goal?goal.outerHTML:'';
+      if(sec<60)msg.innerHTML='自力で考えましょう。'+g;
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+/* ───── 確認：本当にカウントダウンして締め切るタイマー ───── */
+function startCf(qid){
+  if(answered[qid]||timers[qid])return;
+  document.getElementById('cover-'+qid).style.display='none';
+  document.getElementById('body-'+qid).style.display='block';
+  const lim=CFG.LIM[qid];
+  const start=Date.now();cfSecs[qid]=0;
+  const ring=document.getElementById('ring-'+qid);
+  const fg=ring.querySelector('.tfg'),txt=ring.querySelector('.tcenter');
+  const msg=ring.parentNode.querySelector('.timer-msg');
+  function tick(){
+    const sec=Math.floor((Date.now()-start)/1000);
+    cfSecs[qid]=Math.min(sec,lim);
+    const left=Math.max(lim-sec,0);
+    const pct=Math.min(sec/lim,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(left<=lim*.15?' danger':(left<=lim*.4?' warn':'')));
+    txt.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    const goal=msg.querySelector('.goal');
+    if(goal){goal.className='goal'+(left<=lim*.15?' danger':'');
+      goal.textContent=left<=0?'時間切れ':(left<=lim*.15?'あと少し！':(left<=lim*.4?'半分を過ぎました':'制限 '+fmt(lim)));}
+    if(left<=0)timeUp(qid);
+  }
+  tick();
+  timers[qid]=setInterval(tick,250);
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return m?(r?m+'分'+r+'秒':m+'分'):r+'秒';}
+
+function paintChoices(qid,idx,correct){
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&idx!==correct){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+}
+function showAfter(qid){
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const isOk=(idx===correct);
+  const isCf=CFG.CF.includes(qid);
+  const tw=document.getElementById(isCf?'tc'+qid.slice(2):'t'+qid.slice(1));
+  if(tw)tw.style.display='none';
+  paintChoices(qid,idx,correct);
+  const fbOk=document.getElementById('fb-ok-'+qid),fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  showAfter(qid);
+  if(isCf){cfRes[qid]=isOk?'ok':'ng';cfDone++;if(isOk)cfOk++;afterCf();}
+  else{
+    pracDone++;const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    if(pracDone===n){document.getElementById('done-pr').style.display='flex';document.getElementById('pr-done').style.display='block';}
+    const nx=CFG.PR[CFG.PR.indexOf(qid)+1];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+}
+
+function timeUp(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const tw=document.getElementById('tc'+qid.slice(2));
+  if(tw)tw.style.display='none';
+  const c=+document.querySelector('#ch-'+qid+' .ch').getAttribute('onclick').match(/,(\d+)\)/)[1];
+  paintChoices(qid,-1,c);
+  document.getElementById('fb-to-'+qid).style.display='flex';
+  showAfter(qid);
+  cfRes[qid]='to';cfDone++;afterCf();
+}
+
+function afterCf(){
+  const n=CFG.CF.length;
+  document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+  document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+  if(cfDone===n){
+    document.getElementById('done-cf').style.display='flex';
+    document.getElementById('unit-nav').style.display='flex';
+    const to=Object.values(cfRes).filter(v=>v==='to').length;
+    const rate=cfOk/n;
+    document.getElementById('rc-score').textContent='正解 '+cfOk+' / '+n+' 問';
+    let msg='';
+    if(rate>=.8)msg='合格ラインです。この調子で次のパターンへ進みましょう。';
+    else if(rate>=.5)msg='あと少しです。間違えた問題の解説を読み直し、「もう一度」で挑戦してみましょう。';
+    else msg='まだ慣れていないだけです。解説タブの例題をもう一度たどってから、再挑戦しましょう。何度やり直しても大丈夫です。';
+    document.getElementById('rc-msg').textContent=to>0?msg+'（時間切れは '+to+' 問でした。まず正確に解ける形をつくり、そのあとで速さを上げていきましょう。）':msg;
+    document.getElementById('cf-result').style.display='block';
+    lsSet(CFG.key+'_score',cfOk+'/'+n);lsSet(CFG.key,'1');
+    setTimeout(()=>document.getElementById('cf-result').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  const isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  const fbOk=document.getElementById('mfb-'+qid+'-ok'),fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';}_launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid]||0;
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]=r+1;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if((stepRev[qid]||0)>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+(stepRev[qid]+1)+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(prefix+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  const isCf=CFG.CF.includes(qid);
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(isCf){
+    const r=cfRes[qid];
+    if(r){cfDone--;if(r==='ok')cfOk--;delete cfRes[qid];}
+    const n=CFG.CF.length;
+    document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+    document.getElementById('done-cf').style.display='none';
+    document.getElementById('cf-result').style.display='none';
+    document.getElementById('unit-nav').style.display='none';
+    var to=document.getElementById('fb-to-'+qid);if(to)to.style.display='none';
+    document.getElementById('cover-'+qid).style.display='block';
+    document.getElementById('body-'+qid).style.display='none';
+    var tw=document.getElementById('tc'+qid.slice(2));if(tw)tw.style.display='flex';
+    const ring=document.getElementById('ring-'+qid);
+    ring.querySelector('.tfg').style.strokeDashoffset=0;ring.querySelector('.tfg').setAttribute('class','tfg');
+    const lim=CFG.LIM[qid];ring.querySelector('.tcenter').textContent=Math.floor(lim/60)+':'+String(lim%60).padStart(2,'0');
+    const g=ring.parentNode.querySelector('.goal');if(g){g.className='goal';g.textContent='制限 '+fmt(lim);}
+  }else{
+    if(pracDone>0)pracDone--;
+    const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    document.getElementById('done-pr').style.display='none';document.getElementById('pr-done').style.display='none';
+    var tw2=document.getElementById('t'+qid.slice(1));if(tw2)tw2.style.display='flex';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  if(!isCf)startTimer(qid);
+  else window.scrollTo({top:document.getElementById('cover-'+qid).getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+
+lsSet(CFG.key,'1');
+
+</script>
+</body>
+</html>

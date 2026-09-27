@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 速さ パターン1 「速さ」ってなに？（時速・分速・秒速）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tfg.danger{stroke:var(--pink);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.timer-msg .goal.danger{color:var(--pink);font-weight:700;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.85;line-height:1.7;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.unav-idx{background:#fff;border-color:#bcb8ae;color:#58544c;}
+.unav-idx:hover{border-color:#2055b0;color:#2055b0;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+
+/* ── 追加：分数・図・制限時間つき確認問題 ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.3;margin:0 3px;font-size:.92em;font-weight:inherit;}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px;}
+.frac>span:last-child{padding:1px 4px 0;}
+.diagram{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.7rem .6rem .5rem;margin:.9rem 0;overflow-x:auto;}
+.diagram svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto;}
+.diagram .cap{font-size:12px;color:var(--text2);text-align:center;margin-top:.35rem;line-height:1.7;}
+.cf-cover{background:var(--al);border:2px dashed #e0c888;border-radius:12px;padding:1.4rem 1rem;text-align:center;margin-bottom:.6rem;}
+.cf-cover-txt{font-size:13px;color:var(--amber);margin-bottom:.8rem;}
+.cf-cover-txt strong{font-size:16px;}
+.start-btn{background:var(--amber);color:#fff;border:none;border-radius:10px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .15s;}
+.start-btn:hover{background:#8a4e00;}
+.result-card{background:linear-gradient(120deg,#1B2A4A,#2055b0);color:#fff;border-radius:var(--r);padding:1.3rem 1.5rem;margin-top:1.4rem;}
+.rc-title{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.8;margin-bottom:.5rem;}
+.rc-score{font-size:26px;font-weight:700;margin-bottom:.4rem;}
+.rc-msg{font-size:13px;line-height:1.9;opacity:.95;}
+.formula-box .f-eq .frac{margin:0 2px;}
+.exp-box p .frac{font-size:.95em;}
+@media (max-width:480px){.choices,.mini-choices{grid-template-columns:1fr;}.tab-btn{padding:.7rem .8rem;}.card{padding:1.2rem 1.1rem;}.sec-head{margin:-1.2rem -1.1rem 1.1rem;}}
+
+</style>
+</head>
+<body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI 非言語 ／ 速さ　パターン1　「速さ」ってなに？（時速・分速・秒速）</span></header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>実践演習<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>総合確認<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">パターン1 ─ 「速さ」ってなに？（時速・分速・秒速）</div><div class="page-hdr-desc">このコースの最初のページです。「速さ」とは何かを、歩く人や自転車の例で確かめます。使う計算は、足し算・かけ算・わり算だけです。</div></div></div><div class="card"><div class="sec-head"><span class="sec-num">1</span>【ポイント】 「速さ」とは、1つぶんの時間に進む距離のことです</div><div class="body-text">このパターンで覚えることは、次の1つです。<br><strong>「速さ」とは、1時間（または1分、1秒）のあいだに進む距離のこと。</strong></div><div class="formula-box"><div class="f-title">🔑 このパターンのポイント</div><div class="formula-line"><span class="f-key">ポイント①</span><span class="f-eq">時速 ＝ 1時間に進む距離　（時速40km ＝ 1時間に40km）</span></div><div class="formula-line"><span class="f-key">ポイント②</span><span class="f-eq">分速 ＝ 1分に進む距離　（分速60m ＝ 1分に60m）</span></div><div class="formula-line"><span class="f-key">ポイント③</span><span class="f-eq">秒速 ＝ 1秒に進む距離　（秒速5m ＝ 1秒に5m）</span></div><div class="formula-line"><span class="f-key">進んだ距離</span><span class="f-eq">距離 ＝ 速さ × 時間</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 「分速」なら時間は「分」、「時速」なら時間は「時間」で数えます。（単位がそろっている問題から始めます）</div></div><div class="pink-box"><strong>⚠️ よくある勘違い</strong>「時速40km」を、<strong>「40km進んだ」</strong>と読んでしまう人がいます。<br>「時速40km」は、進んだ距離の合計ではなく、<strong>「1時間あたりに進む距離」</strong>のことです。2時間走れば 40km の2倍、3時間走れば3倍になります。</div></div><div class="card"><div class="sec-head"><span class="sec-num">2</span>【解説①】 歩く人のたとえで、「速さ」を考えましょう</div><div class="body-text">まず、公園を歩いている人を考えます。この人は、<strong>1分間に60m</strong>のペースで、ずっと同じように歩いています。<br>このペースのことを、<strong>「分速60m」</strong>と言います。「分速」は、「1分あたりの速さ」という意味です。</div><div class="diagram"><svg viewBox="0 0 600 110" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><defs><marker id="ah-pink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d93652"/></marker><marker id="ah-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d9478"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2055b0"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a86000"/></marker><marker id="ah-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#98948c"/></marker><marker id="ah-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b21a8"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#166534"/></marker></defs><line x1="40" y1="48" x2="560" y2="48" stroke="#58544c" stroke-width="3" stroke-linecap="round"/><line x1="40.0" y1="30" x2="144.0" y2="30" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="40.0" y1="30" x2="40.0" y2="48" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="92.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">60m</text><line x1="144.0" y1="30" x2="248.0" y2="30" stroke="#0d9478" stroke-width="2.5" marker-end="url(#ah-teal)"/><line x1="144.0" y1="30" x2="144.0" y2="48" stroke="#0d9478" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="196.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9478">60m</text><line x1="248.0" y1="30" x2="352.0" y2="30" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="248.0" y1="30" x2="248.0" y2="48" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="300.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">60m</text><line x1="352.0" y1="30" x2="456.0" y2="30" stroke="#0d9478" stroke-width="2.5" marker-end="url(#ah-teal)"/><line x1="352.0" y1="30" x2="352.0" y2="48" stroke="#0d9478" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="404.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9478">60m</text><line x1="456.0" y1="30" x2="560.0" y2="30" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="456.0" y1="30" x2="456.0" y2="48" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="508.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">60m</text><circle cx="40.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="40.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">出発</text><text x="40.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">0m</text><circle cx="144.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="144.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">1分後</text><text x="144.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">60m</text><circle cx="248.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="248.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">2分後</text><text x="248.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">120m</text><circle cx="352.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="352.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">3分後</text><text x="352.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">180m</text><circle cx="456.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="456.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">4分後</text><text x="456.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">240m</text><circle cx="560.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="560.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">5分後</text><text x="560.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">300m</text></svg><div class="cap">分速60mで歩く人は、<b>1分ごとに60mずつ</b>進みます。同じ長さの矢印が、時間の数だけ並んでいます。</div></div><div class="body-text">図を見ると、次のことがわかります。<br>・1分たつと、60m進みます。<br>・2分たつと、もう1分ぶん進むので、60 ＋ 60 ＝ 120m。<br>・3分たつと、60 ＋ 60 ＋ 60 ＝ 180m。<br><strong>「1分に進む距離」が同じなので、時間が長くなるほど、進んだ距離も同じように増えていきます。</strong></div><table class="kansan-table"><tr><th>時間</th><th>進んだ距離（足し算）</th><th>進んだ距離（かけ算）</th></tr><tr><td>1分</td><td>60m</td><td>60 × 1 ＝ 60m</td></tr><tr><td>2分</td><td>60 ＋ 60 ＝ 120m</td><td class="hi">60 × 2 ＝ 120m</td></tr><tr><td>3分</td><td>60 ＋ 60 ＋ 60 ＝ 180m</td><td class="hi">60 × 3 ＝ 180m</td></tr><tr><td>5分</td><td>60 を 5回 足して 300m</td><td class="hi">60 × 5 ＝ 300m</td></tr></table><div class="teal-box"><strong>💡 「速さ」は、1つぶんの長さのものさしです</strong>「速さ」がわかると、「何分後にどこまで進むか」が予想できます。<br>分速60mの人は、10分後には 60 × 10 ＝ 600m 進んでいます。<br>足し算を何回もくり返す代わりに、<strong>かけ算</strong>を使うと、すばやく計算できるのです。</div></div><div class="card"><div class="sec-head"><span class="sec-num">3</span>【解説②】 時速・分速・秒速の意味と、身近な速さ</div><div class="body-text">「速さ」の言い方は、何を1つぶんの時間にするかで、3つに分かれます。</div><table class="kansan-table"><tr><th>言い方</th><th>読み方</th><th>意味</th><th>例</th></tr><tr><td><strong>時速</strong></td><td>じそく</td><td>1<strong>時間</strong>に進む距離</td><td class="hi">時速40km ＝ 1時間に40km</td></tr><tr><td><strong>分速</strong></td><td>ふんそく</td><td>1<strong>分</strong>に進む距離</td><td class="hi">分速60m ＝ 1分に60m</td></tr><tr><td><strong>秒速</strong></td><td>びょうそく</td><td>1<strong>秒</strong>に進む距離</td><td class="hi">秒速5m ＝ 1秒に5m</td></tr></table><div class="body-text"><strong>「時・分・秒」の文字が、そのまま1つぶんの時間を表している</strong>ところが、覚えるコツです。<br>時速なら「1時間」、分速なら「1分」、秒速なら「1秒」に進む距離を言っています。</div><div class="point-box"><strong>📌 思い出そう：kmとmは、どちらも「長さ」の単位です</strong><strong>m（メートル）</strong>は、人が歩く1歩よりも少し大きい長さ（1歩が約70cm）。<strong>km（キロメートル）</strong>は、もっと長い道のりを表すときの単位です。<br>1km ＝ 1000m です。（このパターンでは、kmとmを直す計算は使いません。問題に出てくる単位のまま計算します）</div><table class="kansan-table"><tr><th>進むもの</th><th>ふつうの速さの言い方</th><th>イメージ</th></tr><tr><td>歩く人</td><td>分速80m</td><td>1分間に、約80m進む</td></tr><tr><td>自転車</td><td>分速200m</td><td>1分間に、約200m進む</td></tr><tr><td>電車・自動車</td><td>時速40km</td><td>1時間に、40km進む</td></tr><tr><td>走る人（100m走）</td><td>秒速10m</td><td>1秒間に、10m進む（100mを10秒で走る速さ）</td></tr></table><div class="teal-box"><strong>💡 なぜ、いろいろな言い方があるのでしょうか</strong>ゆっくり進むものには「分速」、自動車のように長い時間走るものには「時速」、一瞬で進むものには「秒速」と、<strong>ちょうどよい時間の長さ</strong>を選んでいるだけです。<br>たとえば、自動車の速さを「秒速」で言うと、数が細かくなって、かえってわかりにくくなります。</div></div><div class="card"><div class="sec-head"><span class="sec-num">4</span>【解説③】 進んだ距離は「速さ × 時間」で求めます</div><div class="body-text">ここまでで、次のことが見えてきました。<br>分速60mの人が5分歩くと、60 が5回分で 300m でした。これは、<strong>60 × 5 ＝ 300</strong>と、かけ算で書けます。</div><div class="formula-box"><div class="f-title">🔑 進んだ距離の求め方</div><div class="formula-line"><span class="f-key">公式</span><span class="f-eq">距離 ＝ 速さ × 時間</span></div><div class="formula-line"><span class="f-key">例①</span><span class="f-eq">分速60mで5分　→　60 × 5 ＝ 300m</span></div><div class="formula-line"><span class="f-key">例②</span><span class="f-eq">時速40kmで3時間　→　40 × 3 ＝ 120km</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 時間の単位は、速さの言い方にあわせます。分速なら「分」、時速なら「時間」、秒速なら「秒」です。</div></div><div class="point-box"><strong>📌 思い出そう：0のついた数のかけ算</strong>60 × 5 や 80 × 3 のように、<strong>0が後ろについた数</strong>のかけ算は、0をいったん外して計算すると、かんたんです。<br>例）80 × 3　→　0を外して 8 × 3 ＝ 24　→　外した0を、後ろにもどして <strong>240</strong><br>例）200 × 7　→　2 × 7 ＝ 14　→　0を2つもどして <strong>1400</strong><br>例）40 × 3　→　4 × 3 ＝ 12　→　0を1つもどして <strong>120</strong><br>（もどす0の数を間違えないように、「もどす前」と「もどしたあと」の数を見くらべます）</div><div class="teal-box"><strong>💡 かけ算は、「同じ数を何回も足す」ことです</strong>九九に自信がない場合は、足し算で確かめることもできます。<br>60 × 5 は、60 を5回足す（60 ＋ 60 ＋ 60 ＋ 60 ＋ 60）ことと同じです。<br>足し算でも、きちんと答えが出ます。かけ算のほうが、ただ短く書けるだけです。</div><div class="pink-box"><strong>⚠️ よくある間違い</strong>・分速60mで5分歩いたのに、「60 ＋ 5 ＝ 65m」と<strong>足してしまう</strong>。→ 60m は「1分ぶん」です。5分ぶんは、60を5回足すので、<strong>60 × 5 ＝ 300m</strong>です。<br>・「時速40km」で3時間なのに、答えの単位を「m」にしてしまう。→ 時速の距離は「km」で答えます。</div></div><div class="card"><div class="sec-head"><span class="sec-num">5</span>【解説④】 逆から考える：進んだ距離から、速さを出します</div><div class="body-text">これまでは、「速さと時間がわかっていて、距離を求める」問題でした。今度は<strong>逆</strong>に、「距離と時間がわかっていて、1分あたりの速さを求める」問題です。</div><div class="teal-box"><strong>💡 例：12枚の資料を、3人で分けます</strong>12枚の資料を、3人に同じ数ずつ分けると、1人4枚です。これは 12 ÷ 3 ＝ 4 の<strong>わり算</strong>でした。<br>速さも同じです。<strong>6分で480m歩いたなら、480mを6つの「1分」に、同じ長さずつ分ける</strong>と、1分あたりの長さ（＝分速）が出ます。</div><div class="point-box"><strong>📌 思い出そう：わり算は「同じ数ずつ分ける」計算です</strong>480 ÷ 6 の計算は、<strong>「6に何をかけると480になるか」</strong>を考えます。6 × 80 ＝ 480 なので、答えは 80 です。<br>0がついた数のわり算も、かけ算と同じで、0を外して考えます。<br>例）480 ÷ 6　→　48 ÷ 6 ＝ 8　→　0を1つもどして <strong>80</strong><br>例）1600 ÷ 8　→　16 ÷ 8 ＝ 2　→　0を2つもどして <strong>200</strong></div><div class="formula-box"><div class="f-title">🔑 速さを出すときのわり算</div><div class="formula-line"><span class="f-key">速さ</span><span class="f-eq">速さ ＝ 距離 ÷ 時間</span></div><div class="formula-line"><span class="f-key">例</span><span class="f-eq">6分で480m進んだ　→　480 ÷ 6 ＝ 80　→　分速80m</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ わられる数は「距離」（大きいほうの数）、わる数は「時間」です。順番を入れかえないようにしましょう。</div></div><div class="body-text">この「距離 ＝ 速さ × 時間」と「速さ ＝ 距離 ÷ 時間」の関係は、次のパターン2で、もっとくわしく学びます。<br>ここでは、<strong>「かけ算で距離、わり算で速さ」</strong>と、おおまかに覚えておけば十分です。</div></div><div class="card"><div class="sec-head"><span class="sec-num">6</span>【例題】 手順を追って解いてみましょう</div><div class="clabel ex" style="margin-top:.4rem">例題 1　分速から、進んだ距離を出す</div><div class="q-text">分速<strong>60m</strong>で歩く人が、<strong>5分間</strong>歩きました。何m進みましたか？</div><div class="diagram"><svg viewBox="0 0 600 110" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><defs><marker id="ah-pink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d93652"/></marker><marker id="ah-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d9478"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2055b0"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a86000"/></marker><marker id="ah-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#98948c"/></marker><marker id="ah-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b21a8"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#166534"/></marker></defs><line x1="40" y1="48" x2="560" y2="48" stroke="#58544c" stroke-width="3" stroke-linecap="round"/><line x1="40.0" y1="30" x2="144.0" y2="30" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="40.0" y1="30" x2="40.0" y2="48" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="92.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">60m</text><line x1="144.0" y1="30" x2="248.0" y2="30" stroke="#0d9478" stroke-width="2.5" marker-end="url(#ah-teal)"/><line x1="144.0" y1="30" x2="144.0" y2="48" stroke="#0d9478" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="196.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9478">60m</text><line x1="248.0" y1="30" x2="352.0" y2="30" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="248.0" y1="30" x2="248.0" y2="48" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="300.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">60m</text><line x1="352.0" y1="30" x2="456.0" y2="30" stroke="#0d9478" stroke-width="2.5" marker-end="url(#ah-teal)"/><line x1="352.0" y1="30" x2="352.0" y2="48" stroke="#0d9478" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="404.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#0d9478">60m</text><line x1="456.0" y1="30" x2="560.0" y2="30" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="456.0" y1="30" x2="456.0" y2="48" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="508.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">60m</text><circle cx="40.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="40.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">出発</text><text x="40.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">0m</text><circle cx="144.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="144.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">1分後</text><text x="144.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">60m</text><circle cx="248.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="248.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">2分後</text><text x="248.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">120m</text><circle cx="352.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="352.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">3分後</text><text x="352.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">180m</text><circle cx="456.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="456.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">4分後</text><text x="456.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">240m</text><circle cx="560.0" cy="48" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="560.0" y="74" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">5分後</text><text x="560.0" y="92" text-anchor="middle" font-size="12" fill="#58544c">300m</text></svg><div class="cap">分速60mで歩く人は、<b>1分ごとに60mずつ</b>進みます。同じ長さの矢印が、時間の数だけ並んでいます。</div></div><div class="body-text">「分速60m」は、「1分に60m進む」という意味でした。5分間ということは、その「1分ぶん」が5回あります。</div><div id="ex1-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます（距離 ＝ 速さ × 時間）</h4><p>速さ　＝ 分速60m
+時間　＝ 5分
+距離　＝ 60 × 5</p></div><div id="ex1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>60 × 5
+0を外して　6 × 5 ＝ 30
+0を1つもどして　300
+つまり　60 × 5 ＝ <strong>300m</strong></p></div><div id="ex1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　足し算で確かめます</h4><p>60 ＋ 60 ＋ 60 ＋ 60 ＋ 60 ＝ 300m
+（60 ＋ 60 ＝ 120、120 ＋ 60 ＝ 180、180 ＋ 60 ＝ 240、240 ＋ 60 ＝ 300）
+かけ算の答えと同じになりました ✓</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',3)">STEP 1 を見る ▼</button><div id="ex1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 2　時速から、進んだ距離を出す</div><div class="q-text">時速<strong>40km</strong>の自動車が、<strong>3時間</strong>走りました。何km進みましたか？</div><div class="body-text">今度は「時速」です。「時速40km」は、1時間に40km進む速さです。3時間なら、その「1時間ぶん」が3回あります。</div><div id="ex2-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>速さ　＝ 時速40km
+時間　＝ 3時間
+距離　＝ 40 × 3</p></div><div id="ex2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>40 × 3
+0を外して　4 × 3 ＝ 12
+0を1つもどして　120
+つまり　40 × 3 ＝ <strong>120km</strong></p></div><div id="ex2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　足し算で確かめます</h4><p>1時間で40km、2時間で 40 ＋ 40 ＝ 80km、3時間で 80 ＋ 40 ＝ <strong>120km</strong> ✓
+（単位は、時速の距離なので「km」です）</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',3)">STEP 1 を見る ▼</button><div id="ex2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 3　逆向き（進んだ距離から、分速を出す）</div><div class="q-text">自転車が、<strong>8分間</strong>で<strong>1600m</strong>進みました。この自転車は、分速何mで走っていますか？</div><div class="body-text">分速は「1分に進む距離」です。8分で1600m進んだのですから、1600mを8つの「1分」に同じだけ分ければ、1分あたりの距離が出ます。</div><div id="ex3-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます（速さ ＝ 距離 ÷ 時間）</h4><p>距離　＝ 1600m
+時間　＝ 8分
+速さ　＝ 1600 ÷ 8</p></div><div id="ex3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>1600 ÷ 8
+0を外して　16 ÷ 8 ＝ 2
+0を2つもどして　200
+つまり　1600 ÷ 8 ＝ 200　→　<strong>分速200m</strong></p></div><div id="ex3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の考え方で確かめます</h4><p>半分ずつに分けてみます。
+8分で 1600m
+4分で 800m（1600の半分）
+2分で 400m（800の半分）
+1分で 200m（400の半分）
+どちらでも <strong>分速200m</strong> になりました ✓</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',3)">STEP 1 を見る ▼</button><div id="ex3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">❓ C<span>まだ不安</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト 速さと距離</div><div class="mini-q">秒速<strong>5m</strong>で走る人が、<strong>6秒間</strong>走りました。何m進みましたか？</div><div class="mini-choices" id="mch-m1"><button class="mch" onclick="miniAns('m1',0,2)"><span class="mcnum">ア</span>11m</button><button class="mch" onclick="miniAns('m1',1,2)"><span class="mcnum">イ</span>24m</button><button class="mch" onclick="miniAns('m1',2,2)"><span class="mcnum">ウ</span>30m</button><button class="mch" onclick="miniAns('m1',3,2)"><span class="mcnum">エ</span>36m</button></div><div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　秒速5mは「1秒に5m」。6秒なら 5 × 6 ＝ <strong>30m</strong></div><div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　「1秒に5m」の速さが、6秒ぶんあります。5 ＋ 5 ＋ 5 ＋ 5 ＋ 5 ＋ 5 ＝ 30、つまり 5 × 6 ＝ <strong>30m</strong>です。（11は 5 ＋ 6 と足してしまった答えです）</div><div class="mini-q" style="margin-top:1rem;">分速<strong>90m</strong>で歩く人が、<strong>4分間</strong>歩きました。何m進みましたか？</div><div class="mini-choices" id="mch-m2"><button class="mch" onclick="miniAns('m2',0,1)"><span class="mcnum">ア</span>94m</button><button class="mch" onclick="miniAns('m2',1,1)"><span class="mcnum">イ</span>360m</button><button class="mch" onclick="miniAns('m2',2,1)"><span class="mcnum">ウ</span>270m</button><button class="mch" onclick="miniAns('m2',3,1)"><span class="mcnum">エ</span>450m</button></div><div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　90 × 4　→　9 × 4 ＝ 36　→　0を1つもどして <strong>360m</strong></div><div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　分速90mは「1分に90m」。4分なら 90 × 4 です。9 × 4 ＝ 36 に、0を1つもどして <strong>360m</strong>です。（94は 90 ＋ 4 と足してしまった答えです）</div></div><button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:.6rem;">実践演習へ進む →</button></div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">実践演習</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！　ヒントも使えます。全5問</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div><div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div></div><div class="prob-n"><span class="n n-pr">1</span><span>実践演習 第1問</span></div><div class="card"><div class="clabel pr">実践演習 第1問　やさしい計算①</div><div class="q-text">分速<strong>80m</strong>で歩く人が、<strong>3分間</strong>歩きました。何m進みましたか？</div><button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button><div class="hint-box" id="h1">「分速80m」は1分に80m進む速さです。3分ぶんなので、80 × 3。0を外して 8 × 3 を計算しましょう。</div><div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 1分以内</span></div></div><div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,1)"><span class="cnum">1</span>83m</button><button class="ch" onclick="ans('q1',1,1)"><span class="cnum">2</span>240m</button><button class="ch" onclick="ans('q1',2,1)"><span class="cnum">3</span>160m</button><button class="ch" onclick="ans('q1',3,1)"><span class="cnum">4</span>2400m</button></div><div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">80 × 3 ＝ 240m ✓</span></span></div><div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">分速80mは「1分に80m」。3分ぶんなので 80 × 3 を計算します。8 × 3 ＝ 24 に、0を1つもどします。</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div><div id="q1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>分速80mで3分。80 × 3 ＝ <strong>240m</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q1"><div class="clabel kai">段階解説</div><div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>距離 ＝ 速さ × 時間 ＝ 80 × 3</p></div><div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>8 × 3 ＝ 24　→　0を1つもどして <strong>240m</strong></p></div><div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>80 ＋ 80 ＋ 80 ＝ 240m ✓</p></div><button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button><div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">2</span><span>実践演習 第2問</span></div><div class="card"><div class="clabel pr">実践演習 第2問　やさしい計算②</div><div class="q-text">時速<strong>50km</strong>のバスが、<strong>4時間</strong>走りました。何km進みましたか？</div><button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button><div class="hint-box" id="h2">「時速50km」は1時間に50km進む速さです。4時間ぶんなので、50 × 4。5 × 4 を計算して、0をもどします。</div><div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 1分以内</span></div></div><div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,3)"><span class="cnum">1</span>54km</button><button class="ch" onclick="ans('q2',1,3)"><span class="cnum">2</span>150km</button><button class="ch" onclick="ans('q2',2,3)"><span class="cnum">3</span>250km</button><button class="ch" onclick="ans('q2',3,3)"><span class="cnum">4</span>200km</button></div><div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">50 × 4 ＝ 200km ✓</span></span></div><div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">時速50kmは「1時間に50km」。4時間ぶんなので 50 × 4 です。5 × 4 ＝ 20 に、0を1つもどします。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div><div id="q2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>時速50kmで4時間。50 × 4 ＝ <strong>200km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q2"><div class="clabel kai">段階解説</div><div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>距離 ＝ 速さ × 時間 ＝ 50 × 4</p></div><div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>5 × 4 ＝ 20　→　0を1つもどして <strong>200km</strong></p></div><div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>50 ＋ 50 ＋ 50 ＋ 50 ＝ 100 ＋ 100 ＝ 200km ✓</p></div><button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button><div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">3</span><span>実践演習 第3問</span></div><div class="card"><div class="clabel pr">実践演習 第3問　秒速の問題</div><div class="q-text">秒速<strong>6m</strong>で走る人が、<strong>9秒間</strong>走りました。何m進みましたか？</div><button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button><div class="hint-box" id="h3">「秒速6m」は1秒に6m進む速さです。9秒ぶんなので 6 × 9。九九の「六九54」を思い出しましょう。</div><div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 1分以内</span></div></div><div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,0)"><span class="cnum">1</span>54m</button><button class="ch" onclick="ans('q3',1,0)"><span class="cnum">2</span>15m</button><button class="ch" onclick="ans('q3',2,0)"><span class="cnum">3</span>45m</button><button class="ch" onclick="ans('q3',3,0)"><span class="cnum">4</span>63m</button></div><div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">6 × 9 ＝ 54m ✓</span></span></div><div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">秒速6mは「1秒に6m」。9秒ぶんなので 6 × 9 です。九九の六の段を思い出しましょう。</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div><div id="q3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>秒速6mで9秒。6 × 9 ＝ <strong>54m</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q3"><div class="clabel kai">段階解説</div><div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>距離 ＝ 速さ × 時間 ＝ 6 × 9</p></div><div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>6 × 9 ＝ <strong>54m</strong>（六九54）</p></div><div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>9 × 6 でも同じです。9 × 6 ＝ 54m。かける順番を入れかえても、答えは同じです ✓</p></div><button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button><div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">4</span><span>実践演習 第4問</span></div><div class="card"><div class="clabel pr">実践演習 第4問　逆向き（速さを出す）</div><div class="q-text">人が、<strong>6分間</strong>で<strong>420m</strong>歩きました。分速何mで歩いていますか？</div><button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button><div class="hint-box" id="h4">分速は「1分あたりの距離」です。420mを6つの「1分」に分けるので、420 ÷ 6。「6に何をかけると420か」を考えます。</div><div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,2)"><span class="cnum">1</span>60m</button><button class="ch" onclick="ans('q4',1,2)"><span class="cnum">2</span>80m</button><button class="ch" onclick="ans('q4',2,2)"><span class="cnum">3</span>70m</button><button class="ch" onclick="ans('q4',3,2)"><span class="cnum">4</span>426m</button></div><div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">420 ÷ 6 ＝ 70　→　分速70m ✓</span></span></div><div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">分速 ＝ 距離 ÷ 時間 ＝ 420 ÷ 6 です。42 ÷ 6 ＝ 7 に、0を1つもどします。</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div><div id="q4-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>420 ÷ 6 ＝ 70　→　<strong>分速70m</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q4"><div class="clabel kai">段階解説</div><div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>速さ ＝ 距離 ÷ 時間 ＝ 420 ÷ 6</p></div><div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>42 ÷ 6 ＝ 7　→　0を1つもどして 70　→　<strong>分速70m</strong></p></div><div id="q4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の考え方で確かめます</h4><p>半分にしてみます。6分で420m、3分で210m。210 ÷ 3 ＝ 70 なので、1分で70m ✓</p></div><button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button><div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">5</span><span>実践演習 第5問</span></div><div class="card"><div class="clabel pr">実践演習 第5問　2つ組み合わせる</div><div class="q-text">分速<strong>60m</strong>で<strong>5分間</strong>歩き、そのあと分速<strong>80m</strong>で<strong>3分間</strong>歩きました。全部で何m歩きましたか？</div><button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button><div class="hint-box" id="h5">前半と後半を、別々に計算して、あとで足します。前半は 60 × 5、後半は 80 × 3 です。</div><div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,1)"><span class="cnum">1</span>240m</button><button class="ch" onclick="ans('q5',1,1)"><span class="cnum">2</span>540m</button><button class="ch" onclick="ans('q5',2,1)"><span class="cnum">3</span>300m</button><button class="ch" onclick="ans('q5',3,1)"><span class="cnum">4</span>1120m</button></div><div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">300m ＋ 240m ＝ 540m ✓</span></span></div><div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">前半 60 × 5 ＝ 300m、後半 80 × 3 ＝ 240m を、足します。</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div><div id="q5-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>前半 60 × 5 ＝ 300m、後半 80 × 3 ＝ 240m。合計 <strong>540m</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q5"><div class="clabel kai">段階解説</div><div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　前半の距離</h4><p>60 × 5 ＝ <strong>300m</strong></p></div><div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　後半の距離</h4><p>80 × 3 ＝ <strong>240m</strong></p></div><div id="q5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　合計します</h4><p>300 ＋ 240 ＝ <strong>540m</strong>
+（確かめ：時間は全部で 5 ＋ 3 ＝ 8分。速さがちがうので、8分に1つの速さはかけられません。区間ごとに計算したのが正解です ✓）</p></div><button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button><div id="q5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div id="pr-done" style="display:none"><div class="teal-box" style="margin-top:1.4rem"><strong>🎉 実践演習 完了！</strong>おつかれさまでした。次はいよいよ総合確認です。ここからは制限時間があります。解き方を思い出しながら、落ち着いて挑戦しましょう。</div><button class="next-page-btn cf" onclick="switchTab('cf')">総合確認へ進む →</button></div></div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">総合確認（制限時間つき）</div><div class="page-hdr-desc">SPI本番のつもりで挑戦しましょう。全3問・ヒントなし。「スタート」を押すとカウントダウンが始まり、時間切れになると自動で締め切られます。</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div><div class="pb-txt" id="pb-cf-txt">0 / 3 完了</div></div><div class="teal-box"><strong>💡 はじめに</strong>時間切れになっても、点数が下がるだけで何も困りません。落ち着いて、解説で「どこに時間がかかったか」を確認し、もう一度挑戦すれば大丈夫です。わからない問題で粘りすぎず、「やり方を思い出せない」と感じたら、いったん解説を見て覚えるのも立派な勉強です。</div><div class="prob-n"><span class="n n-cf">1</span><span>総合確認 第1問</span></div><div class="card"><div class="clabel cf">総合確認 第1問　時速と距離</div><div class="cf-cover" id="cover-qc1"><div class="cf-cover-txt">制限時間：<strong>1分30秒</strong></div><button class="start-btn" onclick="startCf('qc1')">▶ 第1問をスタート</button></div><div id="body-qc1" style="display:none"><div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">1:30</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 1分30秒</span></div></div><div class="q-text">時速<strong>45km</strong>の電車が、<strong>2時間</strong>走りました。何km進みましたか？</div><div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,3)"><span class="cnum">1</span>47km</button><button class="ch" onclick="ans('qc1',1,3)"><span class="cnum">2</span>43km</button><button class="ch" onclick="ans('qc1',2,3)"><span class="cnum">3</span>22.5km</button><button class="ch" onclick="ans('qc1',3,3)"><span class="cnum">4</span>90km</button><button class="ch" onclick="ans('qc1',4,3)"><span class="cnum">5</span>900km</button></div></div><div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">45 × 2 ＝ 90km ✓</span></span></div><div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">時速45kmは「1時間に45km」。2時間ぶんなので 45 × 2 です。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc1"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div id="qc1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>時速45kmで2時間。45 × 2 ＝ <strong>90km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc1"><div class="clabel kai">段階解説</div><div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>距離 ＝ 速さ × 時間 ＝ 45 × 2</p></div><div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>45 × 2 ＝ <strong>90km</strong>
+（確かめ：45 ＋ 45 ＝ 90km ✓）</p></div><button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',2)">STEP 1 を見る ▼</button><div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">2</span><span>総合確認 第2問</span></div><div class="card"><div class="clabel cf">総合確認 第2問　分速と距離</div><div class="cf-cover" id="cover-qc2"><div class="cf-cover-txt">制限時間：<strong>1分30秒</strong></div><button class="start-btn" onclick="startCf('qc2')">▶ 第2問をスタート</button></div><div id="body-qc2" style="display:none"><div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">1:30</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 1分30秒</span></div></div><div class="q-text">分速<strong>200m</strong>で走る自転車が、<strong>7分間</strong>走りました。何m進みましたか？</div><div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,0)"><span class="cnum">1</span>1400m</button><button class="ch" onclick="ans('qc2',1,0)"><span class="cnum">2</span>207m</button><button class="ch" onclick="ans('qc2',2,0)"><span class="cnum">3</span>140m</button><button class="ch" onclick="ans('qc2',3,0)"><span class="cnum">4</span>1200m</button><button class="ch" onclick="ans('qc2',4,0)"><span class="cnum">5</span>14000m</button></div></div><div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">200 × 7 ＝ 1400m ✓</span></span></div><div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">分速200mは「1分に200m」。7分ぶんなので 200 × 7 です。2 × 7 ＝ 14 に、0を2つもどします。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc2"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div id="qc2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>分速200mで7分。200 × 7 ＝ <strong>1400m</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc2"><div class="clabel kai">段階解説</div><div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>距離 ＝ 速さ × 時間 ＝ 200 × 7</p></div><div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>2 × 7 ＝ 14　→　0を2つもどして <strong>1400m</strong>
+（確かめ：200を7回足す。200 ＋ 200 ＋ 200 ＝ 600、あと4回で 800 ＋ 600 ＝ 1400m ✓）</p></div><button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',2)">STEP 1 を見る ▼</button><div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">3</span><span>総合確認 第3問</span></div><div class="card"><div class="clabel cf">総合確認 第3問　速さを求める</div><div class="cf-cover" id="cover-qc3"><div class="cf-cover-txt">制限時間：<strong>2分</strong></div><button class="start-btn" onclick="startCf('qc3')">▶ 第3問をスタート</button></div><div id="body-qc3" style="display:none"><div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分</span></div></div><div class="q-text">電車が、<strong>4時間</strong>で<strong>240km</strong>走りました。この電車の速さは、時速何kmですか？</div><div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,4)"><span class="cnum">1</span>56km</button><button class="ch" onclick="ans('qc3',1,4)"><span class="cnum">2</span>236km</button><button class="ch" onclick="ans('qc3',2,4)"><span class="cnum">3</span>244km</button><button class="ch" onclick="ans('qc3',3,4)"><span class="cnum">4</span>960km</button><button class="ch" onclick="ans('qc3',4,4)"><span class="cnum">5</span>60km</button></div></div><div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">240 ÷ 4 ＝ 60　→　時速60km ✓</span></span></div><div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">時速は「1時間あたりの距離」です。240kmを4つの「1時間」に分けるので、240 ÷ 4 です。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc3"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div id="qc3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>240 ÷ 4 ＝ 60　→　<strong>時速60km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc3"><div class="clabel kai">段階解説</div><div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>速さ ＝ 距離 ÷ 時間 ＝ 240 ÷ 4</p></div><div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>24 ÷ 4 ＝ 6　→　0を1つもどして 60　→　<strong>時速60km</strong></p></div><div id="qc3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>1時間で60km、4時間なら 60 ＋ 60 ＋ 60 ＋ 60 ＝ 240km ✓</p></div><button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',3)">STEP 1 を見る ▼</button><div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="result-card" id="cf-result" style="display:none"><div class="rc-title">📊 総合確認の結果</div><div class="rc-score" id="rc-score"></div><div class="rc-msg" id="rc-msg"></div></div><div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a href="SPI_hayasa_index.html" class="unav-btn unav-idx">☰ 単元一覧へ</a><a href="SPI_hayasa_p02.html" class="unav-btn unav-next">次：パターン2 距離・速さ・時間の公式（み・は・じ） →</a></div></div></div>
+</main>
+<script>
+const CFG={"key": "spi_hayasa_p01", "PR": ["q1", "q2", "q3", "q4", "q5"], "CF": ["qc1", "qc2", "qc3"], "LIM": {"qc1": 90, "qc2": 90, "qc3": 120}, "GOAL": {"q1": "1分", "q2": "1分", "q3": "1分", "q4": "2分", "q5": "3分"}};
+const answered={};
+const timers={};
+const miniAnswered={};
+const stepRev={};
+const cfRes={};
+const cfSecs={};
+const pageSeen={};
+let pracDone=0,cfDone=0,cfOk=0;
+
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered[CFG.PR[0]])startTimer(CFG.PR[0]);
+}
+
+/* ───── 演習：経過時間を表示するタイマー（目安のみ） ───── */
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tw=document.getElementById('t'+qid.slice(1));
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/240,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(pct>.8?' warn':''));
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=m+':'+String(s).padStart(2,'0');
+    if(msg){
+      const goal=msg.querySelector('.goal');const g=goal?goal.outerHTML:'';
+      if(sec<60)msg.innerHTML='自力で考えましょう。'+g;
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+/* ───── 確認：本当にカウントダウンして締め切るタイマー ───── */
+function startCf(qid){
+  if(answered[qid]||timers[qid])return;
+  document.getElementById('cover-'+qid).style.display='none';
+  document.getElementById('body-'+qid).style.display='block';
+  const lim=CFG.LIM[qid];
+  const start=Date.now();cfSecs[qid]=0;
+  const ring=document.getElementById('ring-'+qid);
+  const fg=ring.querySelector('.tfg'),txt=ring.querySelector('.tcenter');
+  const msg=ring.parentNode.querySelector('.timer-msg');
+  function tick(){
+    const sec=Math.floor((Date.now()-start)/1000);
+    cfSecs[qid]=Math.min(sec,lim);
+    const left=Math.max(lim-sec,0);
+    const pct=Math.min(sec/lim,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(left<=lim*.15?' danger':(left<=lim*.4?' warn':'')));
+    txt.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    const goal=msg.querySelector('.goal');
+    if(goal){goal.className='goal'+(left<=lim*.15?' danger':'');
+      goal.textContent=left<=0?'時間切れ':(left<=lim*.15?'あと少し！':(left<=lim*.4?'半分を過ぎました':'制限 '+fmt(lim)));}
+    if(left<=0)timeUp(qid);
+  }
+  tick();
+  timers[qid]=setInterval(tick,250);
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return m?(r?m+'分'+r+'秒':m+'分'):r+'秒';}
+
+function paintChoices(qid,idx,correct){
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&idx!==correct){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+}
+function showAfter(qid){
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const isOk=(idx===correct);
+  const isCf=CFG.CF.includes(qid);
+  const tw=document.getElementById(isCf?'tc'+qid.slice(2):'t'+qid.slice(1));
+  if(tw)tw.style.display='none';
+  paintChoices(qid,idx,correct);
+  const fbOk=document.getElementById('fb-ok-'+qid),fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  showAfter(qid);
+  if(isCf){cfRes[qid]=isOk?'ok':'ng';cfDone++;if(isOk)cfOk++;afterCf();}
+  else{
+    pracDone++;const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    if(pracDone===n){document.getElementById('done-pr').style.display='flex';document.getElementById('pr-done').style.display='block';}
+    const nx=CFG.PR[CFG.PR.indexOf(qid)+1];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+}
+
+function timeUp(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const tw=document.getElementById('tc'+qid.slice(2));
+  if(tw)tw.style.display='none';
+  const c=+document.querySelector('#ch-'+qid+' .ch').getAttribute('onclick').match(/,(\d+)\)/)[1];
+  paintChoices(qid,-1,c);
+  document.getElementById('fb-to-'+qid).style.display='flex';
+  showAfter(qid);
+  cfRes[qid]='to';cfDone++;afterCf();
+}
+
+function afterCf(){
+  const n=CFG.CF.length;
+  document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+  document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+  if(cfDone===n){
+    document.getElementById('done-cf').style.display='flex';
+    document.getElementById('unit-nav').style.display='flex';
+    const to=Object.values(cfRes).filter(v=>v==='to').length;
+    const rate=cfOk/n;
+    document.getElementById('rc-score').textContent='正解 '+cfOk+' / '+n+' 問';
+    let msg='';
+    if(rate>=.8)msg='合格ラインです。この調子で次のパターンへ進みましょう。';
+    else if(rate>=.5)msg='あと少しです。間違えた問題の解説を読み直し、「もう一度」で挑戦してみましょう。';
+    else msg='まだ慣れていないだけです。解説タブの例題をもう一度たどってから、再挑戦しましょう。何度やり直しても大丈夫です。';
+    document.getElementById('rc-msg').textContent=to>0?msg+'（時間切れは '+to+' 問でした。まず正確に解ける形をつくり、そのあとで速さを上げていきましょう。）':msg;
+    document.getElementById('cf-result').style.display='block';
+    lsSet(CFG.key+'_score',cfOk+'/'+n);lsSet(CFG.key,'1');
+    setTimeout(()=>document.getElementById('cf-result').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  const isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  const fbOk=document.getElementById('mfb-'+qid+'-ok'),fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';}_launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid]||0;
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]=r+1;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if((stepRev[qid]||0)>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+(stepRev[qid]+1)+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(prefix+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  const isCf=CFG.CF.includes(qid);
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(isCf){
+    const r=cfRes[qid];
+    if(r){cfDone--;if(r==='ok')cfOk--;delete cfRes[qid];}
+    const n=CFG.CF.length;
+    document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+    document.getElementById('done-cf').style.display='none';
+    document.getElementById('cf-result').style.display='none';
+    document.getElementById('unit-nav').style.display='none';
+    var to=document.getElementById('fb-to-'+qid);if(to)to.style.display='none';
+    document.getElementById('cover-'+qid).style.display='block';
+    document.getElementById('body-'+qid).style.display='none';
+    var tw=document.getElementById('tc'+qid.slice(2));if(tw)tw.style.display='flex';
+    const ring=document.getElementById('ring-'+qid);
+    ring.querySelector('.tfg').style.strokeDashoffset=0;ring.querySelector('.tfg').setAttribute('class','tfg');
+    const lim=CFG.LIM[qid];ring.querySelector('.tcenter').textContent=Math.floor(lim/60)+':'+String(lim%60).padStart(2,'0');
+    const g=ring.parentNode.querySelector('.goal');if(g){g.className='goal';g.textContent='制限 '+fmt(lim);}
+  }else{
+    if(pracDone>0)pracDone--;
+    const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    document.getElementById('done-pr').style.display='none';document.getElementById('pr-done').style.display='none';
+    var tw2=document.getElementById('t'+qid.slice(1));if(tw2)tw2.style.display='flex';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  if(!isCf)startTimer(qid);
+  else window.scrollTo({top:document.getElementById('cover-'+qid).getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+
+lsSet(CFG.key,'1');
+
+</script>
+</body>
+</html>

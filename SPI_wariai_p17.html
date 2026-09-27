@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 割合・比 パターン17 食塩水の濃度②（水を加える・混ぜる）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tfg.danger{stroke:var(--pink);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.timer-msg .goal.danger{color:var(--pink);font-weight:700;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.85;line-height:1.7;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.unav-idx{background:#fff;border-color:#bcb8ae;color:#58544c;}
+.unav-idx:hover{border-color:#2055b0;color:#2055b0;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+
+/* ── 追加：分数・図・制限時間つき確認問題 ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.3;margin:0 3px;font-size:.92em;font-weight:inherit;}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px;}
+.frac>span:last-child{padding:1px 4px 0;}
+.diagram{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.7rem .6rem .5rem;margin:.9rem 0;overflow-x:auto;}
+.diagram svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto;}
+.diagram .cap{font-size:12px;color:var(--text2);text-align:center;margin-top:.35rem;line-height:1.7;}
+.cf-cover{background:var(--al);border:2px dashed #e0c888;border-radius:12px;padding:1.4rem 1rem;text-align:center;margin-bottom:.6rem;}
+.cf-cover-txt{font-size:13px;color:var(--amber);margin-bottom:.8rem;}
+.cf-cover-txt strong{font-size:16px;}
+.start-btn{background:var(--amber);color:#fff;border:none;border-radius:10px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .15s;}
+.start-btn:hover{background:#8a4e00;}
+.result-card{background:linear-gradient(120deg,#1B2A4A,#2055b0);color:#fff;border-radius:var(--r);padding:1.3rem 1.5rem;margin-top:1.4rem;}
+.rc-title{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.8;margin-bottom:.5rem;}
+.rc-score{font-size:26px;font-weight:700;margin-bottom:.4rem;}
+.rc-msg{font-size:13px;line-height:1.9;opacity:.95;}
+.formula-box .f-eq .frac{margin:0 2px;}
+.exp-box p .frac{font-size:.95em;}
+@media (max-width:480px){.choices,.mini-choices{grid-template-columns:1fr;}.tab-btn{padding:.7rem .8rem;}.card{padding:1.2rem 1.1rem;}.sec-head{margin:-1.2rem -1.1rem 1.1rem;}}
+
+</style>
+</head>
+<body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI 非言語 ／ 割合・比　パターン17　食塩水の濃度②（水を加える・混ぜる）</span></header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>実践演習<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>総合確認<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">パターン17 ─ 食塩水の濃度②（水を加える・混ぜる）</div><div class="page-hdr-desc">食塩水の問題は、どんな形でも「食塩の重さ」に注目すると整理できます。表と方程式だけで、水を加える・蒸発させる・混ぜる問題を解いていきます。</div></div></div><div class="card"><div class="sec-head"><span class="sec-num">1</span>【ポイント】 食塩の重さに注目して、表で整理します</div><div class="body-text">パターン16で、<strong>食塩の重さ ＝ 食塩水の重さ × 濃度</strong>を学びました。このパターンでは、食塩水の状態が変わるとき、<strong>何が変わり、何が変わらないのか</strong>を見分けます。</div><div class="formula-box"><div class="f-title">🔑 このパターンのポイント</div><div class="formula-line"><span class="f-key">ポイント①</span><span class="f-eq">水を加える・水が蒸発する　→　<strong>食塩の重さは変わらない</strong></span></div><div class="formula-line"><span class="f-key">ポイント②</span><span class="f-eq">2つの食塩水を混ぜる　→　食塩の重さも、食塩水の重さも<strong>足す</strong></span></div><div class="formula-line"><span class="f-key">ポイント③</span><span class="f-eq">「食塩水の重さ」「濃度」「食塩の重さ」の表をつくり、食塩の重さの列で式を立てる</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 濃度（％）どうしを足したり、平均したりしないこと。濃度は、最後に「食塩 ÷ 食塩水」で求めます。</div></div><div class="pink-box"><strong>⚠️ 濃度を足して2でわってしまう</strong>「10％の食塩水100gと、20％の食塩水300gを混ぜると、濃度は？」<br>（10 ＋ 20）÷ 2 ＝ 15％　と答えるのは<strong>間違い</strong>です。食塩水の重さが違うので、20％のほうが多く入っています。<br>正しくは、食塩 10 ＋ 60 ＝ 70g、食塩水 100 ＋ 300 ＝ 400g　→　70 ÷ 400 ＝ 0.175 ＝ <strong>17.5％</strong>です。</div></div><div class="card"><div class="sec-head"><span class="sec-num">2</span>【解説①】 水を加えると、濃度はうすくなります（食塩は変わらない）</div><div class="body-text">濃度10％の食塩水200gに、水を200g加える場面を考えます。まず、はじめの食塩の重さを求めます。<br>食塩 ＝ 200 × 0.1 ＝ 20g。そこに水を加えても、<strong>食塩は増えも減りもしません</strong>。</div><div class="diagram"><svg viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">① はじめ：食塩水 200g（濃度10％）</text><rect x="10.0" y="18" width="27.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="23.5" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">食塩 20g</text><rect x="37.0" y="18" width="243.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="158.5" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">水 180g</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">② 水を 200g 加えたあと：食塩水 400g（濃度5％）</text><rect x="10.0" y="74" width="27.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="23.5" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">食塩 20g</text><rect x="37.0" y="74" width="243.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="158.5" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">水 180g</text><rect x="280.0" y="74" width="270.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="415.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">加えた水 200g</text></svg><div class="cap">水を加えても、ピンクの「食塩」の部分は<b>20gのまま</b>です。変わるのは、全体の重さだけです。</div></div><table class="kansan-table"><tr><th></th><th>食塩水の重さ</th><th>濃度</th><th>食塩の重さ</th></tr><tr><td>はじめ</td><td>200g</td><td>10％</td><td class="hi">20g</td></tr><tr><td>水を200g加える</td><td class="hig">200 ＋ 200 ＝ 400g</td><td>？</td><td class="hi">20g（変わらない）</td></tr><tr><td>あと</td><td>400g</td><td class="hig">20 ÷ 400 ＝ 0.05 ＝ 5％</td><td>20g</td></tr></table><div class="teal-box"><strong>💡 表の見方</strong>「食塩の重さ」の列に注目します。はじめもあとも同じ20gです。食塩水の重さが2倍（200g→400g）になったので、濃度は半分（10％→5％）になりました。<br>コーヒーにお湯を足すと、味がうすくなるのと同じ考え方です。</div></div><div class="card"><div class="sec-head"><span class="sec-num">3</span>【解説②】 水が蒸発すると、濃度はこくなります</div><div class="body-text">食塩水を加熱すると、水だけが蒸発（じょうはつ）して、<strong>食塩は容器に残ります</strong>。ですから、蒸発でも「食塩の重さは変わらない」が使えます。</div><table class="kansan-table"><tr><th></th><th>食塩水の重さ</th><th>濃度</th><th>食塩の重さ</th></tr><tr><td>はじめ</td><td>400g</td><td>5％</td><td class="hi">400 × 0.05 ＝ 20g</td></tr><tr><td>水を100g蒸発</td><td class="hig">400 － 100 ＝ 300g</td><td>？</td><td class="hi">20g（変わらない）</td></tr><tr><td>あと</td><td>300g</td><td class="hig">20 ÷ 300 ＝ <span class="frac"><span>1</span><span>15</span></span> ＝ 約6.7％</td><td>20g</td></tr></table><div class="body-text">水を加えるときと反対で、<strong>食塩水の重さが減る</strong>ので、濃度は大きくなります（5％ → 約6.7％）。</div><div class="point-box"><strong>📌 思い出そう：食塩水の重さを逆算する</strong>「食塩30gが濃度15％のとき、食塩水は何g？」は、食塩水 ＝ 食塩 ÷ 濃度 で求めます。<br>30 ÷ 0.15 ＝ 3000 ÷ 15 ＝ 200g　（わる数を整数にするため、両方に100をかけました）<br>蒸発や水の追加で「濃度が指定される問題」では、あとの食塩水の重さを、この形で求めます。</div><div class="pink-box"><strong>⚠️ 食塩まで一緒に減らさないでください</strong>蒸発して減るのは<strong>水だけ</strong>です。「食塩水を100g減らす」のではなく、「水を100g減らす」と考えます。食塩は変わらず、水だけが100g減るので、結果として食塩水全体の重さも100g減ります。</div></div><div class="card"><div class="sec-head"><span class="sec-num">4</span>【解説③】 2つの食塩水を混ぜる：重さも食塩も足し算です</div><div class="body-text">10％の食塩水100g（食塩水A）と、20％の食塩水300g（食塩水B）を混ぜます。混ぜたあとの食塩水は、AとBの中身をすべて合わせたものです。</div><div class="diagram"><svg viewBox="0 0 600 186" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">食塩水A：100g（食塩 10g）</text><rect x="10.0" y="18" width="13.5" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="16.8" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">食塩 10g</text><rect x="23.5" y="18" width="121.5" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="84.2" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">水 90g</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">食塩水B：300g（食塩 60g）</text><rect x="10.0" y="74" width="81.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="50.5" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">食塩 60g</text><rect x="91.0" y="74" width="324.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="253.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">水 240g</text><text x="0" y="122" font-size="12" font-weight="700" fill="#58544c">まぜたあと：400g（食塩 10 ＋ 60 ＝ 70g）</text><rect x="10.0" y="130" width="94.5" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="57.2" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">食塩 70g</text><rect x="104.5" y="130" width="445.5" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="327.2" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">水 330g</text></svg><div class="cap">混ぜると、食塩の重さは足し算、食塩水の重さも足し算です。濃度（10％と20％）どうしは、足したり平均したりできません。</div></div><table class="kansan-table"><tr><th></th><th>食塩水の重さ</th><th>濃度</th><th>食塩の重さ</th></tr><tr><td>食塩水A</td><td>100g</td><td>10％</td><td class="hi">100 × 0.1 ＝ 10g</td></tr><tr><td>食塩水B</td><td>300g</td><td>20％</td><td class="hi">300 × 0.2 ＝ 60g</td></tr><tr><td>混ぜたあと</td><td class="hig">100 ＋ 300 ＝ 400g</td><td class="hig">70 ÷ 400 ＝ 0.175 ＝ 17.5％</td><td class="hig">10 ＋ 60 ＝ 70g</td></tr></table><div class="teal-box"><strong>💡 表を書く順番</strong>① 食塩水の重さと濃度がわかっている行から、「食塩の重さ ＝ 食塩水 × 濃度」で食塩の重さを埋める。<br>② 混ぜたあとの行は、食塩の重さも食塩水の重さも<strong>上の行を足す</strong>。<br>③ 最後に、混ぜたあとの濃度を「食塩 ÷ 食塩水」で求める。</div></div><div class="card"><div class="sec-head"><span class="sec-num">5</span>【解説④】 わからない量を x とおいて、食塩の重さで方程式を立てる</div><div class="body-text">「何gの水を加えるか」「何gの食塩水を混ぜるか」のような問題では、求めたい量を <strong>x</strong> とおきます。そして、<strong>変わらない食塩の重さ（または足した食塩の重さ）で等式を作ります</strong>。</div><div class="point-box"><strong>📌 思い出そう：一次方程式（x の式）の解き方</strong>文字を含む等式は、両辺に同じ計算をして、x を1つにまとめます。<br>例）12 ＋ 0.1x ＝ 18 ＋ 0.06x<br>　x の項を左に、数を右に移します：0.1x － 0.06x ＝ 18 － 12<br>　0.04x ＝ 6　→　x ＝ 6 ÷ 0.04 ＝ 600 ÷ 4 ＝ 150</div><table class="kansan-table"><tr><th>問題の型</th><th>食塩の重さで作る式</th></tr><tr><td>水を x g 加える</td><td>はじめの食塩 ＝（はじめの食塩水 ＋ x）×（あとの濃度）</td></tr><tr><td>水を蒸発させる</td><td>はじめの食塩 ＝（はじめの食塩水 － x）×（あとの濃度）</td></tr><tr><td>混ぜる（x g）</td><td>（Aの食塩）＋（Bの食塩）＝（A＋B の食塩水）×（あとの濃度）</td></tr></table><div class="teal-box"><strong>💡 具体例：4％の食塩水300gに、10％の食塩水 x g を混ぜて 6％にしたい</strong>食塩：300 × 0.04 ＋ x × 0.1 ＝ 12 ＋ 0.1x<br>混ぜたあと：（300 ＋ x）× 0.06 ＝ 18 ＋ 0.06x<br>食塩の重さが等しいので　12 ＋ 0.1x ＝ 18 ＋ 0.06x　→　0.04x ＝ 6　→　x ＝ 150（g）<br>確かめ：食塩 12 ＋ 15 ＝ 27g、食塩水 450g で 27 ÷ 450 ＝ 0.06 ＝ 6％ ✓</div></div><div class="card"><div class="sec-head"><span class="sec-num">6</span>【例題】 1つずつ、いっしょに解いてみましょう</div><div class="clabel ex" style="margin-top:.4rem">例題 1　水を加える</div><div class="q-text">濃度<strong>8％</strong>の食塩水<strong>250g</strong>に、水を<strong>150g</strong>加えました。濃度は何％になりますか？</div><div class="body-text">水を加えても、食塩の重さは変わりません。表の「食塩の重さ」の列を、はじめに求めます。</div><div id="ex1-s0" class="exp-box" style="display:none"><h4>STEP 1　はじめの食塩の重さを求めます</h4><p>食塩 ＝ 250 × 0.08 ＝ <strong>20g</strong>（水を加えても変わりません）</p></div><div id="ex1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの食塩水の重さを求めます</h4><p>250 ＋ 150 ＝ <strong>400g</strong></p></div><div id="ex1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　あとの濃度を求めます</h4><p>20 ÷ 400 ＝ 0.05　→　0.05 × 100 ＝ <strong>5％</strong></p></div><div id="ex1-s3" class="exp-box" style="display:none"><h4>STEP 4　確かめます</h4><p>400gの5％は 400 × 0.05 ＝ 20g。はじめの食塩と一致 ✓
+（別解：食塩水が 250 → 400 で 1.6倍。濃度は 8 ÷ 1.6 ＝ 5％）</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',4)">STEP 1 を見る ▼</button><div id="ex1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 2　水を蒸発させる（蒸発した水の量を求める）</div><div class="q-text">濃度<strong>10％</strong>の食塩水<strong>300g</strong>から水を蒸発させて、濃度<strong>15％</strong>にしたいと思います。何gの水を蒸発させればよいですか？</div><div class="body-text">蒸発では食塩の重さが変わりません。あとの食塩水の重さを求め、はじめとの差が蒸発した水です。</div><div id="ex2-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>300 × 0.1 ＝ <strong>30g</strong>（蒸発しても変わりません）</p></div><div id="ex2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの食塩水の重さを求めます</h4><p>食塩30gが15％にあたるので
+30 ÷ 0.15 ＝ 3000 ÷ 15 ＝ <strong>200g</strong></p></div><div id="ex2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　蒸発した水の量を求めます</h4><p>300 － 200 ＝ <strong>100g</strong></p></div><div id="ex2-s3" class="exp-box" style="display:none"><h4>STEP 4　方程式でも確かめます</h4><p>蒸発させる水を x g として　（300 － x）× 0.15 ＝ 30
+300 － x ＝ 200　より x ＝ 100 ✓
+あとの濃度：30 ÷ 200 ＝ 0.15 ＝ 15％ ✓</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',4)">STEP 1 を見る ▼</button><div id="ex2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 3　2つの食塩水を混ぜる</div><div class="q-text">濃度<strong>6％</strong>の食塩水<strong>200g</strong>と、濃度<strong>12％</strong>の食塩水<strong>300g</strong>を混ぜました。できた食塩水の濃度は何％ですか？</div><div class="body-text">表をつくり、食塩の重さ・食塩水の重さをそれぞれ足します。濃度は最後に求めます。</div><div id="ex3-s0" class="exp-box" style="display:none"><h4>STEP 1　それぞれの食塩の重さを求めます</h4><p>6％の食塩水：200 × 0.06 ＝ <strong>12g</strong>
+12％の食塩水：300 × 0.12 ＝ <strong>36g</strong></p></div><div id="ex3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　足し算をします</h4><p>食塩：12 ＋ 36 ＝ <strong>48g</strong>
+食塩水：200 ＋ 300 ＝ <strong>500g</strong></p></div><div id="ex3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　濃度を求めます</h4><p>48 ÷ 500 ＝ 0.096　→　0.096 × 100 ＝ <strong>9.6％</strong></p></div><div id="ex3-s3" class="exp-box" style="display:none"><h4>STEP 4　確かめます</h4><p>500gの9.6％は 500 × 0.096 ＝ 48g ✓
+6％と12％の間にあり、重さの多い12％に近い値です。「6と12の平均の9％」より少し大きいのは、12％の食塩水が多いからです ✓</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',4)">STEP 1 を見る ▼</button><div id="ex3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">❓ C<span>まだ不安</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト 水を加える・蒸発させる</div><div class="mini-q">濃度<strong>20％</strong>の食塩水<strong>150g</strong>に、水を<strong>150g</strong>加えました。濃度は何％ですか？</div><div class="mini-choices" id="mch-m1"><button class="mch" onclick="miniAns('m1',0,2)"><span class="mcnum">ア</span>15％</button><button class="mch" onclick="miniAns('m1',1,2)"><span class="mcnum">イ</span>5％</button><button class="mch" onclick="miniAns('m1',2,2)"><span class="mcnum">ウ</span>10％</button><button class="mch" onclick="miniAns('m1',3,2)"><span class="mcnum">エ</span>20％</button></div><div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　食塩は 150 × 0.2 ＝ 30g。食塩水は 300g。30 ÷ 300 ＝ 0.1 ＝ <strong>10％</strong></div><div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　食塩は 150 × 0.2 ＝ 30g のまま変わりません。食塩水は 150 ＋ 150 ＝ 300g なので、30 ÷ 300 ＝ <strong>10％</strong> です。</div><div class="mini-q" style="margin-top:1rem;">濃度<strong>4％</strong>の食塩水<strong>500g</strong>から、水を<strong>100g</strong>蒸発させました。濃度は何％ですか？</div><div class="mini-choices" id="mch-m2"><button class="mch" onclick="miniAns('m2',0,3)"><span class="mcnum">ア</span>4％</button><button class="mch" onclick="miniAns('m2',1,3)"><span class="mcnum">イ</span>6％</button><button class="mch" onclick="miniAns('m2',2,3)"><span class="mcnum">ウ</span>4.8％</button><button class="mch" onclick="miniAns('m2',3,3)"><span class="mcnum">エ</span>5％</button></div><div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　食塩は 500 × 0.04 ＝ 20g。食塩水は 400g。20 ÷ 400 ＝ 0.05 ＝ <strong>5％</strong></div><div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　食塩は 500 × 0.04 ＝ 20g のまま。食塩水は 500 － 100 ＝ 400g なので、20 ÷ 400 ＝ <strong>5％</strong> です。</div></div><button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:.6rem;">実践演習へ進む →</button></div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">実践演習</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！　ヒントも使えます。全5問</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div><div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div></div><div class="prob-n"><span class="n n-pr">1</span><span>実践演習 第1問</span></div><div class="card"><div class="clabel pr">実践演習 第1問　やさしい計算①</div><div class="q-text">濃度<strong>10％</strong>の食塩水<strong>300g</strong>に、水を<strong>100g</strong>加えました。濃度は何％ですか？</div><button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button><div class="hint-box" id="h1">まず食塩の重さ 300 × 0.1 を求めます。あとの食塩水は 300 ＋ 100 ＝ 400g。食塩 ÷ 食塩水で濃度を求めます。</div><div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,0)"><span class="cnum">1</span>7.5％</button><button class="ch" onclick="ans('q1',1,0)"><span class="cnum">2</span>7％</button><button class="ch" onclick="ans('q1',2,0)"><span class="cnum">3</span>8％</button><button class="ch" onclick="ans('q1',3,0)"><span class="cnum">4</span>10％</button></div><div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">30 ÷ 400 ＝ 0.075 ＝ 7.5％ ✓</span></span></div><div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">食塩は 30g のまま。食塩水は 400g。30 ÷ 400 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div><div id="q1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>食塩 300 × 0.1 ＝ 30g（変わらない）。30 ÷ 400 ＝ 0.075 ＝ <strong>7.5％</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q1"><div class="clabel kai">段階解説</div><div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>300 × 0.1 ＝ <strong>30g</strong></p></div><div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの食塩水と濃度</h4><p>食塩水 ＝ 300 ＋ 100 ＝ 400g
+30 ÷ 400 ＝ 0.075 ＝ <strong>7.5％</strong></p></div><div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>400 × 0.075 ＝ 30g ✓</p></div><button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button><div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">2</span><span>実践演習 第2問</span></div><div class="card"><div class="clabel pr">実践演習 第2問　蒸発させる</div><div class="q-text">濃度<strong>12％</strong>の食塩水<strong>250g</strong>から水を<strong>100g</strong>蒸発させました。濃度は何％になりますか？</div><button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button><div class="hint-box" id="h2">食塩は 250 × 0.12。あとの食塩水は 250 － 100 ＝ 150g。食塩 ÷ 150 が濃度です。</div><div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,3)"><span class="cnum">1</span>12％</button><button class="ch" onclick="ans('q2',1,3)"><span class="cnum">2</span>15％</button><button class="ch" onclick="ans('q2',2,3)"><span class="cnum">3</span>30％</button><button class="ch" onclick="ans('q2',3,3)"><span class="cnum">4</span>20％</button></div><div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">30 ÷ 150 ＝ 0.2 ＝ 20％ ✓</span></span></div><div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">食塩は 30g のまま。食塩水は 150g。30 ÷ 150 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div><div id="q2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>食塩 250 × 0.12 ＝ 30g。30 ÷ 150 ＝ 0.2 ＝ <strong>20％</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q2"><div class="clabel kai">段階解説</div><div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>250 × 0.12 ＝ <strong>30g</strong></p></div><div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの濃度を求めます</h4><p>食塩水 ＝ 250 － 100 ＝ 150g
+30 ÷ 150 ＝ 0.2 ＝ <strong>20％</strong></p></div><div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>150 × 0.2 ＝ 30g ✓</p></div><button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button><div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">3</span><span>実践演習 第3問</span></div><div class="card"><div class="clabel pr">実践演習 第3問　2つを混ぜる</div><div class="q-text">濃度<strong>5％</strong>の食塩水<strong>100g</strong>と、濃度<strong>11％</strong>の食塩水<strong>200g</strong>を混ぜました。濃度は何％ですか？</div><button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button><div class="hint-box" id="h3">食塩は 100 × 0.05 と 200 × 0.11。食塩も食塩水も足してから、食塩 ÷ 食塩水で濃度を求めます。</div><div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,0)"><span class="cnum">1</span>9％</button><button class="ch" onclick="ans('q3',1,0)"><span class="cnum">2</span>8％</button><button class="ch" onclick="ans('q3',2,0)"><span class="cnum">3</span>16％</button><button class="ch" onclick="ans('q3',3,0)"><span class="cnum">4</span>8.5％</button></div><div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">（5 ＋ 22）÷ 300 ＝ 27 ÷ 300 ＝ 0.09 ＝ 9％ ✓</span></span></div><div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">濃度の平均ではなく、食塩の合計 ÷ 食塩水の合計で求めます。（8％は 5 と 11 の平均です）</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div><div id="q3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>食塩 5 ＋ 22 ＝ 27g、食塩水 300g。27 ÷ 300 ＝ 0.09 ＝ <strong>9％</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q3"><div class="clabel kai">段階解説</div><div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>100 × 0.05 ＝ 5g、200 × 0.11 ＝ 22g　→　合計 27g</p></div><div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　濃度を求めます</h4><p>食塩水 ＝ 100 ＋ 200 ＝ 300g
+27 ÷ 300 ＝ 0.09 ＝ <strong>9％</strong></p></div><div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>300 × 0.09 ＝ 27g ✓　（濃度の平均 8％ではありません）</p></div><button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button><div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">4</span><span>実践演習 第4問</span></div><div class="card"><div class="clabel pr">実践演習 第4問　加える水の量を求める</div><div class="q-text">濃度<strong>15％</strong>の食塩水<strong>200g</strong>に水を加えて、濃度<strong>10％</strong>にしたいと思います。何gの水を加えればよいですか？</div><button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button><div class="hint-box" id="h4">食塩は 200 × 0.15 ＝ 30g で変わりません。あとの食塩水 ＝ 30 ÷ 0.1。そこからはじめの200gをひきます。</div><div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,1)"><span class="cnum">1</span>150g</button><button class="ch" onclick="ans('q4',1,1)"><span class="cnum">2</span>100g</button><button class="ch" onclick="ans('q4',2,1)"><span class="cnum">3</span>50g</button><button class="ch" onclick="ans('q4',3,1)"><span class="cnum">4</span>300g</button></div><div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">300 － 200 ＝ 100g ✓</span></span></div><div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">あとの食塩水は 30 ÷ 0.1 ＝ 300g。加えた水は、300 からはじめの200gをひきます。（300gは、あとの食塩水全体です）</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div><div id="q4-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>食塩 30g。あとの食塩水 30 ÷ 0.1 ＝ 300g。加えた水 ＝ 300 － 200 ＝ <strong>100g</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q4"><div class="clabel kai">段階解説</div><div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>200 × 0.15 ＝ <strong>30g</strong>（水を加えても変わりません）</p></div><div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの食塩水の重さを求めます</h4><p>30 ÷ 0.1 ＝ <strong>300g</strong></p></div><div id="q4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　加えた水の量を求めます</h4><p>300 － 200 ＝ <strong>100g</strong>
+（確かめ：30 ÷ 300 ＝ 0.1 ＝ 10％ ✓）</p></div><button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button><div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">5</span><span>実践演習 第5問</span></div><div class="card"><div class="clabel pr">実践演習 第5問　蒸発させる水の量を求める</div><div class="q-text">濃度<strong>6％</strong>の食塩水<strong>500g</strong>から水を蒸発させて、濃度<strong>10％</strong>にしたいと思います。何gの水を蒸発させればよいですか？</div><button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button><div class="hint-box" id="h5">食塩は 500 × 0.06 ＝ 30g。あとの食塩水は 30 ÷ 0.1 ＝ 300g。はじめの500gとの差が、蒸発した水です。</div><div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,2)"><span class="cnum">1</span>300g</button><button class="ch" onclick="ans('q5',1,2)"><span class="cnum">2</span>250g</button><button class="ch" onclick="ans('q5',2,2)"><span class="cnum">3</span>200g</button><button class="ch" onclick="ans('q5',3,2)"><span class="cnum">4</span>20g</button></div><div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">500 － 300 ＝ 200g ✓</span></span></div><div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">あとの食塩水は 30 ÷ 0.1 ＝ 300g。蒸発した水は 500 － 300 で求めます。（300gは、あとの食塩水の重さです）</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div><div id="q5-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>食塩 30g。あとの食塩水 300g。蒸発した水 ＝ 500 － 300 ＝ <strong>200g</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q5"><div class="clabel kai">段階解説</div><div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>500 × 0.06 ＝ <strong>30g</strong></p></div><div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの食塩水の重さを求めます</h4><p>30 ÷ 0.1 ＝ <strong>300g</strong></p></div><div id="q5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　蒸発した水を求めます</h4><p>500 － 300 ＝ <strong>200g</strong>
+（方程式：（500 － x）× 0.1 ＝ 30 より x ＝ 200 ✓）</p></div><button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button><div id="q5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div id="pr-done" style="display:none"><div class="teal-box" style="margin-top:1.4rem"><strong>🎉 実践演習 完了！</strong>おつかれさまでした。次はいよいよ総合確認です。ここからは制限時間があります。解き方を思い出しながら、落ち着いて挑戦しましょう。</div><button class="next-page-btn cf" onclick="switchTab('cf')">総合確認へ進む →</button></div></div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">総合確認（制限時間つき）</div><div class="page-hdr-desc">SPI本番のつもりで挑戦しましょう。全3問・ヒントなし。「スタート」を押すとカウントダウンが始まり、時間切れになると自動で締め切られます。</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div><div class="pb-txt" id="pb-cf-txt">0 / 3 完了</div></div><div class="teal-box"><strong>💡 はじめに</strong>時間切れになっても、点数が下がるだけで何も困りません。落ち着いて、解説で「どこに時間がかかったか」を確認し、もう一度挑戦すれば大丈夫です。わからない問題で粘りすぎず、「やり方を思い出せない」と感じたら、いったん解説を見て覚えるのも立派な勉強です。</div><div class="prob-n"><span class="n n-cf">1</span><span>総合確認 第1問</span></div><div class="card"><div class="clabel cf">総合確認 第1問　水を加える量（濃度が変わる）</div><div class="cf-cover" id="cover-qc1"><div class="cf-cover-txt">制限時間：<strong>2分</strong></div><button class="start-btn" onclick="startCf('qc1')">▶ 第1問をスタート</button></div><div id="body-qc1" style="display:none"><div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分</span></div></div><div class="q-text">濃度<strong>9％</strong>の食塩水<strong>400g</strong>に水を加えて、濃度<strong>6％</strong>にしました。加えた水は何gですか？</div><div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,1)"><span class="cnum">1</span>150g</button><button class="ch" onclick="ans('qc1',1,1)"><span class="cnum">2</span>200g</button><button class="ch" onclick="ans('qc1',2,1)"><span class="cnum">3</span>250g</button><button class="ch" onclick="ans('qc1',3,1)"><span class="cnum">4</span>300g</button><button class="ch" onclick="ans('qc1',4,1)"><span class="cnum">5</span>36g</button></div></div><div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">600 － 400 ＝ 200g ✓</span></span></div><div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">食塩は 400 × 0.09 ＝ 36g。あとの食塩水は 36 ÷ 0.06 ＝ 600g。加えた水は 600 － 400 です。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc1"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div id="qc1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>食塩 36g。あとの食塩水 36 ÷ 0.06 ＝ 600g。加えた水 ＝ 600 － 400 ＝ <strong>200g</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc1"><div class="clabel kai">段階解説</div><div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>400 × 0.09 ＝ <strong>36g</strong></p></div><div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　あとの食塩水の重さを求めます</h4><p>36 ÷ 0.06 ＝ 3600 ÷ 6 ＝ <strong>600g</strong></p></div><div id="qc1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　加えた水を求めます</h4><p>600 － 400 ＝ <strong>200g</strong>
+（確かめ：36 ÷ 600 ＝ 0.06 ＝ 6％ ✓）</p></div><button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',3)">STEP 1 を見る ▼</button><div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">2</span><span>総合確認 第2問</span></div><div class="card"><div class="clabel cf">総合確認 第2問　2つの食塩水を混ぜる</div><div class="cf-cover" id="cover-qc2"><div class="cf-cover-txt">制限時間：<strong>2分30秒</strong></div><button class="start-btn" onclick="startCf('qc2')">▶ 第2問をスタート</button></div><div id="body-qc2" style="display:none"><div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:30</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分30秒</span></div></div><div class="q-text">濃度<strong>3％</strong>の食塩水<strong>300g</strong>と、濃度<strong>8％</strong>の食塩水<strong>200g</strong>を混ぜました。濃度は何％ですか？</div><div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,2)"><span class="cnum">1</span>5.5％</button><button class="ch" onclick="ans('qc2',1,2)"><span class="cnum">2</span>11％</button><button class="ch" onclick="ans('qc2',2,2)"><span class="cnum">3</span>5％</button><button class="ch" onclick="ans('qc2',3,2)"><span class="cnum">4</span>4.5％</button><button class="ch" onclick="ans('qc2',4,2)"><span class="cnum">5</span>6％</button></div></div><div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">（9 ＋ 16）÷ 500 ＝ 25 ÷ 500 ＝ 0.05 ＝ 5％ ✓</span></span></div><div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">食塩は 300 × 0.03 ＝ 9g と 200 × 0.08 ＝ 16g。合計 25g を、食塩水 500g でわります。（5.5％は 3 と 8 の平均です）</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc2"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div id="qc2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>食塩 9 ＋ 16 ＝ 25g、食塩水 500g。25 ÷ 500 ＝ 0.05 ＝ <strong>5％</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc2"><div class="clabel kai">段階解説</div><div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　食塩の重さを求めます</h4><p>300 × 0.03 ＝ 9g、200 × 0.08 ＝ 16g　→　合計 <strong>25g</strong></p></div><div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　濃度を求めます</h4><p>食塩水 ＝ 300 ＋ 200 ＝ 500g
+25 ÷ 500 ＝ 0.05 ＝ <strong>5％</strong>
+（確かめ：500 × 0.05 ＝ 25g ✓）</p></div><button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',2)">STEP 1 を見る ▼</button><div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">3</span><span>総合確認 第3問</span></div><div class="card"><div class="clabel cf">総合確認 第3問　混ぜる量を求める</div><div class="cf-cover" id="cover-qc3"><div class="cf-cover-txt">制限時間：<strong>4分</strong></div><button class="start-btn" onclick="startCf('qc3')">▶ 第3問をスタート</button></div><div id="body-qc3" style="display:none"><div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">4:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 4分</span></div></div><div class="q-text">濃度<strong>4％</strong>の食塩水<strong>300g</strong>に、濃度<strong>10％</strong>の食塩水を混ぜて、濃度<strong>6％</strong>にしたいと思います。10％の食塩水を何g混ぜればよいですか？</div><div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,4)"><span class="cnum">1</span>100g</button><button class="ch" onclick="ans('qc3',1,4)"><span class="cnum">2</span>200g</button><button class="ch" onclick="ans('qc3',2,4)"><span class="cnum">3</span>120g</button><button class="ch" onclick="ans('qc3',3,4)"><span class="cnum">4</span>450g</button><button class="ch" onclick="ans('qc3',4,4)"><span class="cnum">5</span>150g</button></div></div><div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">12 ＋ 0.1x ＝ 18 ＋ 0.06x より x ＝ 150 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">10％の食塩水を x g とし、食塩の重さで式を作ります。300 × 0.04 ＋ x × 0.1 ＝（300 ＋ x）× 0.06。（450gは混ぜたあとの全体の重さです）</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc3"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div id="qc3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>12 ＋ 0.1x ＝ 18 ＋ 0.06x　→　0.04x ＝ 6　→　x ＝ <strong>150g</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc3"><div class="clabel kai">段階解説</div><div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>10％の食塩水を x g とします。
+食塩の合計：300 × 0.04 ＋ x × 0.1 ＝ 12 ＋ 0.1x
+混ぜたあと：（300 ＋ x）× 0.06 ＝ 18 ＋ 0.06x</p></div><div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　方程式を解きます</h4><p>12 ＋ 0.1x ＝ 18 ＋ 0.06x
+0.1x － 0.06x ＝ 18 － 12
+0.04x ＝ 6　→　x ＝ 6 ÷ 0.04 ＝ <strong>150g</strong></p></div><div id="qc3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>食塩 12 ＋ 15 ＝ 27g、食塩水 450g。27 ÷ 450 ＝ 0.06 ＝ 6％ ✓</p></div><button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',3)">STEP 1 を見る ▼</button><div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="result-card" id="cf-result" style="display:none"><div class="rc-title">📊 総合確認の結果</div><div class="rc-score" id="rc-score"></div><div class="rc-msg" id="rc-msg"></div></div><div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a href="SPI_wariai_index.html" class="unav-btn unav-idx">☰ 単元一覧へ</a><a href="SPI_wariai_index.html" class="unav-btn unav-next">🎓 コース修了！単元一覧へ</a></div></div></div>
+</main>
+<script>
+const CFG={"key": "spi_wariai_p17", "PR": ["q1", "q2", "q3", "q4", "q5"], "CF": ["qc1", "qc2", "qc3"], "LIM": {"qc1": 120, "qc2": 150, "qc3": 240}, "GOAL": {"q1": "2分", "q2": "2分", "q3": "3分", "q4": "3分", "q5": "3分"}};
+const answered={};
+const timers={};
+const miniAnswered={};
+const stepRev={};
+const cfRes={};
+const cfSecs={};
+const pageSeen={};
+let pracDone=0,cfDone=0,cfOk=0;
+
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered[CFG.PR[0]])startTimer(CFG.PR[0]);
+}
+
+/* ───── 演習：経過時間を表示するタイマー（目安のみ） ───── */
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tw=document.getElementById('t'+qid.slice(1));
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/240,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(pct>.8?' warn':''));
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=m+':'+String(s).padStart(2,'0');
+    if(msg){
+      const goal=msg.querySelector('.goal');const g=goal?goal.outerHTML:'';
+      if(sec<60)msg.innerHTML='自力で考えましょう。'+g;
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+/* ───── 確認：本当にカウントダウンして締め切るタイマー ───── */
+function startCf(qid){
+  if(answered[qid]||timers[qid])return;
+  document.getElementById('cover-'+qid).style.display='none';
+  document.getElementById('body-'+qid).style.display='block';
+  const lim=CFG.LIM[qid];
+  const start=Date.now();cfSecs[qid]=0;
+  const ring=document.getElementById('ring-'+qid);
+  const fg=ring.querySelector('.tfg'),txt=ring.querySelector('.tcenter');
+  const msg=ring.parentNode.querySelector('.timer-msg');
+  function tick(){
+    const sec=Math.floor((Date.now()-start)/1000);
+    cfSecs[qid]=Math.min(sec,lim);
+    const left=Math.max(lim-sec,0);
+    const pct=Math.min(sec/lim,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(left<=lim*.15?' danger':(left<=lim*.4?' warn':'')));
+    txt.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    const goal=msg.querySelector('.goal');
+    if(goal){goal.className='goal'+(left<=lim*.15?' danger':'');
+      goal.textContent=left<=0?'時間切れ':(left<=lim*.15?'あと少し！':(left<=lim*.4?'半分を過ぎました':'制限 '+fmt(lim)));}
+    if(left<=0)timeUp(qid);
+  }
+  tick();
+  timers[qid]=setInterval(tick,250);
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return m?(r?m+'分'+r+'秒':m+'分'):r+'秒';}
+
+function paintChoices(qid,idx,correct){
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&idx!==correct){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+}
+function showAfter(qid){
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const isOk=(idx===correct);
+  const isCf=CFG.CF.includes(qid);
+  const tw=document.getElementById(isCf?'tc'+qid.slice(2):'t'+qid.slice(1));
+  if(tw)tw.style.display='none';
+  paintChoices(qid,idx,correct);
+  const fbOk=document.getElementById('fb-ok-'+qid),fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  showAfter(qid);
+  if(isCf){cfRes[qid]=isOk?'ok':'ng';cfDone++;if(isOk)cfOk++;afterCf();}
+  else{
+    pracDone++;const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    if(pracDone===n){document.getElementById('done-pr').style.display='flex';document.getElementById('pr-done').style.display='block';}
+    const nx=CFG.PR[CFG.PR.indexOf(qid)+1];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+}
+
+function timeUp(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const tw=document.getElementById('tc'+qid.slice(2));
+  if(tw)tw.style.display='none';
+  const c=+document.querySelector('#ch-'+qid+' .ch').getAttribute('onclick').match(/,(\d+)\)/)[1];
+  paintChoices(qid,-1,c);
+  document.getElementById('fb-to-'+qid).style.display='flex';
+  showAfter(qid);
+  cfRes[qid]='to';cfDone++;afterCf();
+}
+
+function afterCf(){
+  const n=CFG.CF.length;
+  document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+  document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+  if(cfDone===n){
+    document.getElementById('done-cf').style.display='flex';
+    document.getElementById('unit-nav').style.display='flex';
+    const to=Object.values(cfRes).filter(v=>v==='to').length;
+    const rate=cfOk/n;
+    document.getElementById('rc-score').textContent='正解 '+cfOk+' / '+n+' 問';
+    let msg='';
+    if(rate>=.8)msg='合格ラインです。この調子で次のパターンへ進みましょう。';
+    else if(rate>=.5)msg='あと少しです。間違えた問題の解説を読み直し、「もう一度」で挑戦してみましょう。';
+    else msg='まだ慣れていないだけです。解説タブの例題をもう一度たどってから、再挑戦しましょう。何度やり直しても大丈夫です。';
+    document.getElementById('rc-msg').textContent=to>0?msg+'（時間切れは '+to+' 問でした。まず正確に解ける形をつくり、そのあとで速さを上げていきましょう。）':msg;
+    document.getElementById('cf-result').style.display='block';
+    lsSet(CFG.key+'_score',cfOk+'/'+n);lsSet(CFG.key,'1');
+    setTimeout(()=>document.getElementById('cf-result').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  const isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  const fbOk=document.getElementById('mfb-'+qid+'-ok'),fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';}_launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid]||0;
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]=r+1;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if((stepRev[qid]||0)>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+(stepRev[qid]+1)+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(prefix+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  const isCf=CFG.CF.includes(qid);
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(isCf){
+    const r=cfRes[qid];
+    if(r){cfDone--;if(r==='ok')cfOk--;delete cfRes[qid];}
+    const n=CFG.CF.length;
+    document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+    document.getElementById('done-cf').style.display='none';
+    document.getElementById('cf-result').style.display='none';
+    document.getElementById('unit-nav').style.display='none';
+    var to=document.getElementById('fb-to-'+qid);if(to)to.style.display='none';
+    document.getElementById('cover-'+qid).style.display='block';
+    document.getElementById('body-'+qid).style.display='none';
+    var tw=document.getElementById('tc'+qid.slice(2));if(tw)tw.style.display='flex';
+    const ring=document.getElementById('ring-'+qid);
+    ring.querySelector('.tfg').style.strokeDashoffset=0;ring.querySelector('.tfg').setAttribute('class','tfg');
+    const lim=CFG.LIM[qid];ring.querySelector('.tcenter').textContent=Math.floor(lim/60)+':'+String(lim%60).padStart(2,'0');
+    const g=ring.parentNode.querySelector('.goal');if(g){g.className='goal';g.textContent='制限 '+fmt(lim);}
+  }else{
+    if(pracDone>0)pracDone--;
+    const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    document.getElementById('done-pr').style.display='none';document.getElementById('pr-done').style.display='none';
+    var tw2=document.getElementById('t'+qid.slice(1));if(tw2)tw2.style.display='flex';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  if(!isCf)startTimer(qid);
+  else window.scrollTo({top:document.getElementById('cover-'+qid).getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+
+lsSet(CFG.key,'1');
+
+</script>
+</body>
+</html>

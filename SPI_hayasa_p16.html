@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 速さ パターン16 往復の平均の速さ</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tfg.danger{stroke:var(--pink);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.timer-msg .goal.danger{color:var(--pink);font-weight:700;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.85;line-height:1.7;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.unav-idx{background:#fff;border-color:#bcb8ae;color:#58544c;}
+.unav-idx:hover{border-color:#2055b0;color:#2055b0;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+
+/* ── 追加：分数・図・制限時間つき確認問題 ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.3;margin:0 3px;font-size:.92em;font-weight:inherit;}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px;}
+.frac>span:last-child{padding:1px 4px 0;}
+.diagram{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.7rem .6rem .5rem;margin:.9rem 0;overflow-x:auto;}
+.diagram svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto;}
+.diagram .cap{font-size:12px;color:var(--text2);text-align:center;margin-top:.35rem;line-height:1.7;}
+.cf-cover{background:var(--al);border:2px dashed #e0c888;border-radius:12px;padding:1.4rem 1rem;text-align:center;margin-bottom:.6rem;}
+.cf-cover-txt{font-size:13px;color:var(--amber);margin-bottom:.8rem;}
+.cf-cover-txt strong{font-size:16px;}
+.start-btn{background:var(--amber);color:#fff;border:none;border-radius:10px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .15s;}
+.start-btn:hover{background:#8a4e00;}
+.result-card{background:linear-gradient(120deg,#1B2A4A,#2055b0);color:#fff;border-radius:var(--r);padding:1.3rem 1.5rem;margin-top:1.4rem;}
+.rc-title{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.8;margin-bottom:.5rem;}
+.rc-score{font-size:26px;font-weight:700;margin-bottom:.4rem;}
+.rc-msg{font-size:13px;line-height:1.9;opacity:.95;}
+.formula-box .f-eq .frac{margin:0 2px;}
+.exp-box p .frac{font-size:.95em;}
+@media (max-width:480px){.choices,.mini-choices{grid-template-columns:1fr;}.tab-btn{padding:.7rem .8rem;}.card{padding:1.2rem 1.1rem;}.sec-head{margin:-1.2rem -1.1rem 1.1rem;}}
+
+</style>
+</head>
+<body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI 非言語 ／ 速さ　パターン16　往復の平均の速さ</span></header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>実践演習<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>総合確認<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">パターン16 ─ 往復の平均の速さ</div><div class="page-hdr-desc">行きと帰りで速さがちがうとき、「平均の速さ」はどうやって求めるのでしょうか。「足して2でわる」ではないのが、このパターンの大切なところです。これまで学んだ「距離 ÷ 時間」だけで解けます。手順を順に確認していきます。</div></div></div><div class="card"><div class="sec-head"><span class="sec-num">1</span>【ポイント】 平均の速さ ＝ 全体の距離 ÷ 全体の時間</div><div class="body-text">このパターンで覚えることは、たった1つです。<br><strong>平均の速さは、「全体の距離」を「全体の時間」でわって求める。</strong>　これだけです。</div><div class="formula-box"><div class="f-title">🔑 このパターンのポイント</div><div class="formula-line"><span class="f-key">ポイント①</span><span class="f-eq">平均の速さ ＝ 全体の距離 ÷ 全体の時間</span></div><div class="formula-line"><span class="f-key">ポイント②</span><span class="f-eq">時間 ＝ 距離 ÷ 速さ　で、区間ごとの時間を先に出す</span></div><div class="formula-line"><span class="f-key">ポイント③</span><span class="f-eq">「速さを足して2でわる」は<strong>まちがい</strong></span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 新しい公式ではありません。「速さ ＝ 距離 ÷ 時間」を、旅の全体にあてはめただけです。</div></div><div class="pink-box"><strong>⚠️ 「足して2でわる」と、こうなります</strong>行きが時速60km、帰りが時速40kmのとき、（60 ＋ 40）÷ 2 ＝ 50 と答えたくなります。しかし、これは<strong>まちがい</strong>です。<br>正しい答えは時速48kmです。なぜ50kmではだめなのかは、このあと【解説②】でくわしく説明します。</div></div><div class="card"><div class="sec-head"><span class="sec-num">2</span>【解説①】 「平均の速さ」とは、どういう速さでしょうか</div><div class="body-text">たとえば、東京から名古屋まで新幹線で行くとします。途中で速く走ったり、駅の近くでゆっくり走ったりします。<br>それでも、「東京から名古屋まで、だいたい時速○kmで行った」と言うことができます。この<strong>ならして考えた速さ</strong>が、平均の速さです。</div><div class="teal-box"><strong>💡 平均の速さは「ずっと同じ速さで走ったつもり」の速さです</strong>本当は速さが変わっていても、<strong>「ずっと同じ速さで走ったら、同じ時間で同じ距離を進めた」というときの速さ</strong>が平均の速さです。<br>ですから、知りたいのは次の2つだけです。<br>① 全部で何km進んだか（全体の距離）<br>② 全部で何時間かかったか（全体の時間）</div><div class="point-box"><strong>📌 思い出そう：速さ ＝ 距離 ÷ 時間</strong>パターン2で学んだ公式です。「1時間（または1分）に進む距離」が速さでした。<br>例）240kmを5時間で進んだ　→　240 ÷ 5 ＝ 48　→　時速48km<br>平均の速さも、この公式の「距離」に全体の距離、「時間」に全体の時間を入れるだけです。</div><div class="diagram"><svg viewBox="0 0 600 124" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><defs><marker id="ah-pink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d93652"/></marker><marker id="ah-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d9478"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2055b0"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a86000"/></marker><marker id="ah-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#98948c"/></marker><marker id="ah-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b21a8"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#166534"/></marker></defs><line x1="40" y1="82" x2="560" y2="82" stroke="#58544c" stroke-width="3" stroke-linecap="round"/><line x1="40.0" y1="64" x2="560.0" y2="64" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="40.0" y1="64" x2="40.0" y2="82" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="300.0" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">行き 120km（時速60km）</text><line x1="560.0" y1="30" x2="40.0" y2="30" stroke="#d93652" stroke-width="2.5" marker-end="url(#ah-pink)"/><line x1="560.0" y1="30" x2="560.0" y2="82" stroke="#d93652" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="300.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#d93652">帰り 120km（時速40km）</text><circle cx="40.0" cy="82" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="40.0" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">A町</text><circle cx="560.0" cy="82" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="560.0" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">B町</text></svg><div class="cap">行きも帰りも、同じ道を通ります。全体の距離は 120 ＋ 120 ＝ 240km です。</div></div><div class="body-text">図のように、行き120km・帰り120kmなら、全体の距離は <strong>120 ＋ 120 ＝ 240km</strong> です。<br>片道の距離だけで考えてはいけません。<strong>往復なら、行きと帰りの両方を足します。</strong></div><div class="point-box"><strong>📌 思い出そう：時間 ＝ 距離 ÷ 速さ</strong>全体の時間を出すには、まず行きと帰りの時間を別々に求めます。<br>例）行き：120km ÷ 時速60km ＝ 2時間　／　帰り：120km ÷ 時速40km ＝ 3時間<br>全体の時間 ＝ 2 ＋ 3 ＝ 5時間。これで、平均の速さは 240 ÷ 5 ＝ 48（時速48km）と求まります。</div></div><div class="card"><div class="sec-head"><span class="sec-num">3</span>【解説②】 なぜ「足して2でわる」ではだめなのでしょうか</div><div class="body-text">行きが時速60km、帰りが時速20kmで、片道60kmの道を往復した場合を考えます。<br>「足して2でわる」と（60 ＋ 20）÷ 2 ＝ 40 になります。本当にそうでしょうか。時間を調べてみましょう。</div><table class="kansan-table"><tr><th></th><th>距離</th><th>速さ</th><th>時間（距離 ÷ 速さ）</th></tr><tr><td><strong>行き</strong></td><td>60km</td><td>時速60km</td><td class="hi">60 ÷ 60 ＝ 1時間</td></tr><tr><td><strong>帰り</strong></td><td>60km</td><td>時速20km</td><td class="hi">60 ÷ 20 ＝ 3時間</td></tr><tr><td><strong>全体</strong></td><td>120km</td><td>？</td><td class="hig">1 ＋ 3 ＝ 4時間</td></tr></table><div class="diagram"><svg viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">行き：時速60kmで 60km（速いので、短い時間）</text><rect x="10.0" y="18" width="180.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="100.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">1時間</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">帰り：時速20kmで 60km（遅いので、長い時間）</text><rect x="10.0" y="74" width="180.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="100.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">1時間</text><rect x="190.0" y="74" width="180.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">1時間</text><rect x="370.0" y="74" width="180.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="460.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">1時間</text></svg><div class="cap">帯の長さは「かかった時間」です。帰りのほうが3倍も長く走っています。平均の速さは、この長い時間に強く引っぱられます。</div></div><div class="body-text">全体は120kmを4時間で進みましたから、平均の速さは 120 ÷ 4 ＝ <strong>時速30km</strong> です。<br>もし時速40kmで走ったのなら、120km ÷ 40 ＝ 3時間で着くはずですが、実際は4時間かかっています。ですから、40kmは正しくありません。</div><div class="teal-box"><strong>💡 遅い速さで走った「時間」のほうが長いからです</strong>速い行きは、1時間で終わります。遅い帰りは、3時間もかかります。<br>全体の4時間のうち、<strong>3時間は時速20kmで走っている</strong>のですから、平均は真ん中の40kmよりも、遅いほう（20km）に近づきます。<br>「速さ」は、走った時間の長さがちがうもの同士を、そのまま平均することはできないのです。</div><div class="pink-box"><strong>⚠️ よくある間違い</strong>・（行きの速さ ＋ 帰りの速さ）÷ 2 で答えを出してしまう。→ かならず「全体の距離 ÷ 全体の時間」で求めます。<br>・全体の距離を、片道の距離のままにしてしまう。→ 往復なら<strong>2倍</strong>にします。<br>・全体の時間を、行きの時間だけ（または帰りの時間だけ）にしてしまう。→ <strong>両方を足します</strong>。</div></div><div class="card"><div class="sec-head"><span class="sec-num">4</span>【解説③】 片道の長さが書いていないとき・3つの区間のとき</div><div class="body-text">問題によっては、「片道の長さ」が書かれていないことがあります。長さがわからないと解けないように見えますが、実は長さは決めてしまってかまいません。</div><div class="teal-box"><strong>💡 片道の長さは、自分で決めてかまいません</strong>平均の速さは、片道が何kmであっても同じ答えになります。そこで、<strong>計算しやすい長さを自分で決めて</strong>解きます。<br>コツは、<strong>2つの速さのどちらでも、わり切れる長さ</strong>にすることです。そうすると時間が整数になり、計算が楽になります。</div><div class="point-box"><strong>📌 思い出そう：2つの数の「公倍数」</strong>「公倍数」とは、2つの数の<strong>どちらの倍数にもなっている数</strong>のことです。その中でいちばん小さい数を「最小公倍数」といいます。<br>例）時速20kmと時速30kmのとき<br>　20の倍数：20、40、<strong>60</strong>、80、…<br>　30の倍数：30、<strong>60</strong>、90、…<br>　最初に同じになるのは 60　→　片道を <strong>60km</strong> と決めます。<br>60 ÷ 20 ＝ 3、60 ÷ 30 ＝ 2　と、どちらもわり切れます。</div><div class="body-text">3つの区間があるときも、考え方は同じです。<strong>区間ごとに時間を出して、足します。</strong>距離も全部足して、最後に1回だけわり算をします。</div><table class="kansan-table"><tr><th>区間</th><th>距離</th><th>速さ</th><th>時間</th></tr><tr><td>前半</td><td>18km</td><td>時速6km</td><td>18 ÷ 6 ＝ 3時間</td></tr><tr><td>中盤</td><td>20km</td><td>時速10km</td><td>20 ÷ 10 ＝ 2時間</td></tr><tr><td>後半</td><td>22km</td><td>時速11km</td><td>22 ÷ 11 ＝ 2時間</td></tr><tr><td><strong>全体</strong></td><td class="hi">18 ＋ 20 ＋ 22 ＝ 60km</td><td>？</td><td class="hi">3 ＋ 2 ＋ 2 ＝ 7時間</td></tr></table><div class="body-text">平均の速さは 60 ÷ 7 ＝ <span class="frac"><span>60</span><span>7</span></span>（8<span class="frac"><span>4</span><span>7</span></span>）km です。この表のように、距離と時間を全部そろえてから、最後にわります。（このパターンの問題では、答えがきれいな数になるように作ってあります。）</div></div><div class="card"><div class="sec-head"><span class="sec-num">5</span>【例題】 手順を追って解いてみましょう</div><div class="clabel ex" style="margin-top:.4rem">例題 1　まずは、片道の長さがわかる問題</div><div class="q-text">A町とB町のあいだは片道<strong>120km</strong>です。行きは時速<strong>60km</strong>、帰りは時速<strong>40km</strong>で走りました。往復の平均の速さは、時速何kmですか？</div><div class="diagram"><svg viewBox="0 0 600 124" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><defs><marker id="ah-pink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#d93652"/></marker><marker id="ah-teal" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0d9478"/></marker><marker id="ah-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2055b0"/></marker><marker id="ah-amber" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#a86000"/></marker><marker id="ah-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#98948c"/></marker><marker id="ah-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#6b21a8"/></marker><marker id="ah-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#166534"/></marker></defs><line x1="40" y1="82" x2="560" y2="82" stroke="#58544c" stroke-width="3" stroke-linecap="round"/><line x1="40.0" y1="64" x2="560.0" y2="64" stroke="#2055b0" stroke-width="2.5" marker-end="url(#ah-blue)"/><line x1="40.0" y1="64" x2="40.0" y2="82" stroke="#2055b0" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="300.0" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#2055b0">行き 120km（時速60km）</text><line x1="560.0" y1="30" x2="40.0" y2="30" stroke="#d93652" stroke-width="2.5" marker-end="url(#ah-pink)"/><line x1="560.0" y1="30" x2="560.0" y2="82" stroke="#d93652" stroke-width="1" stroke-dasharray="3 3" opacity=".55"/><text x="300.0" y="24" text-anchor="middle" font-size="13" font-weight="700" fill="#d93652">帰り 120km（時速40km）</text><circle cx="40.0" cy="82" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="40.0" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">A町</text><circle cx="560.0" cy="82" r="6" fill="#fff" stroke="#1a1814" stroke-width="2.5"/><text x="560.0" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#1a1814">B町</text></svg><div class="cap">行きも帰りも、同じ道を通ります。全体の距離は 120 ＋ 120 ＝ 240km です。</div></div><div class="body-text">「行きの時間」と「帰りの時間」を別々に出して、最後に全体でわります。</div><div id="ex1-s0" class="exp-box" style="display:none"><h4>STEP 1　行きと帰りの時間を出します（時間 ＝ 距離 ÷ 速さ）</h4><p>　　　　　距離　　　速さ　　　時間
+行き　　　120km　　時速60km　　？
+帰り　　　120km　　時速40km　　？
+
+行き：120 ÷ 60 ＝ <strong>2時間</strong>
+帰り：120 ÷ 40 ＝ <strong>3時間</strong></p></div><div id="ex1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体の距離と時間を出して、わります</h4><p>全体の距離 ＝ 120 ＋ 120 ＝ 240km
+全体の時間 ＝ 2 ＋ 3 ＝ 5時間
+
+平均の速さ ＝ 240 ÷ 5 ＝ <strong>時速48km</strong>
+（（60 ＋ 40）÷ 2 ＝ 50 ではありません）</p></div><div id="ex1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の片道の長さで確かめます</h4><p>片道を60kmに変えて、もう一度やってみます。
+行き 60 ÷ 60 ＝ 1時間、帰り 60 ÷ 40 ＝ 1.5時間　→　合計 2.5時間
+全体の距離 60 ＋ 60 ＝ 120km　→　120 ÷ 2.5 ＝ 48
+同じ時速48kmになりました ✓（片道の長さによらない、という意味です）</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',3)">STEP 1 を見る ▼</button><div id="ex1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 2　片道の長さが書いていないとき</div><div class="q-text">ある道を、行きは時速<strong>20km</strong>、帰りは時速<strong>30km</strong>で往復しました。片道の長さはわかりません。往復の平均の速さは、時速何kmですか？</div><div class="body-text">片道の長さを自分で決めます。20と30の最小公倍数の60kmにすると、時間が整数になります。</div><div id="ex2-s0" class="exp-box" style="display:none"><h4>STEP 1　片道を60kmと決めて、時間を出します</h4><p>行き：60 ÷ 20 ＝ <strong>3時間</strong>
+帰り：60 ÷ 30 ＝ <strong>2時間</strong></p></div><div id="ex2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体の距離と時間で、わります</h4><p>全体の距離 ＝ 60 ＋ 60 ＝ 120km
+全体の時間 ＝ 3 ＋ 2 ＝ 5時間
+平均の速さ ＝ 120 ÷ 5 ＝ <strong>時速24km</strong></p></div><div id="ex2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　片道を120kmと決めて、確かめます</h4><p>行き 120 ÷ 20 ＝ 6時間、帰り 120 ÷ 30 ＝ 4時間　→　合計10時間
+全体の距離 ＝ 240km　→　240 ÷ 10 ＝ 24
+やはり時速24kmです ✓（（20 ＋ 30）÷ 2 ＝ 25 とはちがいます）</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',3)">STEP 1 を見る ▼</button><div id="ex2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 3　3つの区間を進むとき</div><div class="q-text">A地点からD地点まで、3つの区間を進みます。A→Bは<strong>4km</strong>を時速<strong>2km</strong>、B→Cは<strong>15km</strong>を時速<strong>5km</strong>、C→Dは<strong>21km</strong>を時速<strong>7km</strong>で進みました。全体の平均の速さは、時速何kmですか？</div><div class="body-text">区間ごとに時間を出して足します。距離も全部足して、最後に1回だけわり算をします。</div><div id="ex3-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの時間を出します</h4><p>A→B：4 ÷ 2 ＝ <strong>2時間</strong>
+B→C：15 ÷ 5 ＝ <strong>3時間</strong>
+C→D：21 ÷ 7 ＝ <strong>3時間</strong></p></div><div id="ex3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体の距離と時間を足します</h4><p>全体の距離 ＝ 4 ＋ 15 ＋ 21 ＝ 40km
+全体の時間 ＝ 2 ＋ 3 ＋ 3 ＝ 8時間</p></div><div id="ex3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　平均の速さを求めて、確かめます</h4><p>平均の速さ ＝ 40 ÷ 8 ＝ <strong>時速5km</strong>
+確かめ：時速5kmで8時間進むと 5 × 8 ＝ 40km。全体の距離と合っています ✓
+（（2 ＋ 5 ＋ 7）÷ 3 ＝ <span class="frac"><span>14</span><span>3</span></span> は、速さを平均したまちがいです）</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',3)">STEP 1 を見る ▼</button><div id="ex3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">❓ C<span>まだ不安</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト 平均の速さ</div><div class="mini-q">ある道を、行きは時速<strong>12km</strong>、帰りは時速<strong>24km</strong>で往復しました。片道の長さはわかりません。往復の平均の速さは、時速何kmですか？</div><div class="mini-choices" id="mch-m1"><button class="mch" onclick="miniAns('m1',0,1)"><span class="mcnum">ア</span>時速18km</button><button class="mch" onclick="miniAns('m1',1,1)"><span class="mcnum">イ</span>時速16km</button><button class="mch" onclick="miniAns('m1',2,1)"><span class="mcnum">ウ</span>時速14km</button><button class="mch" onclick="miniAns('m1',3,1)"><span class="mcnum">エ</span>時速20km</button></div><div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　片道を24kmと決めます。行き 24 ÷ 12 ＝ 2時間、帰り 24 ÷ 24 ＝ 1時間。全体 48 ÷ 3 ＝ <strong>時速16km</strong></div><div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　片道を24kmと仮に決めます。行き 2時間、帰り 1時間、合計3時間。往復48kmなので 48 ÷ 3 ＝ <strong>時速16km</strong> です。（12 ＋ 24）÷ 2 ＝ 18 は、速さを平均してしまったまちがいです。</div><div class="mini-q" style="margin-top:1rem;">時速<strong>40km</strong>で<strong>1時間</strong>走り、つづいて時速<strong>60km</strong>で<strong>3時間</strong>走りました。全体の平均の速さは、時速何kmですか？</div><div class="mini-choices" id="mch-m2"><button class="mch" onclick="miniAns('m2',0,2)"><span class="mcnum">ア</span>時速50km</button><button class="mch" onclick="miniAns('m2',1,2)"><span class="mcnum">イ</span>時速52km</button><button class="mch" onclick="miniAns('m2',2,2)"><span class="mcnum">ウ</span>時速55km</button><button class="mch" onclick="miniAns('m2',3,2)"><span class="mcnum">エ</span>時速58km</button></div><div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　距離は 40 × 1 ＝ 40km と 60 × 3 ＝ 180km で合計220km。時間は 1 ＋ 3 ＝ 4時間。220 ÷ 4 ＝ <strong>時速55km</strong></div><div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　今度は「時間」が書いてあるので、距離を出します（距離 ＝ 速さ × 時間）。40 × 1 ＋ 60 × 3 ＝ 220km。時間は合計4時間。220 ÷ 4 ＝ <strong>時速55km</strong>。（40 ＋ 60）÷ 2 ＝ 50 は、走った時間がちがうのに平均したまちがいです。</div></div><button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:.6rem;">実践演習へ進む →</button></div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">実践演習</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！　ヒントも使えます。全5問</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div><div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div></div><div class="prob-n"><span class="n n-pr">1</span><span>実践演習 第1問</span></div><div class="card"><div class="clabel pr">実践演習 第1問　やさしい計算①</div><div class="q-text">片道<strong>90km</strong>の道を、行きは時速<strong>45km</strong>、帰りは時速<strong>30km</strong>で往復しました。往復の平均の速さは、時速何kmですか？</div><button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button><div class="hint-box" id="h1">まず行きと帰りの時間を、距離 ÷ 速さ で出します（90 ÷ 45 と 90 ÷ 30）。次に全体の距離 180km を、時間の合計でわります。</div><div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,2)"><span class="cnum">1</span>時速30km</button><button class="ch" onclick="ans('q1',1,2)"><span class="cnum">2</span>時速37.5km</button><button class="ch" onclick="ans('q1',2,2)"><span class="cnum">3</span>時速36km</button><button class="ch" onclick="ans('q1',3,2)"><span class="cnum">4</span>時速40km</button></div><div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">180 ÷ 5 ＝ 36。時速36km ✓</span></span></div><div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">行き 90 ÷ 45 ＝ 2時間、帰り 90 ÷ 30 ＝ 3時間。全体の距離180kmを、合計5時間でわります。</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div><div id="q1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>行き2時間、帰り3時間で合計5時間。往復180km ÷ 5時間 ＝ <strong>時速36km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q1"><div class="clabel kai">段階解説</div><div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　行きと帰りの時間</h4><p>行き：90 ÷ 45 ＝ 2時間
+帰り：90 ÷ 30 ＝ 3時間</p></div><div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体でわります</h4><p>全体の距離 ＝ 90 ＋ 90 ＝ 180km、全体の時間 ＝ 2 ＋ 3 ＝ 5時間
+180 ÷ 5 ＝ <strong>時速36km</strong></p></div><div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>時速36kmで5時間進むと 36 × 5 ＝ 180km ✓（37.5は、（45 ＋ 30）÷ 2 のまちがいです）</p></div><button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button><div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">2</span><span>実践演習 第2問</span></div><div class="card"><div class="clabel pr">実践演習 第2問　時間が小数になるとき</div><div class="q-text">片道<strong>120km</strong>の道を、行きは時速<strong>80km</strong>、帰りは時速<strong>48km</strong>で往復しました。往復の平均の速さは、時速何kmですか？</div><button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button><div class="hint-box" id="h2">行きの時間は 120 ÷ 80 ＝ 1.5時間、帰りは 120 ÷ 48 ＝ 2.5時間です。合計の時間で、全体の距離240kmをわります。</div><div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,1)"><span class="cnum">1</span>時速64km</button><button class="ch" onclick="ans('q2',1,1)"><span class="cnum">2</span>時速60km</button><button class="ch" onclick="ans('q2',2,1)"><span class="cnum">3</span>時速58km</button><button class="ch" onclick="ans('q2',3,1)"><span class="cnum">4</span>時速62km</button></div><div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">240 ÷ 4 ＝ 60。時速60km ✓</span></span></div><div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">行き 1.5時間、帰り 2.5時間で合計4時間。240 ÷ 4 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div><div id="q2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>行き 120 ÷ 80 ＝ 1.5時間、帰り 120 ÷ 48 ＝ 2.5時間。240 ÷ 4 ＝ <strong>時速60km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q2"><div class="clabel kai">段階解説</div><div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　行きと帰りの時間</h4><p>行き：120 ÷ 80 ＝ 1.5時間
+帰り：120 ÷ 48 ＝ 2.5時間
+（120 ÷ 48 は、24でわって 5 ÷ 2 ＝ 2.5 と考えます）</p></div><div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体でわります</h4><p>全体の距離 ＝ 240km、全体の時間 ＝ 1.5 ＋ 2.5 ＝ 4時間
+240 ÷ 4 ＝ <strong>時速60km</strong></p></div><div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>時速60kmで4時間進むと 60 × 4 ＝ 240km ✓（64は、（80 ＋ 48）÷ 2 のまちがいです）</p></div><button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button><div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">3</span><span>実践演習 第3問</span></div><div class="card"><div class="clabel pr">実践演習 第3問　片道の長さがわからない</div><div class="q-text">ある道を、行きは時速<strong>12km</strong>、帰りは時速<strong>6km</strong>で往復しました。片道の長さはわかりません。往復の平均の速さは、時速何kmですか？</div><button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button><div class="hint-box" id="h3">12と6の最小公倍数は12です。片道を12kmと決めると、行きは12 ÷ 12、帰りは12 ÷ 6 で、どちらも整数の時間になります。</div><div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,0)"><span class="cnum">1</span>時速8km</button><button class="ch" onclick="ans('q3',1,0)"><span class="cnum">2</span>時速9km</button><button class="ch" onclick="ans('q3',2,0)"><span class="cnum">3</span>時速7km</button><button class="ch" onclick="ans('q3',3,0)"><span class="cnum">4</span>時速10km</button></div><div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">24 ÷ 3 ＝ 8。時速8km ✓</span></span></div><div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">片道12kmと決めると、行き1時間、帰り2時間。往復24kmを、合計3時間でわります。</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div><div id="q3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>片道を12kmと決める。行き1時間、帰り2時間で合計3時間。24 ÷ 3 ＝ <strong>時速8km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q3"><div class="clabel kai">段階解説</div><div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　片道の長さを決めます</h4><p>12と6の最小公倍数は12なので、片道を12kmと決めます。</p></div><div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　時間を出して、わります</h4><p>行き：12 ÷ 12 ＝ 1時間、帰り：12 ÷ 6 ＝ 2時間
+全体の距離 ＝ 24km、全体の時間 ＝ 3時間
+24 ÷ 3 ＝ <strong>時速8km</strong></p></div><div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の長さで確かめます</h4><p>片道を24kmにすると、行き2時間、帰り4時間で合計6時間。往復48km ÷ 6 ＝ 8 ✓（9は、（12 ＋ 6）÷ 2 のまちがいです）</p></div><button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button><div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">4</span><span>実践演習 第4問</span></div><div class="card"><div class="clabel pr">実践演習 第4問　3つの区間</div><div class="q-text">A→B→C→Dと進みます。どの区間も<strong>12km</strong>で、速さは順に時速<strong>3km</strong>、時速<strong>4km</strong>、時速<strong>6km</strong>でした。全体の平均の速さは、時速何kmですか？</div><button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button><div class="hint-box" id="h4">区間ごとの時間は 12 ÷ 3、12 ÷ 4、12 ÷ 6 です。全体の距離は 12 × 3 ＝ 36km。時間の合計でわります。</div><div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,2)"><span class="cnum">1</span>時速4<span class="frac"><span>1</span><span>3</span></span>km</button><button class="ch" onclick="ans('q4',1,2)"><span class="cnum">2</span>時速5km</button><button class="ch" onclick="ans('q4',2,2)"><span class="cnum">3</span>時速4km</button><button class="ch" onclick="ans('q4',3,2)"><span class="cnum">4</span>時速3km</button></div><div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">36 ÷ 9 ＝ 4。時速4km ✓</span></span></div><div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">時間は 4時間、3時間、2時間で合計9時間。全体の距離36kmを9でわります。</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div><div id="q4-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>時間は 4 ＋ 3 ＋ 2 ＝ 9時間、距離は 12 × 3 ＝ 36km。36 ÷ 9 ＝ <strong>時速4km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q4"><div class="clabel kai">段階解説</div><div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの時間</h4><p>12 ÷ 3 ＝ 4時間、12 ÷ 4 ＝ 3時間、12 ÷ 6 ＝ 2時間
+合計 4 ＋ 3 ＋ 2 ＝ 9時間</p></div><div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体でわります</h4><p>全体の距離 ＝ 12 × 3 ＝ 36km
+36 ÷ 9 ＝ <strong>時速4km</strong></p></div><div id="q4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>時速4kmで9時間進むと 4 × 9 ＝ 36km ✓（4<span class="frac"><span>1</span><span>3</span></span> は、（3 ＋ 4 ＋ 6）÷ 3 のまちがいです）</p></div><button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button><div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">5</span><span>実践演習 第5問</span></div><div class="card"><div class="clabel pr">実践演習 第5問　逆向き（帰りの速さを求める）</div><div class="q-text">片道<strong>60km</strong>の道を、行きは時速<strong>60km</strong>で走り、往復の平均の速さは時速<strong>40km</strong>でした。帰りは時速何kmで走りましたか？</div><button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button><div class="hint-box" id="h5">往復の距離は120km。平均が時速40kmなので、全体の時間は 120 ÷ 40 ＝ 3時間。行きは1時間なので、帰りは何時間でしょう。</div><div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 4分以内</span></div></div><div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,3)"><span class="cnum">1</span>時速20km</button><button class="ch" onclick="ans('q5',1,3)"><span class="cnum">2</span>時速25km</button><button class="ch" onclick="ans('q5',2,3)"><span class="cnum">3</span>時速40km</button><button class="ch" onclick="ans('q5',3,3)"><span class="cnum">4</span>時速30km</button></div><div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">帰り2時間で60km。60 ÷ 2 ＝ 時速30km ✓</span></span></div><div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">全体の時間 3時間から、行きの1時間を引くと、帰りの時間は2時間です。</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div><div id="q5-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>全体の時間 ＝ 120 ÷ 40 ＝ 3時間。帰りの時間 ＝ 3 － 1 ＝ 2時間。60 ÷ 2 ＝ <strong>時速30km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q5"><div class="clabel kai">段階解説</div><div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　全体の時間を出します</h4><p>往復の距離 ＝ 60 ＋ 60 ＝ 120km
+全体の時間 ＝ 120 ÷ 40 ＝ 3時間</p></div><div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　帰りの時間と速さ</h4><p>行きの時間 ＝ 60 ÷ 60 ＝ 1時間
+帰りの時間 ＝ 3 － 1 ＝ 2時間
+帰りの速さ ＝ 60 ÷ 2 ＝ <strong>時速30km</strong></p></div><div id="q5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>行き1時間 ＋ 帰り2時間 ＝ 3時間。往復120km ÷ 3 ＝ 時速40km ✓（20は、2 × 40 － 60 のまちがいです）</p></div><button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button><div id="q5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div id="pr-done" style="display:none"><div class="teal-box" style="margin-top:1.4rem"><strong>🎉 実践演習 完了！</strong>おつかれさまでした。次はいよいよ総合確認です。ここからは制限時間があります。解き方を思い出しながら、落ち着いて挑戦しましょう。</div><button class="next-page-btn cf" onclick="switchTab('cf')">総合確認へ進む →</button></div></div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">総合確認（制限時間つき）</div><div class="page-hdr-desc">SPI本番のつもりで挑戦しましょう。全3問・ヒントなし。「スタート」を押すとカウントダウンが始まり、時間切れになると自動で締め切られます。</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div><div class="pb-txt" id="pb-cf-txt">0 / 3 完了</div></div><div class="teal-box"><strong>💡 はじめに</strong>時間切れになっても、点数が下がるだけで何も困りません。落ち着いて、解説で「どこに時間がかかったか」を確認し、もう一度挑戦すれば大丈夫です。わからない問題で粘りすぎず、「やり方を思い出せない」と感じたら、いったん解説を見て覚えるのも立派な勉強です。</div><div class="prob-n"><span class="n n-cf">1</span><span>総合確認 第1問</span></div><div class="card"><div class="clabel cf">総合確認 第1問　往復の平均の速さ</div><div class="cf-cover" id="cover-qc1"><div class="cf-cover-txt">制限時間：<strong>2分</strong></div><button class="start-btn" onclick="startCf('qc1')">▶ 第1問をスタート</button></div><div id="body-qc1" style="display:none"><div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分</span></div></div><div class="q-text">片道<strong>180km</strong>の道を、行きは時速<strong>90km</strong>、帰りは時速<strong>60km</strong>で往復しました。往復の平均の速さは、時速何kmですか？</div><div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,2)"><span class="cnum">1</span>時速75km</button><button class="ch" onclick="ans('qc1',1,2)"><span class="cnum">2</span>時速70km</button><button class="ch" onclick="ans('qc1',2,2)"><span class="cnum">3</span>時速72km</button><button class="ch" onclick="ans('qc1',3,2)"><span class="cnum">4</span>時速68km</button><button class="ch" onclick="ans('qc1',4,2)"><span class="cnum">5</span>時速66km</button></div></div><div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">360 ÷ 5 ＝ 72km ✓</span></span></div><div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">行き 180 ÷ 90 ＝ 2時間、帰り 180 ÷ 60 ＝ 3時間。360 ÷ 5 を計算します。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc1"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div id="qc1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>行き2時間、帰り3時間で合計5時間。往復360km ÷ 5 ＝ <strong>時速72km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc1"><div class="clabel kai">段階解説</div><div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　時間を出します</h4><p>行き：180 ÷ 90 ＝ 2時間
+帰り：180 ÷ 60 ＝ 3時間</p></div><div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体でわります</h4><p>全体の距離 ＝ 360km、全体の時間 ＝ 5時間
+360 ÷ 5 ＝ <strong>時速72km</strong>
+（確かめ：72 × 5 ＝ 360km ✓。75は（90 ＋ 60）÷ 2 のまちがいです）</p></div><button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',2)">STEP 1 を見る ▼</button><div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">2</span><span>総合確認 第2問</span></div><div class="card"><div class="clabel cf">総合確認 第2問　片道の長さが不明</div><div class="cf-cover" id="cover-qc2"><div class="cf-cover-txt">制限時間：<strong>2分30秒</strong></div><button class="start-btn" onclick="startCf('qc2')">▶ 第2問をスタート</button></div><div id="body-qc2" style="display:none"><div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:30</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分30秒</span></div></div><div class="q-text">ある道を、行きは時速<strong>8km</strong>、帰りは時速<strong>24km</strong>で往復しました。片道の長さはわかりません。往復の平均の速さは、時速何kmですか？</div><div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,0)"><span class="cnum">1</span>時速12km</button><button class="ch" onclick="ans('qc2',1,0)"><span class="cnum">2</span>時速16km</button><button class="ch" onclick="ans('qc2',2,0)"><span class="cnum">3</span>時速14km</button><button class="ch" onclick="ans('qc2',3,0)"><span class="cnum">4</span>時速10km</button><button class="ch" onclick="ans('qc2',4,0)"><span class="cnum">5</span>時速13km</button></div></div><div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">48 ÷ 4 ＝ 12km ✓</span></span></div><div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">片道を24kmと決めると、行き3時間、帰り1時間。往復48kmを4時間でわります。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc2"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div id="qc2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>片道を24kmと決める。行き3時間、帰り1時間で合計4時間。48 ÷ 4 ＝ <strong>時速12km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc2"><div class="clabel kai">段階解説</div><div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　片道の長さを決めます</h4><p>8と24の最小公倍数は24なので、片道を24kmと決めます。</p></div><div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　時間を出して、わります</h4><p>行き：24 ÷ 8 ＝ 3時間、帰り：24 ÷ 24 ＝ 1時間
+全体の距離 ＝ 48km、全体の時間 ＝ 4時間
+48 ÷ 4 ＝ <strong>時速12km</strong></p></div><div id="qc2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>片道を48kmにすると、行き6時間、帰り2時間で合計8時間。往復96km ÷ 8 ＝ 12 ✓（16は（8 ＋ 24）÷ 2 のまちがいです）</p></div><button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',3)">STEP 1 を見る ▼</button><div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">3</span><span>総合確認 第3問</span></div><div class="card"><div class="clabel cf">総合確認 第3問　3つの区間（時間の計算あり）</div><div class="cf-cover" id="cover-qc3"><div class="cf-cover-txt">制限時間：<strong>3分</strong></div><button class="start-btn" onclick="startCf('qc3')">▶ 第3問をスタート</button></div><div id="body-qc3" style="display:none"><div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">3:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 3分</span></div></div><div class="q-text">A→B→C→Dと進みます。どの区間も<strong>30km</strong>で、速さは順に時速<strong>60km</strong>、時速<strong>30km</strong>、時速<strong>20km</strong>でした。全体の平均の速さは、時速何kmですか？</div><div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,4)"><span class="cnum">1</span>時速36<span class="frac"><span>2</span><span>3</span></span>km</button><button class="ch" onclick="ans('qc3',1,4)"><span class="cnum">2</span>時速35km</button><button class="ch" onclick="ans('qc3',2,4)"><span class="cnum">3</span>時速32km</button><button class="ch" onclick="ans('qc3',3,4)"><span class="cnum">4</span>時速25km</button><button class="ch" onclick="ans('qc3',4,4)"><span class="cnum">5</span>時速30km</button></div></div><div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">90 ÷ 3 ＝ 30km ✓</span></span></div><div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">時間は 0.5時間、1時間、1.5時間で合計3時間。全体の距離90kmを3でわります。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc3"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div id="qc3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>時間は 0.5 ＋ 1 ＋ 1.5 ＝ 3時間、距離は 30 × 3 ＝ 90km。90 ÷ 3 ＝ <strong>時速30km</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc3"><div class="clabel kai">段階解説</div><div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの時間</h4><p>30 ÷ 60 ＝ 0.5時間、30 ÷ 30 ＝ 1時間、30 ÷ 20 ＝ 1.5時間
+合計 0.5 ＋ 1 ＋ 1.5 ＝ 3時間</p></div><div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　全体でわります</h4><p>全体の距離 ＝ 30 × 3 ＝ 90km
+90 ÷ 3 ＝ <strong>時速30km</strong></p></div><div id="qc3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>時速30kmで3時間進むと 30 × 3 ＝ 90km ✓（36<span class="frac"><span>2</span><span>3</span></span> は、（60 ＋ 30 ＋ 20）÷ 3 のまちがいです）</p></div><button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',3)">STEP 1 を見る ▼</button><div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="result-card" id="cf-result" style="display:none"><div class="rc-title">📊 総合確認の結果</div><div class="rc-score" id="rc-score"></div><div class="rc-msg" id="rc-msg"></div></div><div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a href="SPI_hayasa_index.html" class="unav-btn unav-idx">☰ 単元一覧へ</a><a href="SPI_hayasa_p17.html" class="unav-btn unav-next">次：パターン17 時計の針①（針の角度） →</a></div></div></div>
+</main>
+<script>
+const CFG={"key": "spi_hayasa_p16", "PR": ["q1", "q2", "q3", "q4", "q5"], "CF": ["qc1", "qc2", "qc3"], "LIM": {"qc1": 120, "qc2": 150, "qc3": 180}, "GOAL": {"q1": "2分", "q2": "3分", "q3": "3分", "q4": "3分", "q5": "4分"}};
+const answered={};
+const timers={};
+const miniAnswered={};
+const stepRev={};
+const cfRes={};
+const cfSecs={};
+const pageSeen={};
+let pracDone=0,cfDone=0,cfOk=0;
+
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered[CFG.PR[0]])startTimer(CFG.PR[0]);
+}
+
+/* ───── 演習：経過時間を表示するタイマー（目安のみ） ───── */
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tw=document.getElementById('t'+qid.slice(1));
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/240,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(pct>.8?' warn':''));
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=m+':'+String(s).padStart(2,'0');
+    if(msg){
+      const goal=msg.querySelector('.goal');const g=goal?goal.outerHTML:'';
+      if(sec<60)msg.innerHTML='自力で考えましょう。'+g;
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+/* ───── 確認：本当にカウントダウンして締め切るタイマー ───── */
+function startCf(qid){
+  if(answered[qid]||timers[qid])return;
+  document.getElementById('cover-'+qid).style.display='none';
+  document.getElementById('body-'+qid).style.display='block';
+  const lim=CFG.LIM[qid];
+  const start=Date.now();cfSecs[qid]=0;
+  const ring=document.getElementById('ring-'+qid);
+  const fg=ring.querySelector('.tfg'),txt=ring.querySelector('.tcenter');
+  const msg=ring.parentNode.querySelector('.timer-msg');
+  function tick(){
+    const sec=Math.floor((Date.now()-start)/1000);
+    cfSecs[qid]=Math.min(sec,lim);
+    const left=Math.max(lim-sec,0);
+    const pct=Math.min(sec/lim,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(left<=lim*.15?' danger':(left<=lim*.4?' warn':'')));
+    txt.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    const goal=msg.querySelector('.goal');
+    if(goal){goal.className='goal'+(left<=lim*.15?' danger':'');
+      goal.textContent=left<=0?'時間切れ':(left<=lim*.15?'あと少し！':(left<=lim*.4?'半分を過ぎました':'制限 '+fmt(lim)));}
+    if(left<=0)timeUp(qid);
+  }
+  tick();
+  timers[qid]=setInterval(tick,250);
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return m?(r?m+'分'+r+'秒':m+'分'):r+'秒';}
+
+function paintChoices(qid,idx,correct){
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&idx!==correct){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+}
+function showAfter(qid){
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const isOk=(idx===correct);
+  const isCf=CFG.CF.includes(qid);
+  const tw=document.getElementById(isCf?'tc'+qid.slice(2):'t'+qid.slice(1));
+  if(tw)tw.style.display='none';
+  paintChoices(qid,idx,correct);
+  const fbOk=document.getElementById('fb-ok-'+qid),fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  showAfter(qid);
+  if(isCf){cfRes[qid]=isOk?'ok':'ng';cfDone++;if(isOk)cfOk++;afterCf();}
+  else{
+    pracDone++;const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    if(pracDone===n){document.getElementById('done-pr').style.display='flex';document.getElementById('pr-done').style.display='block';}
+    const nx=CFG.PR[CFG.PR.indexOf(qid)+1];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+}
+
+function timeUp(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const tw=document.getElementById('tc'+qid.slice(2));
+  if(tw)tw.style.display='none';
+  const c=+document.querySelector('#ch-'+qid+' .ch').getAttribute('onclick').match(/,(\d+)\)/)[1];
+  paintChoices(qid,-1,c);
+  document.getElementById('fb-to-'+qid).style.display='flex';
+  showAfter(qid);
+  cfRes[qid]='to';cfDone++;afterCf();
+}
+
+function afterCf(){
+  const n=CFG.CF.length;
+  document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+  document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+  if(cfDone===n){
+    document.getElementById('done-cf').style.display='flex';
+    document.getElementById('unit-nav').style.display='flex';
+    const to=Object.values(cfRes).filter(v=>v==='to').length;
+    const rate=cfOk/n;
+    document.getElementById('rc-score').textContent='正解 '+cfOk+' / '+n+' 問';
+    let msg='';
+    if(rate>=.8)msg='合格ラインです。この調子で次のパターンへ進みましょう。';
+    else if(rate>=.5)msg='あと少しです。間違えた問題の解説を読み直し、「もう一度」で挑戦してみましょう。';
+    else msg='まだ慣れていないだけです。解説タブの例題をもう一度たどってから、再挑戦しましょう。何度やり直しても大丈夫です。';
+    document.getElementById('rc-msg').textContent=to>0?msg+'（時間切れは '+to+' 問でした。まず正確に解ける形をつくり、そのあとで速さを上げていきましょう。）':msg;
+    document.getElementById('cf-result').style.display='block';
+    lsSet(CFG.key+'_score',cfOk+'/'+n);lsSet(CFG.key,'1');
+    setTimeout(()=>document.getElementById('cf-result').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  const isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  const fbOk=document.getElementById('mfb-'+qid+'-ok'),fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';}_launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid]||0;
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]=r+1;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if((stepRev[qid]||0)>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+(stepRev[qid]+1)+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(prefix+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  const isCf=CFG.CF.includes(qid);
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(isCf){
+    const r=cfRes[qid];
+    if(r){cfDone--;if(r==='ok')cfOk--;delete cfRes[qid];}
+    const n=CFG.CF.length;
+    document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+    document.getElementById('done-cf').style.display='none';
+    document.getElementById('cf-result').style.display='none';
+    document.getElementById('unit-nav').style.display='none';
+    var to=document.getElementById('fb-to-'+qid);if(to)to.style.display='none';
+    document.getElementById('cover-'+qid).style.display='block';
+    document.getElementById('body-'+qid).style.display='none';
+    var tw=document.getElementById('tc'+qid.slice(2));if(tw)tw.style.display='flex';
+    const ring=document.getElementById('ring-'+qid);
+    ring.querySelector('.tfg').style.strokeDashoffset=0;ring.querySelector('.tfg').setAttribute('class','tfg');
+    const lim=CFG.LIM[qid];ring.querySelector('.tcenter').textContent=Math.floor(lim/60)+':'+String(lim%60).padStart(2,'0');
+    const g=ring.parentNode.querySelector('.goal');if(g){g.className='goal';g.textContent='制限 '+fmt(lim);}
+  }else{
+    if(pracDone>0)pracDone--;
+    const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    document.getElementById('done-pr').style.display='none';document.getElementById('pr-done').style.display='none';
+    var tw2=document.getElementById('t'+qid.slice(1));if(tw2)tw2.style.display='flex';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  if(!isCf)startTimer(qid);
+  else window.scrollTo({top:document.getElementById('cover-'+qid).getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+
+lsSet(CFG.key,'1');
+
+</script>
+</body>
+</html>

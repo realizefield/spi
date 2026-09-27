@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 速さ パターン17 時計の針①（針の角度）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tfg.danger{stroke:var(--pink);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.timer-msg .goal.danger{color:var(--pink);font-weight:700;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.85;line-height:1.7;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.unav-idx{background:#fff;border-color:#bcb8ae;color:#58544c;}
+.unav-idx:hover{border-color:#2055b0;color:#2055b0;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+
+/* ── 追加：分数・図・制限時間つき確認問題 ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.3;margin:0 3px;font-size:.92em;font-weight:inherit;}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px;}
+.frac>span:last-child{padding:1px 4px 0;}
+.diagram{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.7rem .6rem .5rem;margin:.9rem 0;overflow-x:auto;}
+.diagram svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto;}
+.diagram .cap{font-size:12px;color:var(--text2);text-align:center;margin-top:.35rem;line-height:1.7;}
+.cf-cover{background:var(--al);border:2px dashed #e0c888;border-radius:12px;padding:1.4rem 1rem;text-align:center;margin-bottom:.6rem;}
+.cf-cover-txt{font-size:13px;color:var(--amber);margin-bottom:.8rem;}
+.cf-cover-txt strong{font-size:16px;}
+.start-btn{background:var(--amber);color:#fff;border:none;border-radius:10px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .15s;}
+.start-btn:hover{background:#8a4e00;}
+.result-card{background:linear-gradient(120deg,#1B2A4A,#2055b0);color:#fff;border-radius:var(--r);padding:1.3rem 1.5rem;margin-top:1.4rem;}
+.rc-title{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.8;margin-bottom:.5rem;}
+.rc-score{font-size:26px;font-weight:700;margin-bottom:.4rem;}
+.rc-msg{font-size:13px;line-height:1.9;opacity:.95;}
+.formula-box .f-eq .frac{margin:0 2px;}
+.exp-box p .frac{font-size:.95em;}
+@media (max-width:480px){.choices,.mini-choices{grid-template-columns:1fr;}.tab-btn{padding:.7rem .8rem;}.card{padding:1.2rem 1.1rem;}.sec-head{margin:-1.2rem -1.1rem 1.1rem;}}
+
+</style>
+</head>
+<body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI 非言語 ／ 速さ　パターン17　時計の針①（針の角度）</span></header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>実践演習<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>総合確認<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">パターン17 ─ 時計の針①（針の角度）</div><div class="page-hdr-desc">時計の長針と短針は、1分間にそれぞれ何度ずつ進むのでしょうか。それがわかれば、何時何分でも針の角度が計算できます。分度器や難しい公式は使わず、2本の針の進む速さだけを手がかりに求めます。</div></div></div><div class="card"><div class="sec-head"><span class="sec-num">1</span>【ポイント】 長針は1分に6°、短針は1分に0.5°</div><div class="body-text">このパターンで覚えることは、<strong>2つの針の進む速さ</strong>です。時計の文字盤は、ぐるっと1周で 360°（360度）です。</div><div class="formula-box"><div class="f-title">🔑 このパターンのポイント</div><div class="formula-line"><span class="f-key">ポイント①</span><span class="f-eq">長針は 1分に <strong>6°</strong>　→　長針の角度 ＝ 6 × 分</span></div><div class="formula-line"><span class="f-key">ポイント②</span><span class="f-eq">短針は 1分に <strong>0.5°</strong>（1時間で30°）　→　短針の角度 ＝ 30 × 時 ＋ 0.5 × 分</span></div><div class="formula-line"><span class="f-key">ポイント③</span><span class="f-eq">2本の針の作る角度 ＝ 大きいほう － 小さいほう（180°をこえたら、360°から引く）</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 角度は、12の位置から時計まわりに測ります。</div></div><div class="pink-box"><strong>⚠️ 短針は「ちょうどの数字」にはいません</strong>4時20分のとき、短針は「4」の位置にぴったりはいません。20分のあいだに、すでに先へ進んでいます。<br>分がある時刻では、<strong>短針の「0.5 × 分」を足し忘れない</strong>ようにしましょう。</div></div><div class="card"><div class="sec-head"><span class="sec-num">2</span>【解説①】 長針は1分に何度進むのでしょうか</div><div class="body-text">長針は、60分で文字盤を1周（360°）します。ですから、1分で進む角度は、360を60でわった数です。</div><div class="point-box"><strong>📌 思い出そう：わり算で「1つぶん」を出す</strong>「全体を、同じ数に分けたときの1つぶん」は、わり算で求めます。<br>例）360 ÷ 60 ＝ 6（36 ÷ 6 ＝ 6 と考えて、0が1つずつ消えるだけです）<br>よって、長針は <strong>1分に 6°</strong> 進みます。</div><table class="kansan-table"><tr><th>長針が進んだ時間</th><th>進んだ角度</th><th>文字盤の位置</th></tr><tr><td>5分</td><td class="hi">6 × 5 ＝ 30°</td><td>数字1つぶん（たとえば12から1へ）</td></tr><tr><td>10分</td><td class="hi">6 × 10 ＝ 60°</td><td>数字2つぶん（12から2へ）</td></tr><tr><td>15分</td><td class="hi">6 × 15 ＝ 90°</td><td>数字3つぶん（12から3へ）</td></tr><tr><td>30分</td><td class="hi">6 × 30 ＝ 180°</td><td>数字6つぶん（12から6へ・半周）</td></tr><tr><td>60分</td><td class="hi">6 × 60 ＝ 360°</td><td>1周（12にもどる）</td></tr></table><div class="teal-box"><strong>💡 「数字1つぶん ＝ 30°」も覚えておくと便利です</strong>文字盤には数字が12個あります。1周360°を12でわると 360 ÷ 12 ＝ <span class="hl-t">30°</span>。<br>つまり、となりの数字までは30°です。長針が5分進むと数字1つぶん進むので、5分で30°、これは 6 × 5 ＝ 30 と一致しています。<br>長針が「6」を指していたら、それは30分で、12から 6 × 30 ＝ 180° の位置です。</div><div class="body-text">長針の角度は、<strong>6 × 分</strong> で求められます。たとえば、20分のときは 6 × 20 ＝ 120° です（数字の「4」の位置です）。</div></div><div class="card"><div class="sec-head"><span class="sec-num">3</span>【解説②】 短針は1分に何度進むのでしょうか</div><div class="body-text">短針は、12時間で文字盤を1周（360°）します。1時間は60分ですから、12時間は 12 × 60 ＝ 720分 です。<br>よって、1分で進む角度は 360 ÷ 720 ＝ <strong>0.5°</strong> です。長針の12分の1しか進みません。</div><div class="teal-box"><strong>💡 「1時間で30°」と考えるほうが、わかりやすいです</strong>短針は、1時間でとなりの数字まで進みます。数字1つぶんは30°でしたね。<br>つまり、短針は <strong>1時間に30°</strong>。1時間は60分ですから、1分では 30 ÷ 60 ＝ 0.5° です。どちらで考えても同じです。</div><div class="point-box"><strong>📌 思い出そう：「0.5をかける」は「2でわる」のと同じです</strong>0.5 ＝ <span class="frac"><span>1</span><span>2</span></span> なので、0.5 をかけることは、2でわることと同じです。<br>例）0.5 × 20 ＝ 20 ÷ 2 ＝ 10　／　0.5 × 30 ＝ 30 ÷ 2 ＝ 15　／　0.5 × 50 ＝ 50 ÷ 2 ＝ 25</div><div class="diagram"><svg viewBox="0 0 200 200" style="max-width:240px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><circle cx="100" cy="100" r="88" fill="#fff" stroke="#1a1814" stroke-width="3"/><line x1="100.0" y1="20.0" x2="100.0" y2="12.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="30.7" x2="144.0" y2="23.8" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="60.0" x2="176.2" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="180.0" y1="100.0" x2="188.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="140.0" x2="176.2" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="169.3" x2="144.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="100.0" y1="180.0" x2="100.0" y2="188.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="169.3" x2="56.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="140.0" x2="23.8" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="20.0" y1="100.0" x2="12.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="60.0" x2="23.8" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="30.7" x2="56.0" y2="23.8" stroke="#58544c" stroke-width="2"/><text x="100.0" y="40.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">12</text><text x="166.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">3</text><text x="100.0" y="172.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">6</text><text x="34.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">9</text><line x1="100" y1="100" x2="135.2" y2="129.6" stroke="#2055b0" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="100" x2="162.4" y2="136.0" stroke="#d93652" stroke-width="3.5" stroke-linecap="round"/><circle cx="100" cy="100" r="5" fill="#1a1814"/></svg><div class="cap">4時20分の時計です（赤が長針、青が短針）。短針は「4」の少しだけ先にいます。</div></div><div class="formula-box"><div class="f-title">🔑 短針の角度の求め方</div><div class="formula-line"><span class="f-key">ちょうどの時刻</span><span class="f-eq">30 × 時（12の位置から）</span></div><div class="formula-line"><span class="f-key">分がある時刻</span><span class="f-eq">30 × 時 ＋ 0.5 × 分</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">例）4時20分：30 × 4 ＋ 0.5 × 20 ＝ 120 ＋ 10 ＝ 130°</div></div><table class="kansan-table"><tr><th>時刻</th><th>長針の角度（6 × 分）</th><th>短針の角度（30 × 時 ＋ 0.5 × 分）</th></tr><tr><td><strong>3時ちょうど</strong></td><td>6 × 0 ＝ 0°</td><td class="hi">30 × 3 ＝ 90°</td></tr><tr><td><strong>3時20分</strong></td><td>6 × 20 ＝ 120°</td><td class="hi">90 ＋ 0.5 × 20 ＝ 100°</td></tr><tr><td><strong>3時40分</strong></td><td>6 × 40 ＝ 240°</td><td class="hi">90 ＋ 0.5 × 40 ＝ 110°</td></tr></table><div class="pink-box"><strong>⚠️ よくある間違い</strong>・短針の角度を「30 × 時」だけで済ませてしまう（分の進みを忘れています）。→ 3時40分なら、90° ではなく <strong>110°</strong><br>・長針の角度を「分の数」そのままにしてしまう（40分を40°としてしまう）。→ 6をかけて <strong>240°</strong></div></div><div class="card"><div class="sec-head"><span class="sec-num">4</span>【解説③】 2本の針の作る角度を求めます</div><div class="body-text">長針の角度と短針の角度がわかったら、あとは<strong>差</strong>を求めるだけです。大きいほうから小さいほうを引きます。</div><table class="kansan-table"><tr><th>時刻</th><th>長針</th><th>短針</th><th>差（大きい － 小さい）</th></tr><tr><td>3時ちょうど</td><td>0°</td><td>90°</td><td class="hi">90 － 0 ＝ 90°</td></tr><tr><td>6時ちょうど</td><td>0°</td><td>180°</td><td class="hi">180 － 0 ＝ 180°（一直線）</td></tr><tr><td>9時ちょうど</td><td>0°</td><td>270°</td><td class="hi">270 － 0 ＝ 270°　→　？</td></tr></table><div class="body-text">9時ちょうどのとき、差は 270° になりました。でも、時計の針が作る角度は、ふつう<strong>小さいほう（180°以下のほう）</strong>で答えます。<br>2本の針の間には、ぐるっと回って測る角度と、反対まわりで測る角度の2つがあり、その合計は360°だからです。</div><div class="point-box"><strong>📌 思い出そう：合計が360°になる2つの角度</strong>差が180°をこえたら、<strong>360° － 差</strong> で反対まわりの角度を出します。<br>例）差が270°　→　360 － 270 ＝ <strong>90°</strong><br>差が180°ちょうどなら、そのまま180°です。</div><div class="formula-box"><div class="f-title">🔑 手順まとめ</div><div class="formula-line"><span class="f-key">①</span><span class="f-eq">長針の角度 ＝ 6 × 分</span></div><div class="formula-line"><span class="f-key">②</span><span class="f-eq">短針の角度 ＝ 30 × 時 ＋ 0.5 × 分</span></div><div class="formula-line"><span class="f-key">③</span><span class="f-eq">差を出す（大きい － 小さい）</span></div><div class="formula-line"><span class="f-key">④</span><span class="f-eq">180°をこえたら、360° から引く</span></div></div><div class="teal-box"><strong>💡 図でも確かめられます</strong>差を出したあとで、図を頭に思い浮かべて「だいたいこれくらいの角度」と見当をつけましょう。<br>針が90°くらい離れているはずなのに、計算が150°になったら、どこかで間違えています。見直しの目安になります。</div></div><div class="card"><div class="sec-head"><span class="sec-num">5</span>【例題】 手順を追って解いてみましょう</div><div class="clabel ex" style="margin-top:.4rem">例題 1　まずは、ちょうどの時刻で</div><div class="q-text">5時ちょうどのとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="diagram"><svg viewBox="0 0 200 200" style="max-width:240px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><circle cx="100" cy="100" r="88" fill="#fff" stroke="#1a1814" stroke-width="3"/><line x1="100.0" y1="20.0" x2="100.0" y2="12.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="30.7" x2="144.0" y2="23.8" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="60.0" x2="176.2" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="180.0" y1="100.0" x2="188.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="140.0" x2="176.2" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="169.3" x2="144.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="100.0" y1="180.0" x2="100.0" y2="188.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="169.3" x2="56.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="140.0" x2="23.8" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="20.0" y1="100.0" x2="12.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="60.0" x2="23.8" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="30.7" x2="56.0" y2="23.8" stroke="#58544c" stroke-width="2"/><text x="100.0" y="40.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">12</text><text x="166.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">3</text><text x="100.0" y="172.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">6</text><text x="34.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">9</text><line x1="100" y1="100" x2="123.0" y2="139.8" stroke="#2055b0" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="100" x2="100.0" y2="28.0" stroke="#d93652" stroke-width="3.5" stroke-linecap="round"/><circle cx="100" cy="100" r="5" fill="#1a1814"/></svg><div class="cap">5時ちょうどの時計です。長針は「12」、短針は「5」を指しています。</div></div><div class="body-text">5時ちょうどなので、長針は「12」を指しています（0°）。短針の角度だけを求めれば済みます。</div><div id="ex1-s0" class="exp-box" style="display:none"><h4>STEP 1　長針と短針の角度を出します</h4><p>長針：ちょうどなので 6 × 0 ＝ <strong>0°</strong>
+短針：30 × 5 ＝ <strong>150°</strong></p></div><div id="ex1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　差を出します</h4><p>150 － 0 ＝ <strong>150°</strong>
+180°以下なので、このまま答えになります。</p></div><div id="ex1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の考え方で確かめます</h4><p>「12」から「5」までは、数字5つぶんです。
+数字1つぶんは30°なので、30 × 5 ＝ 150° ✓</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',3)">STEP 1 を見る ▼</button><div id="ex1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 2　分がある時刻で</div><div class="q-text">7時20分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="diagram"><svg viewBox="0 0 200 200" style="max-width:240px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><circle cx="100" cy="100" r="88" fill="#fff" stroke="#1a1814" stroke-width="3"/><line x1="100.0" y1="20.0" x2="100.0" y2="12.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="30.7" x2="144.0" y2="23.8" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="60.0" x2="176.2" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="180.0" y1="100.0" x2="188.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="140.0" x2="176.2" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="169.3" x2="144.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="100.0" y1="180.0" x2="100.0" y2="188.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="169.3" x2="56.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="140.0" x2="23.8" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="20.0" y1="100.0" x2="12.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="60.0" x2="23.8" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="30.7" x2="56.0" y2="23.8" stroke="#58544c" stroke-width="2"/><text x="100.0" y="40.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">12</text><text x="166.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">3</text><text x="100.0" y="172.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">6</text><text x="34.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">9</text><line x1="100" y1="100" x2="70.4" y2="135.2" stroke="#2055b0" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="100" x2="162.4" y2="136.0" stroke="#d93652" stroke-width="3.5" stroke-linecap="round"/><circle cx="100" cy="100" r="5" fill="#1a1814"/></svg><div class="cap">7時20分の時計です。赤が長針、青が短針です。</div></div><div class="body-text">長針も短針も、12の位置から数えます。短針が20分ぶん先へ進んでいることに気をつけましょう。</div><div id="ex2-s0" class="exp-box" style="display:none"><h4>STEP 1　長針の角度を求めます</h4><p>6 × 20 ＝ <strong>120°</strong>（数字の「4」の位置です）</p></div><div id="ex2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　短針の角度を求めます</h4><p>30 × 7 ＋ 0.5 × 20 ＝ 210 ＋ 10 ＝ <strong>220°</strong></p></div><div id="ex2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　差を出します</h4><p>220 － 120 ＝ <strong>100°</strong>
+180°以下なので、答えは <strong>100°</strong> です。</p></div><div id="ex2-s3" class="exp-box" style="display:none"><h4>STEP 4　別の考え方で確かめます</h4><p>7時ちょうどのとき、短針は210°、長針は0°ですから、差は210°です。
+20分たつと、長針は120°進み、短針は10°進みます。長針のほうが 120 － 10 ＝ 110° 多く進んだので、差は
+210 － 110 ＝ 100° ✓</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',4)">STEP 1 を見る ▼</button><div id="ex2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 3　差が180°をこえるとき</div><div class="q-text">11時10分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="diagram"><svg viewBox="0 0 200 200" style="max-width:240px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><circle cx="100" cy="100" r="88" fill="#fff" stroke="#1a1814" stroke-width="3"/><line x1="100.0" y1="20.0" x2="100.0" y2="12.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="30.7" x2="144.0" y2="23.8" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="60.0" x2="176.2" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="180.0" y1="100.0" x2="188.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="169.3" y1="140.0" x2="176.2" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="140.0" y1="169.3" x2="144.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="100.0" y1="180.0" x2="100.0" y2="188.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="169.3" x2="56.0" y2="176.2" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="140.0" x2="23.8" y2="144.0" stroke="#58544c" stroke-width="2"/><line x1="20.0" y1="100.0" x2="12.0" y2="100.0" stroke="#58544c" stroke-width="2"/><line x1="30.7" y1="60.0" x2="23.8" y2="56.0" stroke="#58544c" stroke-width="2"/><line x1="60.0" y1="30.7" x2="56.0" y2="23.8" stroke="#58544c" stroke-width="2"/><text x="100.0" y="40.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">12</text><text x="166.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">3</text><text x="100.0" y="172.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">6</text><text x="34.0" y="106.0" text-anchor="middle" font-size="16" font-weight="700" fill="#1a1814">9</text><line x1="100" y1="100" x2="80.6" y2="58.3" stroke="#2055b0" stroke-width="6" stroke-linecap="round"/><line x1="100" y1="100" x2="162.4" y2="64.0" stroke="#d93652" stroke-width="3.5" stroke-linecap="round"/><circle cx="100" cy="100" r="5" fill="#1a1814"/></svg><div class="cap">11時10分の時計です。短針は「12」の少し手前にいます。</div></div><div class="body-text">短針が「12」の少し手前にいます。差が180°をこえるので、最後に「360°から引く」を忘れないようにします。</div><div id="ex3-s0" class="exp-box" style="display:none"><h4>STEP 1　長針の角度を求めます</h4><p>6 × 10 ＝ <strong>60°</strong></p></div><div id="ex3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　短針の角度を求めます</h4><p>30 × 11 ＋ 0.5 × 10 ＝ 330 ＋ 5 ＝ <strong>335°</strong></p></div><div id="ex3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　差を出して、小さいほうにします</h4><p>335 － 60 ＝ 275°
+275°は180°をこえているので、360 － 275 ＝ <strong>85°</strong></p></div><div id="ex3-s3" class="exp-box" style="display:none"><h4>STEP 4　別の考え方で確かめます</h4><p>短針は335°なので、「12」の 360 － 335 ＝ 25° 手前にいます。
+長針は「12」から60°先にいます。
+2つの針は「12」をはさんでいるので、25 ＋ 60 ＝ 85° ✓</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',4)">STEP 1 を見る ▼</button><div id="ex3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">❓ C<span>まだ不安</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト 針の作る角度</div><div class="mini-q">2時30分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="mini-choices" id="mch-m1"><button class="mch" onclick="miniAns('m1',0,1)"><span class="mcnum">ア</span>120°</button><button class="mch" onclick="miniAns('m1',1,1)"><span class="mcnum">イ</span>105°</button><button class="mch" onclick="miniAns('m1',2,1)"><span class="mcnum">ウ</span>75°</button><button class="mch" onclick="miniAns('m1',3,1)"><span class="mcnum">エ</span>90°</button></div><div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　長針 6 × 30 ＝ 180°。短針 30 × 2 ＋ 0.5 × 30 ＝ 60 ＋ 15 ＝ 75°。差 180 － 75 ＝ <strong>105°</strong></div><div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　長針は 6 × 30 ＝ 180°、短針は 60 ＋ 0.5 × 30 ＝ 75° です。差は 180 － 75 ＝ <strong>105°</strong>。（短針の「0.5 × 分」を忘れると 120° になります。）</div><div class="mini-q" style="margin-top:1rem;">1時40分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="mini-choices" id="mch-m2"><button class="mch" onclick="miniAns('m2',0,2)"><span class="mcnum">ア</span>190°</button><button class="mch" onclick="miniAns('m2',1,2)"><span class="mcnum">イ</span>150°</button><button class="mch" onclick="miniAns('m2',2,2)"><span class="mcnum">ウ</span>170°</button><button class="mch" onclick="miniAns('m2',3,2)"><span class="mcnum">エ</span>160°</button></div><div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　長針 6 × 40 ＝ 240°。短針 30 ＋ 0.5 × 40 ＝ 50°。差 240 － 50 ＝ 190° は180°をこえているので、360 － 190 ＝ <strong>170°</strong></div><div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　長針は 240°、短針は 30 ＋ 20 ＝ 50° です。差は 190° ですが、180°をこえているので、小さいほうの角度 360 － 190 ＝ <strong>170°</strong> を答えます。</div></div><button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:.6rem;">実践演習へ進む →</button></div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">実践演習</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！　ヒントも使えます。全5問</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div><div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div></div><div class="prob-n"><span class="n n-pr">1</span><span>実践演習 第1問</span></div><div class="card"><div class="clabel pr">実践演習 第1問　やさしい計算①</div><div class="q-text">長針が<strong>35分</strong>を指しているとき、長針は12の位置から時計まわりに何度進んでいますか？</div><button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button><div class="hint-box" id="h1">長針は1分に6°進みます。35分なら 6 × 35 を計算します。（6 × 30 ＝ 180 と 6 × 5 ＝ 30 に分けると楽です）</div><div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,1)"><span class="cnum">1</span>175°</button><button class="ch" onclick="ans('q1',1,1)"><span class="cnum">2</span>210°</button><button class="ch" onclick="ans('q1',2,1)"><span class="cnum">3</span>180°</button><button class="ch" onclick="ans('q1',3,1)"><span class="cnum">4</span>35°</button></div><div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">6 × 35 ＝ 210° ✓</span></span></div><div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">長針の角度は「6 × 分」です。6 × 35 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div><div id="q1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>長針の角度 ＝ 6 × 35 ＝ <strong>210°</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q1"><div class="clabel kai">段階解説</div><div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　式を立てます</h4><p>長針は1分に6°なので、6 × 35</p></div><div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　計算します</h4><p>6 × 30 ＝ 180、6 × 5 ＝ 30　→　180 ＋ 30 ＝ <strong>210°</strong></p></div><div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>35分は、30分（180°）より5分（30°）多い。180 ＋ 30 ＝ 210° ✓</p></div><button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button><div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">2</span><span>実践演習 第2問</span></div><div class="card"><div class="clabel pr">実践演習 第2問　短針の角度</div><div class="q-text">4時30分のとき、短針は12の位置から時計まわりに何度進んでいますか？</div><button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button><div class="hint-box" id="h2">短針の角度 ＝ 30 × 時 ＋ 0.5 × 分 です。30 × 4 と、0.5 × 30（＝ 30 ÷ 2）を足します。</div><div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,2)"><span class="cnum">1</span>120°</button><button class="ch" onclick="ans('q2',1,2)"><span class="cnum">2</span>150°</button><button class="ch" onclick="ans('q2',2,2)"><span class="cnum">3</span>135°</button><button class="ch" onclick="ans('q2',3,2)"><span class="cnum">4</span>130°</button></div><div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">120 ＋ 15 ＝ 135° ✓</span></span></div><div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">30 × 4 ＝ 120° に、30分ぶんの 0.5 × 30 ＝ 15° を足します。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div><div id="q2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>短針の角度 ＝ 30 × 4 ＋ 0.5 × 30 ＝ 120 ＋ 15 ＝ <strong>135°</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q2"><div class="clabel kai">段階解説</div><div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　4時ちょうどの位置</h4><p>30 × 4 ＝ 120°</p></div><div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　30分で進んだぶん</h4><p>0.5 × 30 ＝ 15°　→　120 ＋ 15 ＝ <strong>135°</strong></p></div><div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>4時30分の短針は、「4」（120°）と「5」（150°）のちょうど真ん中。（120 ＋ 150）÷ 2 ＝ 135° ✓</p></div><button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button><div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">3</span><span>実践演習 第3問</span></div><div class="card"><div class="clabel pr">実践演習 第3問　2本の針の角度</div><div class="q-text">3時40分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button><div class="hint-box" id="h3">長針は 6 × 40、短針は 30 × 3 ＋ 0.5 × 40。それぞれ出してから、大きいほうから小さいほうを引きます。</div><div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,3)"><span class="cnum">1</span>110°</button><button class="ch" onclick="ans('q3',1,3)"><span class="cnum">2</span>150°</button><button class="ch" onclick="ans('q3',2,3)"><span class="cnum">3</span>120°</button><button class="ch" onclick="ans('q3',3,3)"><span class="cnum">4</span>130°</button></div><div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">240 － 110 ＝ 130° ✓</span></span></div><div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">長針は240°、短針は 90 ＋ 20 ＝ 110°。差を計算します。</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div><div id="q3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>長針 240°、短針 110°。240 － 110 ＝ <strong>130°</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q3"><div class="clabel kai">段階解説</div><div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　長針と短針の角度</h4><p>長針：6 × 40 ＝ 240°
+短針：30 × 3 ＋ 0.5 × 40 ＝ 90 ＋ 20 ＝ 110°</p></div><div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　差を出します</h4><p>240 － 110 ＝ <strong>130°</strong>（180°以下なのでそのまま）</p></div><div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の考え方で確かめます</h4><p>長針は「8」の位置。「3」から「8」までは数字5つぶんで 30 × 5 ＝ 150°。短針が「3」から20°先へ進んでいるので、150 － 20 ＝ 130° ✓</p></div><button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button><div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">4</span><span>実践演習 第4問</span></div><div class="card"><div class="clabel pr">実践演習 第4問　180°をこえるとき</div><div class="q-text">8時10分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button><div class="hint-box" id="h4">長針は 6 × 10 ＝ 60°、短針は 30 × 8 ＋ 0.5 × 10。差が180°をこえたら、360°から引きます。</div><div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,1)"><span class="cnum">1</span>185°</button><button class="ch" onclick="ans('q4',1,1)"><span class="cnum">2</span>175°</button><button class="ch" onclick="ans('q4',2,1)"><span class="cnum">3</span>180°</button><button class="ch" onclick="ans('q4',3,1)"><span class="cnum">4</span>190°</button></div><div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">差185°は180°をこえるので、360 － 185 ＝ 175° ✓</span></span></div><div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">長針60°、短針245°で差は185°。180°をこえているので、360°から引きます。</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div><div id="q4-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>長針 60°、短針 245°。差 185° → 360 － 185 ＝ <strong>175°</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q4"><div class="clabel kai">段階解説</div><div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　長針と短針の角度</h4><p>長針：6 × 10 ＝ 60°
+短針：30 × 8 ＋ 0.5 × 10 ＝ 240 ＋ 5 ＝ 245°</p></div><div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　差を出して、小さいほうにします</h4><p>245 － 60 ＝ 185°
+180°をこえているので　360 － 185 ＝ <strong>175°</strong></p></div><div id="q4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の考え方で確かめます</h4><p>短針は「12」の 360 － 245 ＝ 115° 手前、長針は「12」の60°先。115 ＋ 60 ＝ 175° ✓</p></div><button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button><div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">5</span><span>実践演習 第5問</span></div><div class="card"><div class="clabel pr">実践演習 第5問　逆向き（時刻を求める）</div><div class="q-text">3時台のある時刻に、短針が12の位置から時計まわりに<strong>115°</strong>の位置にありました。この時刻は、3時何分ですか？（答えは「分」の数です）</div><button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button><div class="hint-box" id="h5">3時ちょうどの短針は 30 × 3 ＝ 90°。115°との差の何度ぶんを、短針は分のあいだに進んだのでしょうか。短針は1分に0.5°進みます。</div><div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 4分以内</span></div></div><div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,0)"><span class="cnum">1</span>50分</button><button class="ch" onclick="ans('q5',1,0)"><span class="cnum">2</span>25分</button><button class="ch" onclick="ans('q5',2,0)"><span class="cnum">3</span>15分</button><button class="ch" onclick="ans('q5',3,0)"><span class="cnum">4</span>30分</button></div><div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">25 ÷ 0.5 ＝ 50分。3時50分 ✓</span></span></div><div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">115 － 90 ＝ 25° が、分で進んだぶんです。0.5°で1分なので、分は 25 ÷ 0.5 ＝ 50 です。</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div><div id="q5-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>115 － 90 ＝ 25°。25 ÷ 0.5 ＝ 50分　→　<strong>3時50分</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q5"><div class="clabel kai">段階解説</div><div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　3時ちょうどの短針</h4><p>30 × 3 ＝ 90°</p></div><div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　分で進んだ角度と、分の数</h4><p>115 － 90 ＝ 25°
+短針は1分に0.5°なので、25 ÷ 0.5 ＝ <strong>50分</strong>
+（0.5でわるのは、2をかけるのと同じです。25 × 2 ＝ 50）</p></div><div id="q5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>3時50分の短針は 90 ＋ 0.5 × 50 ＝ 90 ＋ 25 ＝ 115° ✓（3時25分は、25°を分の数と思ったまちがいです）</p></div><button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button><div id="q5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div id="pr-done" style="display:none"><div class="teal-box" style="margin-top:1.4rem"><strong>🎉 実践演習 完了！</strong>おつかれさまでした。次はいよいよ総合確認です。ここからは制限時間があります。解き方を思い出しながら、落ち着いて挑戦しましょう。</div><button class="next-page-btn cf" onclick="switchTab('cf')">総合確認へ進む →</button></div></div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">総合確認（制限時間つき）</div><div class="page-hdr-desc">SPI本番のつもりで挑戦しましょう。全3問・ヒントなし。「スタート」を押すとカウントダウンが始まり、時間切れになると自動で締め切られます。</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div><div class="pb-txt" id="pb-cf-txt">0 / 3 完了</div></div><div class="teal-box"><strong>💡 はじめに</strong>時間切れになっても、点数が下がるだけで何も困りません。落ち着いて、解説で「どこに時間がかかったか」を確認し、もう一度挑戦すれば大丈夫です。わからない問題で粘りすぎず、「やり方を思い出せない」と感じたら、いったん解説を見て覚えるのも立派な勉強です。</div><div class="prob-n"><span class="n n-cf">1</span><span>総合確認 第1問</span></div><div class="card"><div class="clabel cf">総合確認 第1問　針の角度①</div><div class="cf-cover" id="cover-qc1"><div class="cf-cover-txt">制限時間：<strong>2分</strong></div><button class="start-btn" onclick="startCf('qc1')">▶ 第1問をスタート</button></div><div id="body-qc1" style="display:none"><div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分</span></div></div><div class="q-text">5時40分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,0)"><span class="cnum">1</span>70°</button><button class="ch" onclick="ans('qc1',1,0)"><span class="cnum">2</span>60°</button><button class="ch" onclick="ans('qc1',2,0)"><span class="cnum">3</span>90°</button><button class="ch" onclick="ans('qc1',3,0)"><span class="cnum">4</span>80°</button><button class="ch" onclick="ans('qc1',4,0)"><span class="cnum">5</span>100°</button></div></div><div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">240 － 170 ＝ 70° ✓</span></span></div><div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">長針は 6 × 40 ＝ 240°、短針は 150 ＋ 20 ＝ 170°。差を計算します。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc1"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div id="qc1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>長針 240°、短針 30 × 5 ＋ 0.5 × 40 ＝ 170°。240 － 170 ＝ <strong>70°</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc1"><div class="clabel kai">段階解説</div><div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　長針と短針の角度</h4><p>長針：6 × 40 ＝ 240°
+短針：30 × 5 ＋ 0.5 × 40 ＝ 150 ＋ 20 ＝ 170°</p></div><div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　差を出します</h4><p>240 － 170 ＝ <strong>70°</strong>
+（確かめ：「5」から「8」は数字3つぶんで90°。短針が20°進んでいるので 90 － 20 ＝ 70° ✓）</p></div><button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',2)">STEP 1 を見る ▼</button><div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">2</span><span>総合確認 第2問</span></div><div class="card"><div class="clabel cf">総合確認 第2問　針の角度②</div><div class="cf-cover" id="cover-qc2"><div class="cf-cover-txt">制限時間：<strong>2分30秒</strong></div><button class="start-btn" onclick="startCf('qc2')">▶ 第2問をスタート</button></div><div id="body-qc2" style="display:none"><div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:30</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分30秒</span></div></div><div class="q-text">9時24分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,4)"><span class="cnum">1</span>126°</button><button class="ch" onclick="ans('qc2',1,4)"><span class="cnum">2</span>132°</button><button class="ch" onclick="ans('qc2',2,4)"><span class="cnum">3</span>144°</button><button class="ch" onclick="ans('qc2',3,4)"><span class="cnum">4</span>150°</button><button class="ch" onclick="ans('qc2',4,4)"><span class="cnum">5</span>138°</button></div></div><div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">差 282 － 144 ＝ 138°。180°以下なのでそのまま138° ✓</span></span></div><div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">長針144°、短針282°で差は138°です（282 － 144）。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc2"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div id="qc2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>長針 6 × 24 ＝ 144°、短針 270 ＋ 12 ＝ 282°。差 282 － 144 ＝ <strong>138°</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc2"><div class="clabel kai">段階解説</div><div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　長針と短針の角度</h4><p>長針：6 × 24 ＝ 144°
+短針：30 × 9 ＋ 0.5 × 24 ＝ 270 ＋ 12 ＝ 282°</p></div><div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　差を出します</h4><p>282 － 144 ＝ <strong>138°</strong>（180°以下なのでそのまま）</p></div><div id="qc2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の考え方で確かめます</h4><p>短針は「12」の 360 － 282 ＝ 78° 手前、長針は144°先。78 ＋ 144 ＝ 222° は180°をこえるので、360 － 222 ＝ 138° ✓</p></div><button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',3)">STEP 1 を見る ▼</button><div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">3</span><span>総合確認 第3問</span></div><div class="card"><div class="clabel cf">総合確認 第3問　180°をこえる</div><div class="cf-cover" id="cover-qc3"><div class="cf-cover-txt">制限時間：<strong>3分</strong></div><button class="start-btn" onclick="startCf('qc3')">▶ 第3問をスタート</button></div><div id="body-qc3" style="display:none"><div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">3:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 3分</span></div></div><div class="q-text">2時50分のとき、長針と短針の作る角度（小さいほう）は何度ですか？</div><div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,4)"><span class="cnum">1</span>215°</button><button class="ch" onclick="ans('qc3',1,4)"><span class="cnum">2</span>155°</button><button class="ch" onclick="ans('qc3',2,4)"><span class="cnum">3</span>135°</button><button class="ch" onclick="ans('qc3',3,4)"><span class="cnum">4</span>150°</button><button class="ch" onclick="ans('qc3',4,4)"><span class="cnum">5</span>145°</button></div></div><div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">差215°は180°をこえるので、360 － 215 ＝ 145° ✓</span></span></div><div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">長針300°、短針85°で差は215°。180°をこえているので360°から引きます。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc3"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div id="qc3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>長針 300°、短針 60 ＋ 25 ＝ 85°。差 215° → 360 － 215 ＝ <strong>145°</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc3"><div class="clabel kai">段階解説</div><div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　長針と短針の角度</h4><p>長針：6 × 50 ＝ 300°
+短針：30 × 2 ＋ 0.5 × 50 ＝ 60 ＋ 25 ＝ 85°</p></div><div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　差を出して、小さいほうにします</h4><p>300 － 85 ＝ 215°
+180°をこえているので　360 － 215 ＝ <strong>145°</strong></p></div><div id="qc3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　別の考え方で確かめます</h4><p>長針は「12」の 360 － 300 ＝ 60° 手前、短針は「12」の85°先。60 ＋ 85 ＝ 145° ✓</p></div><button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',3)">STEP 1 を見る ▼</button><div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="result-card" id="cf-result" style="display:none"><div class="rc-title">📊 総合確認の結果</div><div class="rc-score" id="rc-score"></div><div class="rc-msg" id="rc-msg"></div></div><div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a href="SPI_hayasa_index.html" class="unav-btn unav-idx">☰ 単元一覧へ</a><a href="SPI_hayasa_p18.html" class="unav-btn unav-next">次：パターン18 時計の針②（重なる・180°になる時刻） →</a></div></div></div>
+</main>
+<script>
+const CFG={"key": "spi_hayasa_p17", "PR": ["q1", "q2", "q3", "q4", "q5"], "CF": ["qc1", "qc2", "qc3"], "LIM": {"qc1": 120, "qc2": 150, "qc3": 180}, "GOAL": {"q1": "2分", "q2": "2分", "q3": "3分", "q4": "3分", "q5": "4分"}};
+const answered={};
+const timers={};
+const miniAnswered={};
+const stepRev={};
+const cfRes={};
+const cfSecs={};
+const pageSeen={};
+let pracDone=0,cfDone=0,cfOk=0;
+
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered[CFG.PR[0]])startTimer(CFG.PR[0]);
+}
+
+/* ───── 演習：経過時間を表示するタイマー（目安のみ） ───── */
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tw=document.getElementById('t'+qid.slice(1));
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/240,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(pct>.8?' warn':''));
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=m+':'+String(s).padStart(2,'0');
+    if(msg){
+      const goal=msg.querySelector('.goal');const g=goal?goal.outerHTML:'';
+      if(sec<60)msg.innerHTML='自力で考えましょう。'+g;
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+/* ───── 確認：本当にカウントダウンして締め切るタイマー ───── */
+function startCf(qid){
+  if(answered[qid]||timers[qid])return;
+  document.getElementById('cover-'+qid).style.display='none';
+  document.getElementById('body-'+qid).style.display='block';
+  const lim=CFG.LIM[qid];
+  const start=Date.now();cfSecs[qid]=0;
+  const ring=document.getElementById('ring-'+qid);
+  const fg=ring.querySelector('.tfg'),txt=ring.querySelector('.tcenter');
+  const msg=ring.parentNode.querySelector('.timer-msg');
+  function tick(){
+    const sec=Math.floor((Date.now()-start)/1000);
+    cfSecs[qid]=Math.min(sec,lim);
+    const left=Math.max(lim-sec,0);
+    const pct=Math.min(sec/lim,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(left<=lim*.15?' danger':(left<=lim*.4?' warn':'')));
+    txt.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    const goal=msg.querySelector('.goal');
+    if(goal){goal.className='goal'+(left<=lim*.15?' danger':'');
+      goal.textContent=left<=0?'時間切れ':(left<=lim*.15?'あと少し！':(left<=lim*.4?'半分を過ぎました':'制限 '+fmt(lim)));}
+    if(left<=0)timeUp(qid);
+  }
+  tick();
+  timers[qid]=setInterval(tick,250);
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return m?(r?m+'分'+r+'秒':m+'分'):r+'秒';}
+
+function paintChoices(qid,idx,correct){
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&idx!==correct){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+}
+function showAfter(qid){
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const isOk=(idx===correct);
+  const isCf=CFG.CF.includes(qid);
+  const tw=document.getElementById(isCf?'tc'+qid.slice(2):'t'+qid.slice(1));
+  if(tw)tw.style.display='none';
+  paintChoices(qid,idx,correct);
+  const fbOk=document.getElementById('fb-ok-'+qid),fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  showAfter(qid);
+  if(isCf){cfRes[qid]=isOk?'ok':'ng';cfDone++;if(isOk)cfOk++;afterCf();}
+  else{
+    pracDone++;const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    if(pracDone===n){document.getElementById('done-pr').style.display='flex';document.getElementById('pr-done').style.display='block';}
+    const nx=CFG.PR[CFG.PR.indexOf(qid)+1];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+}
+
+function timeUp(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const tw=document.getElementById('tc'+qid.slice(2));
+  if(tw)tw.style.display='none';
+  const c=+document.querySelector('#ch-'+qid+' .ch').getAttribute('onclick').match(/,(\d+)\)/)[1];
+  paintChoices(qid,-1,c);
+  document.getElementById('fb-to-'+qid).style.display='flex';
+  showAfter(qid);
+  cfRes[qid]='to';cfDone++;afterCf();
+}
+
+function afterCf(){
+  const n=CFG.CF.length;
+  document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+  document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+  if(cfDone===n){
+    document.getElementById('done-cf').style.display='flex';
+    document.getElementById('unit-nav').style.display='flex';
+    const to=Object.values(cfRes).filter(v=>v==='to').length;
+    const rate=cfOk/n;
+    document.getElementById('rc-score').textContent='正解 '+cfOk+' / '+n+' 問';
+    let msg='';
+    if(rate>=.8)msg='合格ラインです。この調子で次のパターンへ進みましょう。';
+    else if(rate>=.5)msg='あと少しです。間違えた問題の解説を読み直し、「もう一度」で挑戦してみましょう。';
+    else msg='まだ慣れていないだけです。解説タブの例題をもう一度たどってから、再挑戦しましょう。何度やり直しても大丈夫です。';
+    document.getElementById('rc-msg').textContent=to>0?msg+'（時間切れは '+to+' 問でした。まず正確に解ける形をつくり、そのあとで速さを上げていきましょう。）':msg;
+    document.getElementById('cf-result').style.display='block';
+    lsSet(CFG.key+'_score',cfOk+'/'+n);lsSet(CFG.key,'1');
+    setTimeout(()=>document.getElementById('cf-result').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  const isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  const fbOk=document.getElementById('mfb-'+qid+'-ok'),fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';}_launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid]||0;
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]=r+1;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if((stepRev[qid]||0)>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+(stepRev[qid]+1)+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(prefix+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  const isCf=CFG.CF.includes(qid);
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(isCf){
+    const r=cfRes[qid];
+    if(r){cfDone--;if(r==='ok')cfOk--;delete cfRes[qid];}
+    const n=CFG.CF.length;
+    document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+    document.getElementById('done-cf').style.display='none';
+    document.getElementById('cf-result').style.display='none';
+    document.getElementById('unit-nav').style.display='none';
+    var to=document.getElementById('fb-to-'+qid);if(to)to.style.display='none';
+    document.getElementById('cover-'+qid).style.display='block';
+    document.getElementById('body-'+qid).style.display='none';
+    var tw=document.getElementById('tc'+qid.slice(2));if(tw)tw.style.display='flex';
+    const ring=document.getElementById('ring-'+qid);
+    ring.querySelector('.tfg').style.strokeDashoffset=0;ring.querySelector('.tfg').setAttribute('class','tfg');
+    const lim=CFG.LIM[qid];ring.querySelector('.tcenter').textContent=Math.floor(lim/60)+':'+String(lim%60).padStart(2,'0');
+    const g=ring.parentNode.querySelector('.goal');if(g){g.className='goal';g.textContent='制限 '+fmt(lim);}
+  }else{
+    if(pracDone>0)pracDone--;
+    const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    document.getElementById('done-pr').style.display='none';document.getElementById('pr-done').style.display='none';
+    var tw2=document.getElementById('t'+qid.slice(1));if(tw2)tw2.style.display='flex';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  if(!isCf)startTimer(qid);
+  else window.scrollTo({top:document.getElementById('cover-'+qid).getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+
+lsSet(CFG.key,'1');
+
+</script>
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 仕事算 パターン9 途中で交代して働く</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tfg.danger{stroke:var(--pink);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.timer-msg .goal.danger{color:var(--pink);font-weight:700;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.85;line-height:1.7;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.unav-idx{background:#fff;border-color:#bcb8ae;color:#58544c;}
+.unav-idx:hover{border-color:#2055b0;color:#2055b0;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+
+/* ── 追加：分数・図・制限時間つき確認問題 ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.3;margin:0 3px;font-size:.92em;font-weight:inherit;}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px;}
+.frac>span:last-child{padding:1px 4px 0;}
+.diagram{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.7rem .6rem .5rem;margin:.9rem 0;overflow-x:auto;}
+.diagram svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto;}
+.diagram .cap{font-size:12px;color:var(--text2);text-align:center;margin-top:.35rem;line-height:1.7;}
+.cf-cover{background:var(--al);border:2px dashed #e0c888;border-radius:12px;padding:1.4rem 1rem;text-align:center;margin-bottom:.6rem;}
+.cf-cover-txt{font-size:13px;color:var(--amber);margin-bottom:.8rem;}
+.cf-cover-txt strong{font-size:16px;}
+.start-btn{background:var(--amber);color:#fff;border:none;border-radius:10px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .15s;}
+.start-btn:hover{background:#8a4e00;}
+.result-card{background:linear-gradient(120deg,#1B2A4A,#2055b0);color:#fff;border-radius:var(--r);padding:1.3rem 1.5rem;margin-top:1.4rem;}
+.rc-title{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.8;margin-bottom:.5rem;}
+.rc-score{font-size:26px;font-weight:700;margin-bottom:.4rem;}
+.rc-msg{font-size:13px;line-height:1.9;opacity:.95;}
+.formula-box .f-eq .frac{margin:0 2px;}
+.exp-box p .frac{font-size:.95em;}
+@media (max-width:480px){.choices,.mini-choices{grid-template-columns:1fr;}.tab-btn{padding:.7rem .8rem;}.card{padding:1.2rem 1.1rem;}.sec-head{margin:-1.2rem -1.1rem 1.1rem;}}
+
+</style>
+</head>
+<body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI 非言語 ／ 仕事算　パターン9　途中で交代して働く</span></header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>実践演習<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>総合確認<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">パターン9 ─ 途中で交代して働く</div><div class="page-hdr-desc">「Aが4日、次にBが10日、残りをA」のように、働く人が順番に変わる問題です。やることは、これまでの「1日の仕事量 × 日数」の繰り返しだけです。帯の図で整理します。</div></div></div><div class="card"><div class="sec-head"><span class="sec-num">1</span>【ポイント】 交代の問題は「区間ごとに仕事量を出して、たす」</div><div class="body-text">このパターンで押さえることは、1つだけです。<br><strong>人が交代しても、「1日の仕事量 × 日数」を区間ごとに出して、たしていけばよい。</strong>　そして、全体（1）から引けば「残り」がわかります。</div><div class="formula-box"><div class="f-title">🔑 このパターンのポイント</div><div class="formula-line"><span class="f-key">ポイント①</span><span class="f-eq">区間の仕事量 ＝ その人の1日の仕事量 × 働いた日数</span></div><div class="formula-line"><span class="f-key">ポイント②</span><span class="f-eq">ここまでの合計 ＝ 各区間の仕事量を、たし算する</span></div><div class="formula-line"><span class="f-key">ポイント③</span><span class="f-eq">残り ＝ 1 － ここまでの合計</span></div><div class="formula-line"><span class="f-key">ポイント④</span><span class="f-eq">残りの日数 ＝ 残り ÷ （残りを担当する人の1日の仕事量）</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 全体を「1」とおいています。p07で学んだ、全体を最小公倍数でおく方法でも、同じ答えになります。</div></div><div class="pink-box"><strong>⚠️ 日数どうしをたしてはいけません</strong>「Aが3日、Bが4日、残りをAが2日」のとき、「3 ＋ 4 ＋ 2 ＝ 9 だから全体は9」と考えるのは<strong>間違い</strong>です。<br>日数は「かかった時間」で、仕事の量ではありません。AとBは進む速さがちがうので、<strong>日数をそのまま足しても、仕事量にはなりません。</strong><br>必ず「1日の仕事量 × 日数」で<span class="hl-x">仕事量にしてから</span>足します。</div></div><div class="card"><div class="sec-head"><span class="sec-num">2</span>【解説①】 担当が順番に変わる仕事を、帯で表します</div><div class="body-text">まず、具体的な場面で考えます。ある資料の入力作業を、AさんとBさんが交代で担当します。<br>最初にAさんが一部を入力し、次にBさんが引き継いで進め、最後にまたAさんが残りを仕上げます。<br>資料全体の作業量を「1」とすると、<strong>Aさんの分、Bさんの分、またAさんの分をすべて足すと、ちょうど「1」</strong>になります。</div><div class="diagram"><svg viewBox="0 0 600 130" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">「Aが3日 → Bが4日 → 残りをA」を、帯で表します（帯の長さ＝仕事の量）</text><rect x="10.0" y="18" width="180.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="100.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">A 3日</text><rect x="190.0" y="18" width="240.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="310.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">B 4日</text><rect x="430.0" y="18" width="120.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="490.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">残り（A）</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">すべて合わせると、ちょうど全体（1）になります</text><rect x="10.0" y="74" width="540.0" height="34" rx="5" fill="#98948c" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">全体 ＝ 1</text></svg><div class="cap">青がAさん、オレンジがBさんの担当です。<b>3つの帯をつなぐと、全体の「1」になる</b>。これが交代の問題の基本です。</div></div><div class="body-text">図の見方は、次のとおりです。<br>・青い帯が「Aさんが進めた量」、オレンジの帯が「Bさんが進めた量」です。<br>・帯の長さは、その人の<strong>1日の仕事量 × 働いた日数</strong>で決まります。<br>・帯を全部つなげたものが「全体（1）」です。</div><div class="teal-box"><strong>💡 「残り」は、引き算で出せます</strong>はじめの2つの帯（AとB）の長さがわかれば、<strong>最後の帯（残り）は「1 － はじめの2つの合計」</strong>で出せます。<br>たとえば、はじめの2つで全体の <span class="frac"><span>3</span><span>4</span></span> まで進んだなら、残りは 1 － <span class="frac"><span>3</span><span>4</span></span> ＝ <span class="frac"><span>1</span><span>4</span></span> です。<br>（1 ＝ <span class="frac"><span>4</span><span>4</span></span> と考えると、<span class="frac"><span>4</span><span>4</span></span> － <span class="frac"><span>3</span><span>4</span></span> ＝ <span class="frac"><span>1</span><span>4</span></span> です。）</div><table class="kansan-table"><tr><th>区間</th><th>働く人</th><th>1日の仕事量</th><th>日数</th><th>その区間の仕事量</th></tr><tr><td>1つめ</td><td>A</td><td><span class="frac"><span>1</span><span>10</span></span></td><td>4日</td><td class="hi"><span class="frac"><span>1</span><span>10</span></span> × 4</td></tr><tr><td>2つめ</td><td>B</td><td><span class="frac"><span>1</span><span>20</span></span></td><td>6日</td><td class="hi"><span class="frac"><span>1</span><span>20</span></span> × 6</td></tr><tr><td>3つめ</td><td>A（残り）</td><td><span class="frac"><span>1</span><span>10</span></span></td><td>？日</td><td class="hig">1 － （1つめ ＋ 2つめ）</td></tr></table><div class="body-text">表のように、<strong>区間ごとに「人・1日の仕事量・日数」を1行ずつ書く</strong>と、間違えにくくなります。</div></div><div class="card"><div class="sec-head"><span class="sec-num">3</span>【解説②】 区間ごとの仕事量を出して、たします（分数の思い出し）</div><div class="body-text">区間の仕事量を出すには、<strong>分数 × 整数</strong>のかけ算が必要です。そのあと、区間の仕事量を<strong>分数のたし算</strong>で合計します。ここで確認しておきます。</div><div class="point-box"><strong>📌 思い出そう：分数 × 整数</strong><strong>分子に整数をかけて、分母はそのまま。</strong>そのあと、約分します。<br>例）<span class="frac"><span>1</span><span>15</span></span> × 5 ＝ <span class="frac"><span>1 × 5</span><span>15</span></span> ＝ <span class="frac"><span>5</span><span>15</span></span> ＝ <span class="frac"><span>1</span><span>3</span></span>　（5でわって約分）<br>例）<span class="frac"><span>1</span><span>25</span></span> × 10 ＝ <span class="frac"><span>10</span><span>25</span></span> ＝ <span class="frac"><span>2</span><span>5</span></span>　（5でわって約分）<br>「1日の仕事量が <span class="frac"><span>1</span><span>15</span></span>」の人が5日働けば、15に区切った全体のうち5つぶんを進める、と考えると理解しやすくなります。</div><div class="point-box"><strong>📌 思い出そう：分母がちがう分数のたし算（通分）</strong>分母がちがう分数は、<strong>そのままではたせません。</strong>分母を同じ数にそろえる（<strong>通分</strong>する）必要があります。<br>例）<span class="frac"><span>1</span><span>3</span></span> ＋ <span class="frac"><span>2</span><span>5</span></span><br>　3と5の最小公倍数は15です。　<span class="frac"><span>1</span><span>3</span></span> ＝ <span class="frac"><span>5</span><span>15</span></span>、　<span class="frac"><span>2</span><span>5</span></span> ＝ <span class="frac"><span>6</span><span>15</span></span><br>　<span class="frac"><span>5</span><span>15</span></span> ＋ <span class="frac"><span>6</span><span>15</span></span> ＝ <span class="frac"><span>11</span><span>15</span></span>　（分母はそのまま、分子だけをたします）</div><table class="kansan-table"><tr><th>ステップ</th><th>やること</th><th>例（A15日・B25日、Aが5日→Bが10日）</th></tr><tr><td>①</td><td>1日の仕事量を出す</td><td>A：<span class="frac"><span>1</span><span>15</span></span>　B：<span class="frac"><span>1</span><span>25</span></span></td></tr><tr><td>②</td><td>区間ごとに「1日の量 × 日数」</td><td>A：<span class="frac"><span>1</span><span>15</span></span> × 5 ＝ <span class="frac"><span>1</span><span>3</span></span>　B：<span class="frac"><span>1</span><span>25</span></span> × 10 ＝ <span class="frac"><span>2</span><span>5</span></span></td></tr><tr><td>③</td><td>通分してたす</td><td><span class="frac"><span>1</span><span>3</span></span> ＋ <span class="frac"><span>2</span><span>5</span></span> ＝ <span class="frac"><span>5</span><span>15</span></span> ＋ <span class="frac"><span>6</span><span>15</span></span> ＝ <span class="frac"><span>11</span><span>15</span></span></td></tr><tr><td>④</td><td>1から引いて残りを出す</td><td>1 － <span class="frac"><span>11</span><span>15</span></span> ＝ <span class="frac"><span>15</span><span>15</span></span> － <span class="frac"><span>11</span><span>15</span></span> ＝ <span class="frac"><span>4</span><span>15</span></span></td></tr></table><div class="pink-box"><strong>⚠️ よくある間違い</strong>・<span class="frac"><span>1</span><span>3</span></span> ＋ <span class="frac"><span>2</span><span>5</span></span> を「分子どうし、分母どうし」で <span class="frac"><span>3</span><span>8</span></span> としてしまう。→ 通分してから、分子だけをたします。<br>・「残り」を出すとき、1 を引くのではなく、<strong>合計をそのまま「残り」にしてしまう</strong>。→ 合計は「もう終わった分」です。残りは「1 － 合計」です。</div></div><div class="card"><div class="sec-head"><span class="sec-num">4</span>【解説③】 「残り」を仕上げる日数は、わり算で求めます</div><div class="body-text">最後の区間では、「残りの仕事量」と「その人の1日の仕事量」がわかっています。<br><strong>日数 ＝ 仕事量 ÷ 1日の仕事量</strong>　です。（ここは、p04で学んだ「かかる日数」と同じ考え方です。）</div><div class="point-box"><strong>📌 思い出そう：分数 ÷ 分数（逆数をかける）</strong><strong>分数でわるときは、わる数の分子と分母を入れかえて（逆数にして）、かけ算にします。</strong><br>例）<span class="frac"><span>4</span><span>15</span></span> ÷ <span class="frac"><span>1</span><span>15</span></span> ＝ <span class="frac"><span>4</span><span>15</span></span> × <span class="frac"><span>15</span><span>1</span></span> ＝ <span class="frac"><span>4 × 15</span><span>15</span></span> ＝ 4　（15を約分して、4）<br>例）<span class="frac"><span>1</span><span>4</span></span> ÷ <span class="frac"><span>1</span><span>12</span></span> ＝ <span class="frac"><span>1</span><span>4</span></span> × 12 ＝ 3<br>「残りの中に、1日ぶんが何個入っているか」を数えている、と考えてもよいです。</div><div class="teal-box"><strong>💡 全体の日数を聞かれたら、最後にたし算です</strong>問題によっては「全部で何日かかりましたか？」と聞かれます。<br>そのときは、<strong>区間ごとの日数（3つ）をたす</strong>のを、最後に忘れないでください。<br>このとき、はじめて日数どうしをたします。（仕事量を出すときには、日数はたしません。）</div><table class="kansan-table"><tr><th>問われていること</th><th>答えの出し方</th></tr><tr><td>残りを仕上げるには何日？</td><td>残り ÷ その人の1日の仕事量</td></tr><tr><td>全部で何日かかった？</td><td>区間ごとの日数をすべてたす（残りの日数もふくめる）</td></tr><tr><td>まん中の人は何日働いた？（逆向き）</td><td>全体から他の区間を引いて、それを1日の仕事量でわる</td></tr></table><div class="pink-box"><strong>⚠️ 全体の日数を聞かれているのに…</strong>「残りをAが3日で仕上げる」と出せたところで、答えを「3日」としてしまう人がいます。<br>「全部で何日？」と聞かれたら、<span class="hl-x">はじめの区間の日数もたす</span>のを忘れないようにしましょう。</div></div><div class="card"><div class="sec-head"><span class="sec-num">5</span>【例題】 1問ずつ、手順を確認しながら解きます</div><div class="clabel ex" style="margin-top:.4rem">例題 1　まずは、計算しやすい数字で</div><div class="q-text">ある仕事を、Aだけですると6日、Bだけですると12日かかります。はじめにAが2日、次にBが6日働きました。残りをAが仕上げるには、あと何日かかりますか？</div><div class="diagram"><svg viewBox="0 0 600 74" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">仕事全体（1）を6つに区切った図</text><rect x="10.0" y="18" width="180.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="100.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">A 2日（1/3）</text><rect x="190.0" y="18" width="270.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="325.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">B 6日（1/2）</text><rect x="460.0" y="18" width="90.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="505.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">残り（1/6）</text></svg><div class="cap">Aの2日ぶんが全体の1/3、Bの6日ぶんが1/2。残りの1/6を、またAが受けもちます。</div></div><div class="body-text">全体を「1」として、3つの区間を帯にして整理します。</div><div id="ex1-s0" class="exp-box" style="display:none"><h4>STEP 1　1日の仕事量を出します</h4><p>Aは6日かかるので、1日に全体の <span class="frac"><span>1</span><span>6</span></span>
+Bは12日かかるので、1日に全体の <span class="frac"><span>1</span><span>12</span></span></p></div><div id="ex1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　区間ごとの仕事量を出して、たします</h4><p>Aが2日　：<span class="frac"><span>1</span><span>6</span></span> × 2 ＝ <span class="frac"><span>2</span><span>6</span></span> ＝ <span class="frac"><span>1</span><span>3</span></span>
+Bが6日　：<span class="frac"><span>1</span><span>12</span></span> × 6 ＝ <span class="frac"><span>6</span><span>12</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span>
+ここまでの合計 ＝ <span class="frac"><span>1</span><span>3</span></span> ＋ <span class="frac"><span>1</span><span>2</span></span> ＝ <span class="frac"><span>2</span><span>6</span></span> ＋ <span class="frac"><span>3</span><span>6</span></span> ＝ <span class="frac"><span>5</span><span>6</span></span>
+（3と2の最小公倍数6で通分しました）</p></div><div id="ex1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　残りを出して、日数を求めます</h4><p>残り ＝ 1 － <span class="frac"><span>5</span><span>6</span></span> ＝ <span class="frac"><span>6</span><span>6</span></span> － <span class="frac"><span>5</span><span>6</span></span> ＝ <span class="frac"><span>1</span><span>6</span></span>
+残りをAが仕上げる日数 ＝ <span class="frac"><span>1</span><span>6</span></span> ÷ <span class="frac"><span>1</span><span>6</span></span> ＝ <strong>1日</strong></p></div><div id="ex1-s3" class="exp-box" style="display:none"><h4>STEP 4　別の方法で確かめます（全体を12とおく）</h4><p>全体を12とおくと、Aは1日に 12 ÷ 6 ＝ 2、Bは1日に 12 ÷ 12 ＝ 1
+A：2 × 2 ＝ 4　B：1 × 6 ＝ 6　合計 10
+残り 12 － 10 ＝ 2　これをAが 2 ÷ 2 ＝ <strong>1日</strong>　✓</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',4)">STEP 1 を見る ▼</button><div id="ex1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 2　全部で何日？（標準）</div><div class="q-text">ある仕事を、Aだけですると15日、Bだけですると25日かかります。この仕事を、はじめにAが5日、次にBが10日働き、残りをAが仕上げました。仕事が終わるまで、全部で何日かかりましたか？</div><div class="diagram"><svg viewBox="0 0 600 74" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">仕事全体（1）を15に区切った図</text><rect x="10.0" y="18" width="180.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="100.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">A 5日（5/15）</text><rect x="190.0" y="18" width="216.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="298.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">B 10日（6/15）</text><rect x="406.0" y="18" width="144.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="478.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">残り（4/15）</text></svg><div class="cap">はじめの2区間で 11/15 が終わり、残りは 4/15 です。この残りをAが仕上げます。</div></div><div class="body-text">「全部で何日」と聞かれています。残りの日数を出したあと、3つの区間の日数をたします。</div><div id="ex2-s0" class="exp-box" style="display:none"><h4>STEP 1　1日の仕事量と、区間ごとの仕事量を出します</h4><p>Aの1日 ＝ <span class="frac"><span>1</span><span>15</span></span>、Bの1日 ＝ <span class="frac"><span>1</span><span>25</span></span>
+Aが5日　：<span class="frac"><span>1</span><span>15</span></span> × 5 ＝ <span class="frac"><span>5</span><span>15</span></span> ＝ <span class="frac"><span>1</span><span>3</span></span>
+Bが10日　：<span class="frac"><span>1</span><span>25</span></span> × 10 ＝ <span class="frac"><span>10</span><span>25</span></span> ＝ <span class="frac"><span>2</span><span>5</span></span></p></div><div id="ex2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　合計を通分してたし、残りを出します</h4><p>合計 ＝ <span class="frac"><span>1</span><span>3</span></span> ＋ <span class="frac"><span>2</span><span>5</span></span> ＝ <span class="frac"><span>5</span><span>15</span></span> ＋ <span class="frac"><span>6</span><span>15</span></span> ＝ <span class="frac"><span>11</span><span>15</span></span>
+残り ＝ 1 － <span class="frac"><span>11</span><span>15</span></span> ＝ <span class="frac"><span>15</span><span>15</span></span> － <span class="frac"><span>11</span><span>15</span></span> ＝ <span class="frac"><span>4</span><span>15</span></span></p></div><div id="ex2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　残りをAが仕上げる日数を出して、全部の日数をたします</h4><p>残りの日数 ＝ <span class="frac"><span>4</span><span>15</span></span> ÷ <span class="frac"><span>1</span><span>15</span></span> ＝ <span class="frac"><span>4</span><span>15</span></span> × 15 ＝ 4日
+
+全部の日数 ＝ 5 ＋ 10 ＋ 4 ＝ <strong>19日</strong></p></div><div id="ex2-s3" class="exp-box" style="display:none"><h4>STEP 4　別の方法で確かめます（全体を75とおく）</h4><p>15と25の最小公倍数75を全体とします。Aは1日に 75 ÷ 15 ＝ 5、Bは1日に 75 ÷ 25 ＝ 3
+A：5 × 5 ＝ 25　B：3 × 10 ＝ 30　合計 55
+残り 75 － 55 ＝ 20　Aが 20 ÷ 5 ＝ 4日　→　5 ＋ 10 ＋ 4 ＝ <strong>19日</strong>　✓</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',4)">STEP 1 を見る ▼</button><div id="ex2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 3　まん中の日数を求める（逆向き）</div><div class="q-text">ある仕事を、Aだけですると20日、Bだけですると30日かかります。はじめにAが6日働き、次にBが何日か働き、最後にAが4日働いて、ちょうど仕事が終わりました。Bは何日働きましたか？</div><div class="diagram"><svg viewBox="0 0 600 74" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">仕事全体（1）を10に区切った図</text><rect x="10.0" y="18" width="162.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="91.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">A 6日（3/10）</text><rect x="172.0" y="18" width="270.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="307.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">B ？日</text><rect x="442.0" y="18" width="108.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="496.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">A 4日（2/10）</text></svg><div class="cap">Aの2つの帯は 3/10 と 2/10。合わせて 5/10 なので、まん中のBの帯が、残りの 5/10 です。</div></div><div class="body-text">今度は、まん中のBの日数が「わからない数」です。Aの2つの区間はわかっているので、それを全体（1）から引くと、Bの仕事量が出ます。</div><div id="ex3-s0" class="exp-box" style="display:none"><h4>STEP 1　Aの2つの区間の仕事量を出します</h4><p>Aの1日 ＝ <span class="frac"><span>1</span><span>20</span></span>
+前半　：<span class="frac"><span>1</span><span>20</span></span> × 6 ＝ <span class="frac"><span>6</span><span>20</span></span> ＝ <span class="frac"><span>3</span><span>10</span></span>
+後半　：<span class="frac"><span>1</span><span>20</span></span> × 4 ＝ <span class="frac"><span>4</span><span>20</span></span> ＝ <span class="frac"><span>1</span><span>5</span></span>
+Aの合計 ＝ <span class="frac"><span>3</span><span>10</span></span> ＋ <span class="frac"><span>1</span><span>5</span></span> ＝ <span class="frac"><span>3</span><span>10</span></span> ＋ <span class="frac"><span>2</span><span>10</span></span> ＝ <span class="frac"><span>5</span><span>10</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span></p></div><div id="ex3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　Bの仕事量を出します</h4><p>Bが進めた量 ＝ 1 － <span class="frac"><span>1</span><span>2</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span></p></div><div id="ex3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　Bの日数を出します</h4><p>Bの1日 ＝ <span class="frac"><span>1</span><span>30</span></span>
+Bの日数 ＝ <span class="frac"><span>1</span><span>2</span></span> ÷ <span class="frac"><span>1</span><span>30</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span> × 30 ＝ <strong>15日</strong></p></div><div id="ex3-s3" class="exp-box" style="display:none"><h4>STEP 4　別の方法で確かめます（全体を60とおく）</h4><p>全体を60とおくと、Aは1日に 60 ÷ 20 ＝ 3、Bは1日に 60 ÷ 30 ＝ 2
+Aは合計 6 ＋ 4 ＝ 10日　→　3 × 10 ＝ 30
+Bの分 60 － 30 ＝ 30　→　30 ÷ 2 ＝ <strong>15日</strong>　✓</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',4)">STEP 1 を見る ▼</button><div id="ex3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">❓ C<span>まだ不安</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト 交代の計算</div><div class="mini-q">ある仕事を、Aだけですると10日、Bだけですると25日かかります。はじめにAが4日、次にBが10日働きました。ここまでで、仕事は全体のどれだけ進みましたか？</div><div class="mini-choices" id="mch-m1"><button class="mch" onclick="miniAns('m1',0,0)"><span class="mcnum">ア</span><span class="frac"><span>4</span><span>5</span></span></button><button class="mch" onclick="miniAns('m1',1,0)"><span class="mcnum">イ</span><span class="frac"><span>1</span><span>5</span></span></button><button class="mch" onclick="miniAns('m1',2,0)"><span class="mcnum">ウ</span><span class="frac"><span>2</span><span>5</span></span></button><button class="mch" onclick="miniAns('m1',3,0)"><span class="mcnum">エ</span><span class="frac"><span>3</span><span>5</span></span></button></div><div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　Aが4日：<span class="frac"><span>1</span><span>10</span></span> × 4 ＝ <span class="frac"><span>2</span><span>5</span></span>　Bが10日：<span class="frac"><span>1</span><span>25</span></span> × 10 ＝ <span class="frac"><span>2</span><span>5</span></span>　たすと <span class="frac"><span>2</span><span>5</span></span> ＋ <span class="frac"><span>2</span><span>5</span></span> ＝ <strong><span class="frac"><span>4</span><span>5</span></span></strong></div><div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　Aが4日：<span class="frac"><span>1</span><span>10</span></span> × 4 ＝ <span class="frac"><span>2</span><span>5</span></span>、Bが10日：<span class="frac"><span>1</span><span>25</span></span> × 10 ＝ <span class="frac"><span>2</span><span>5</span></span>。たすと <strong><span class="frac"><span>4</span><span>5</span></span></strong> です。（<span class="frac"><span>1</span><span>5</span></span> は、その「残り」です）</div><div class="mini-q" style="margin-top:1rem;">ある仕事を、Aだけですると8日、Bだけですると24日かかります。はじめにBが12日、次にAが2日働き、残りをBが仕上げました。仕事が終わるまで、全部で何日かかりましたか？</div><div class="mini-choices" id="mch-m2"><button class="mch" onclick="miniAns('m2',0,2)"><span class="mcnum">ア</span>6日</button><button class="mch" onclick="miniAns('m2',1,2)"><span class="mcnum">イ</span>14日</button><button class="mch" onclick="miniAns('m2',2,2)"><span class="mcnum">ウ</span>20日</button><button class="mch" onclick="miniAns('m2',3,2)"><span class="mcnum">エ</span>12日</button></div><div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　Bが12日：<span class="frac"><span>1</span><span>24</span></span> × 12 ＝ <span class="frac"><span>1</span><span>2</span></span>　Aが2日：<span class="frac"><span>1</span><span>8</span></span> × 2 ＝ <span class="frac"><span>1</span><span>4</span></span>　合計 <span class="frac"><span>3</span><span>4</span></span>、残り <span class="frac"><span>1</span><span>4</span></span>。Bが <span class="frac"><span>1</span><span>4</span></span> ÷ <span class="frac"><span>1</span><span>24</span></span> ＝ 6日。全部で 12 ＋ 2 ＋ 6 ＝ <strong>20日</strong></div><div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　残りは 1 － <span class="frac"><span>1</span><span>2</span></span> － <span class="frac"><span>1</span><span>4</span></span> ＝ <span class="frac"><span>1</span><span>4</span></span>。これをBが <span class="frac"><span>1</span><span>4</span></span> ÷ <span class="frac"><span>1</span><span>24</span></span> ＝ 6日で仕上げます。全部で 12 ＋ 2 ＋ 6 ＝ <strong>20日</strong> です。（6日は「残りの日数」、14日は残りをたし忘れた答えです）</div></div><button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:.6rem;">実践演習へ進む →</button></div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">実践演習</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！　ヒントも使えます。全5問</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div><div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div></div><div class="prob-n"><span class="n n-pr">1</span><span>実践演習 第1問</span></div><div class="card"><div class="clabel pr">実践演習 第1問　やさしい計算①</div><div class="q-text">ある仕事を、Aだけですると6日、Bだけですると12日かかります。はじめにAが2日働き、残りをBが仕上げました。Bは何日働きましたか？</div><button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button><div class="hint-box" id="h1">Aの2日ぶんは <span class="frac"><span>1</span><span>6</span></span> × 2 ＝ <span class="frac"><span>1</span><span>3</span></span>。残りは 1 － <span class="frac"><span>1</span><span>3</span></span>。それをBの1日 <span class="frac"><span>1</span><span>12</span></span> でわります。</div><div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 2分以内</span></div></div><div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,1)"><span class="cnum">1</span>6日</button><button class="ch" onclick="ans('q1',1,1)"><span class="cnum">2</span>8日</button><button class="ch" onclick="ans('q1',2,1)"><span class="cnum">3</span>9日</button><button class="ch" onclick="ans('q1',3,1)"><span class="cnum">4</span>12日</button></div><div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">残り <span class="frac"><span>2</span><span>3</span></span> を <span class="frac"><span>1</span><span>12</span></span> でわって 8日 ✓</span></span></div><div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">Aの2日ぶん <span class="frac"><span>1</span><span>3</span></span> を1から引いた残り <span class="frac"><span>2</span><span>3</span></span> を、Bの1日 <span class="frac"><span>1</span><span>12</span></span> でわります。</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div><div id="q1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>A：<span class="frac"><span>1</span><span>6</span></span> × 2 ＝ <span class="frac"><span>1</span><span>3</span></span>。残り <span class="frac"><span>2</span><span>3</span></span>。<span class="frac"><span>2</span><span>3</span></span> ÷ <span class="frac"><span>1</span><span>12</span></span> ＝ <span class="frac"><span>2</span><span>3</span></span> × 12 ＝ <strong>8日</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q1"><div class="clabel kai">段階解説</div><div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　Aの2日ぶんを出します</h4><p>Aの1日 ＝ <span class="frac"><span>1</span><span>6</span></span>
+<span class="frac"><span>1</span><span>6</span></span> × 2 ＝ <span class="frac"><span>2</span><span>6</span></span> ＝ <span class="frac"><span>1</span><span>3</span></span></p></div><div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　残りを出して、Bの日数を求めます</h4><p>残り ＝ 1 － <span class="frac"><span>1</span><span>3</span></span> ＝ <span class="frac"><span>2</span><span>3</span></span>
+Bの1日 ＝ <span class="frac"><span>1</span><span>12</span></span>
+<span class="frac"><span>2</span><span>3</span></span> ÷ <span class="frac"><span>1</span><span>12</span></span> ＝ <span class="frac"><span>2</span><span>3</span></span> × 12 ＝ <strong>8日</strong></p></div><div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます（全体を12とおく）</h4><p>Aは1日2、Bは1日1。A：2 × 2 ＝ 4、残り 12 － 4 ＝ 8、Bが 8 ÷ 1 ＝ 8日 ✓</p></div><button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button><div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">2</span><span>実践演習 第2問</span></div><div class="card"><div class="clabel pr">実践演習 第2問　3区間の交代</div><div class="q-text">ある仕事を、Aだけですると20日、Bだけですると30日かかります。はじめにAが5日、次にBが12日働き、残りをAが仕上げました。残りをAが仕上げるのに、何日かかりましたか？</div><button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button><div class="hint-box" id="h2">A：<span class="frac"><span>1</span><span>20</span></span> × 5、B：<span class="frac"><span>1</span><span>30</span></span> × 12 を出して（約分して）たします。分母は20にそろえます。残りをAの1日 <span class="frac"><span>1</span><span>20</span></span> でわります。</div><div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,3)"><span class="cnum">1</span>9日</button><button class="ch" onclick="ans('q2',1,3)"><span class="cnum">2</span>5日</button><button class="ch" onclick="ans('q2',2,3)"><span class="cnum">3</span>6日</button><button class="ch" onclick="ans('q2',3,3)"><span class="cnum">4</span>7日</button></div><div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">合計 <span class="frac"><span>13</span><span>20</span></span>、残り <span class="frac"><span>7</span><span>20</span></span>、<span class="frac"><span>7</span><span>20</span></span> ÷ <span class="frac"><span>1</span><span>20</span></span> ＝ 7日 ✓</span></span></div><div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">A：<span class="frac"><span>1</span><span>20</span></span> × 5 ＝ <span class="frac"><span>1</span><span>4</span></span>、B：<span class="frac"><span>1</span><span>30</span></span> × 12 ＝ <span class="frac"><span>2</span><span>5</span></span>。合計を1から引いた残りを、Aの1日でわります。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div><div id="q2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>A：<span class="frac"><span>1</span><span>4</span></span>、B：<span class="frac"><span>2</span><span>5</span></span>。合計 <span class="frac"><span>13</span><span>20</span></span>。残り <span class="frac"><span>7</span><span>20</span></span> ÷ <span class="frac"><span>1</span><span>20</span></span> ＝ <strong>7日</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q2"><div class="clabel kai">段階解説</div><div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの仕事量を出します</h4><p>Aが5日　：<span class="frac"><span>1</span><span>20</span></span> × 5 ＝ <span class="frac"><span>5</span><span>20</span></span> ＝ <span class="frac"><span>1</span><span>4</span></span>
+Bが12日　：<span class="frac"><span>1</span><span>30</span></span> × 12 ＝ <span class="frac"><span>12</span><span>30</span></span> ＝ <span class="frac"><span>2</span><span>5</span></span></p></div><div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　合計と残りを出します</h4><p><span class="frac"><span>1</span><span>4</span></span> ＋ <span class="frac"><span>2</span><span>5</span></span> ＝ <span class="frac"><span>5</span><span>20</span></span> ＋ <span class="frac"><span>8</span><span>20</span></span> ＝ <span class="frac"><span>13</span><span>20</span></span>
+残り ＝ 1 － <span class="frac"><span>13</span><span>20</span></span> ＝ <span class="frac"><span>7</span><span>20</span></span></p></div><div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　日数を出して、確かめます</h4><p><span class="frac"><span>7</span><span>20</span></span> ÷ <span class="frac"><span>1</span><span>20</span></span> ＝ <strong>7日</strong>
+【確かめ】全体を60とおく：A3、B2。A：3 × 5 ＝ 15、B：2 × 12 ＝ 24、合計 39、残り 21、21 ÷ 3 ＝ 7日 ✓</p></div><button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button><div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">3</span><span>実践演習 第3問</span></div><div class="card"><div class="clabel pr">実践演習 第3問　全部で何日？</div><div class="q-text">ある仕事を、Aだけですると24日、Bだけですると30日かかります。はじめにBが15日、次にAが8日働き、残りをBが仕上げました。仕事が終わるまで、全部で何日かかりましたか？</div><button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button><div class="hint-box" id="h3">B：<span class="frac"><span>1</span><span>30</span></span> × 15 ＝ <span class="frac"><span>1</span><span>2</span></span>、A：<span class="frac"><span>1</span><span>24</span></span> × 8 ＝ <span class="frac"><span>1</span><span>3</span></span>。残りをBの1日でわり、最後に3つの日数をたします。</div><div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,1)"><span class="cnum">1</span>23日</button><button class="ch" onclick="ans('q3',1,1)"><span class="cnum">2</span>28日</button><button class="ch" onclick="ans('q3',2,1)"><span class="cnum">3</span>30日</button><button class="ch" onclick="ans('q3',3,1)"><span class="cnum">4</span>33日</button></div><div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">残り <span class="frac"><span>1</span><span>6</span></span> ÷ <span class="frac"><span>1</span><span>30</span></span> ＝ 5日。15 ＋ 8 ＋ 5 ＝ 28日 ✓</span></span></div><div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">23日は「残りの日数5日」をたし忘れた答えです。3つの区間の日数をすべてたします。</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div><div id="q3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>B：<span class="frac"><span>1</span><span>2</span></span>、A：<span class="frac"><span>1</span><span>3</span></span>。合計 <span class="frac"><span>5</span><span>6</span></span>、残り <span class="frac"><span>1</span><span>6</span></span>。<span class="frac"><span>1</span><span>6</span></span> ÷ <span class="frac"><span>1</span><span>30</span></span> ＝ 5日。15 ＋ 8 ＋ 5 ＝ <strong>28日</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q3"><div class="clabel kai">段階解説</div><div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの仕事量を出します</h4><p>Bが15日　：<span class="frac"><span>1</span><span>30</span></span> × 15 ＝ <span class="frac"><span>15</span><span>30</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span>
+Aが8日　：<span class="frac"><span>1</span><span>24</span></span> × 8 ＝ <span class="frac"><span>8</span><span>24</span></span> ＝ <span class="frac"><span>1</span><span>3</span></span></p></div><div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　合計と残りを出します</h4><p><span class="frac"><span>1</span><span>2</span></span> ＋ <span class="frac"><span>1</span><span>3</span></span> ＝ <span class="frac"><span>3</span><span>6</span></span> ＋ <span class="frac"><span>2</span><span>6</span></span> ＝ <span class="frac"><span>5</span><span>6</span></span>
+残り ＝ 1 － <span class="frac"><span>5</span><span>6</span></span> ＝ <span class="frac"><span>1</span><span>6</span></span></p></div><div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　残りの日数と、全部の日数を出します</h4><p>Bが残りを仕上げる日数 ＝ <span class="frac"><span>1</span><span>6</span></span> ÷ <span class="frac"><span>1</span><span>30</span></span> ＝ <span class="frac"><span>1</span><span>6</span></span> × 30 ＝ 5日
+全部で　15 ＋ 8 ＋ 5 ＝ <strong>28日</strong>
+【確かめ】全体を120とおく：Aは5、Bは4。B：4 × 15 ＝ 60、A：5 × 8 ＝ 40、残り 20、20 ÷ 4 ＝ 5日 ✓</p></div><button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button><div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">4</span><span>実践演習 第4問</span></div><div class="card"><div class="clabel pr">実践演習 第4問　3人が順番に</div><div class="q-text">ある仕事を、Aだけですると10日、Bだけですると15日、Cだけですると30日かかります。この仕事を、Aが4日、次にBが5日、最後にCが6日、順番に働きました。まだ終わっていない残りは、全体のどれだけですか？</div><button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button><div class="hint-box" id="h4">3人でも、区間ごとの「1日の仕事量 × 日数」をたすだけです。A：<span class="frac"><span>1</span><span>10</span></span> × 4、B：<span class="frac"><span>1</span><span>15</span></span> × 5、C：<span class="frac"><span>1</span><span>30</span></span> × 6。分母は30にそろえます。</div><div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,0)"><span class="cnum">1</span><span class="frac"><span>1</span><span>15</span></span></button><button class="ch" onclick="ans('q4',1,0)"><span class="cnum">2</span><span class="frac"><span>14</span><span>15</span></span></button><button class="ch" onclick="ans('q4',2,0)"><span class="cnum">3</span><span class="frac"><span>1</span><span>30</span></span></button><button class="ch" onclick="ans('q4',3,0)"><span class="cnum">4</span><span class="frac"><span>2</span><span>15</span></span></button></div><div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">終わった分 <span class="frac"><span>14</span><span>15</span></span>、残り <span class="frac"><span>1</span><span>15</span></span> ✓</span></span></div><div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub"><span class="frac"><span>14</span><span>15</span></span> は「終わった分」です。「残り」は 1 から引いた <span class="frac"><span>1</span><span>15</span></span> です。</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div><div id="q4-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>A：<span class="frac"><span>2</span><span>5</span></span>、B：<span class="frac"><span>1</span><span>3</span></span>、C：<span class="frac"><span>1</span><span>5</span></span>。合計 <span class="frac"><span>14</span><span>15</span></span>。残り ＝ 1 － <span class="frac"><span>14</span><span>15</span></span> ＝ <strong><span class="frac"><span>1</span><span>15</span></span></strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q4"><div class="clabel kai">段階解説</div><div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの仕事量を出します</h4><p>Aが4日　：<span class="frac"><span>1</span><span>10</span></span> × 4 ＝ <span class="frac"><span>4</span><span>10</span></span> ＝ <span class="frac"><span>2</span><span>5</span></span>
+Bが5日　：<span class="frac"><span>1</span><span>15</span></span> × 5 ＝ <span class="frac"><span>5</span><span>15</span></span> ＝ <span class="frac"><span>1</span><span>3</span></span>
+Cが6日　：<span class="frac"><span>1</span><span>30</span></span> × 6 ＝ <span class="frac"><span>6</span><span>30</span></span> ＝ <span class="frac"><span>1</span><span>5</span></span></p></div><div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　通分してたします</h4><p>3つの分母 5、3、5 の最小公倍数は15
+<span class="frac"><span>2</span><span>5</span></span> ＋ <span class="frac"><span>1</span><span>3</span></span> ＋ <span class="frac"><span>1</span><span>5</span></span> ＝ <span class="frac"><span>6</span><span>15</span></span> ＋ <span class="frac"><span>5</span><span>15</span></span> ＋ <span class="frac"><span>3</span><span>15</span></span> ＝ <span class="frac"><span>14</span><span>15</span></span></p></div><div id="q4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　残りを出して、確かめます</h4><p>残り ＝ 1 － <span class="frac"><span>14</span><span>15</span></span> ＝ <strong><span class="frac"><span>1</span><span>15</span></span></strong>
+【確かめ】全体を30とおく：Aは3、Bは2、Cは1。12 ＋ 10 ＋ 6 ＝ 28、残り 30 － 28 ＝ 2 ＝ 全体の <span class="frac"><span>2</span><span>30</span></span> ＝ <span class="frac"><span>1</span><span>15</span></span> ✓</p></div><button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button><div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">5</span><span>実践演習 第5問</span></div><div class="card"><div class="clabel pr">実践演習 第5問　まん中の日数を求める</div><div class="q-text">ある仕事を、Aだけですると10日、Bだけですると20日かかります。はじめにAが5日働き、次にBが何日か働き、最後にAが3日働いて、ちょうど仕事が終わりました。Bは何日働きましたか？</div><button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button><div class="hint-box" id="h5">Aは全部で 5 ＋ 3 ＝ 8日働きます。Aの分 <span class="frac"><span>1</span><span>10</span></span> × 8 を1から引くと、Bの仕事量が出ます。それをBの1日 <span class="frac"><span>1</span><span>20</span></span> でわります。</div><div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,2)"><span class="cnum">1</span>3日</button><button class="ch" onclick="ans('q5',1,2)"><span class="cnum">2</span>5日</button><button class="ch" onclick="ans('q5',2,2)"><span class="cnum">3</span>4日</button><button class="ch" onclick="ans('q5',3,2)"><span class="cnum">4</span>8日</button></div><div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">Aの分 <span class="frac"><span>4</span><span>5</span></span>、Bの分 <span class="frac"><span>1</span><span>5</span></span>、<span class="frac"><span>1</span><span>5</span></span> ÷ <span class="frac"><span>1</span><span>20</span></span> ＝ 4日 ✓</span></span></div><div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">Aの2つの区間を合わせて 8日ぶん（<span class="frac"><span>4</span><span>5</span></span>）です。1から引いた <span class="frac"><span>1</span><span>5</span></span> を、Bの1日でわります。</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div><div id="q5-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>Aの分 <span class="frac"><span>1</span><span>10</span></span> × 8 ＝ <span class="frac"><span>4</span><span>5</span></span>。Bの分 ＝ <span class="frac"><span>1</span><span>5</span></span>。<span class="frac"><span>1</span><span>5</span></span> ÷ <span class="frac"><span>1</span><span>20</span></span> ＝ <strong>4日</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q5"><div class="clabel kai">段階解説</div><div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　Aの分をまとめて出します</h4><p>Aは 5 ＋ 3 ＝ 8日 働きました
+<span class="frac"><span>1</span><span>10</span></span> × 8 ＝ <span class="frac"><span>8</span><span>10</span></span> ＝ <span class="frac"><span>4</span><span>5</span></span></p></div><div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　Bの分を出します</h4><p>Bの仕事量 ＝ 1 － <span class="frac"><span>4</span><span>5</span></span> ＝ <span class="frac"><span>1</span><span>5</span></span></p></div><div id="q5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　Bの日数を出して、確かめます</h4><p><span class="frac"><span>1</span><span>5</span></span> ÷ <span class="frac"><span>1</span><span>20</span></span> ＝ <span class="frac"><span>1</span><span>5</span></span> × 20 ＝ <strong>4日</strong>
+【確かめ】全体を20とおく：Aは2、Bは1。A：2 × 8 ＝ 16、Bの分 4、4 ÷ 1 ＝ 4日 ✓</p></div><button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button><div id="q5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div id="pr-done" style="display:none"><div class="teal-box" style="margin-top:1.4rem"><strong>🎉 実践演習 完了！</strong>おつかれさまでした。次はいよいよ総合確認です。ここからは制限時間があります。解き方を思い出しながら、落ち着いて挑戦しましょう。</div><button class="next-page-btn cf" onclick="switchTab('cf')">総合確認へ進む →</button></div></div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">総合確認（制限時間つき）</div><div class="page-hdr-desc">SPI本番のつもりで挑戦しましょう。全3問・ヒントなし。「スタート」を押すとカウントダウンが始まり、時間切れになると自動で締め切られます。</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div><div class="pb-txt" id="pb-cf-txt">0 / 3 完了</div></div><div class="teal-box"><strong>💡 はじめに</strong>時間切れになっても、点数が下がるだけで何も困りません。落ち着いて、解説で「どこに時間がかかったか」を確認し、もう一度挑戦すれば大丈夫です。わからない問題で粘りすぎず、「やり方を思い出せない」と感じたら、いったん解説を見て覚えるのも立派な勉強です。</div><div class="prob-n"><span class="n n-cf">1</span><span>総合確認 第1問</span></div><div class="card"><div class="clabel cf">総合確認 第1問　全部で何日</div><div class="cf-cover" id="cover-qc1"><div class="cf-cover-txt">制限時間：<strong>2分30秒</strong></div><button class="start-btn" onclick="startCf('qc1')">▶ 第1問をスタート</button></div><div id="body-qc1" style="display:none"><div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:30</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分30秒</span></div></div><div class="q-text">ある仕事を、Aだけですると16日、Bだけですると24日かかります。はじめにAが4日、次にBが9日働き、残りをAが仕上げました。仕事が終わるまで、全部で何日かかりましたか？</div><div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,2)"><span class="cnum">1</span>6日</button><button class="ch" onclick="ans('qc1',1,2)"><span class="cnum">2</span>13日</button><button class="ch" onclick="ans('qc1',2,2)"><span class="cnum">3</span>19日</button><button class="ch" onclick="ans('qc1',3,2)"><span class="cnum">4</span>22日</button><button class="ch" onclick="ans('qc1',4,2)"><span class="cnum">5</span>25日</button></div></div><div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">残り <span class="frac"><span>3</span><span>8</span></span> ÷ <span class="frac"><span>1</span><span>16</span></span> ＝ 6日。4 ＋ 9 ＋ 6 ＝ 19日 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">13日は「残りの6日」をたし忘れた答えです。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc1"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div id="qc1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>A：<span class="frac"><span>1</span><span>4</span></span>、B：<span class="frac"><span>3</span><span>8</span></span>。合計 <span class="frac"><span>5</span><span>8</span></span>、残り <span class="frac"><span>3</span><span>8</span></span>。<span class="frac"><span>3</span><span>8</span></span> ÷ <span class="frac"><span>1</span><span>16</span></span> ＝ 6日。4 ＋ 9 ＋ 6 ＝ <strong>19日</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc1"><div class="clabel kai">段階解説</div><div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの仕事量と残り</h4><p>Aが4日：<span class="frac"><span>1</span><span>16</span></span> × 4 ＝ <span class="frac"><span>1</span><span>4</span></span>　Bが9日：<span class="frac"><span>1</span><span>24</span></span> × 9 ＝ <span class="frac"><span>9</span><span>24</span></span> ＝ <span class="frac"><span>3</span><span>8</span></span>
+合計 ＝ <span class="frac"><span>2</span><span>8</span></span> ＋ <span class="frac"><span>3</span><span>8</span></span> ＝ <span class="frac"><span>5</span><span>8</span></span>　残り ＝ 1 － <span class="frac"><span>5</span><span>8</span></span> ＝ <span class="frac"><span>3</span><span>8</span></span></p></div><div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　日数を出します</h4><p>残りをAが <span class="frac"><span>3</span><span>8</span></span> ÷ <span class="frac"><span>1</span><span>16</span></span> ＝ <span class="frac"><span>3</span><span>8</span></span> × 16 ＝ 6日
+全部で 4 ＋ 9 ＋ 6 ＝ <strong>19日</strong>
+【確かめ】全体を48とおく：Aは3、Bは2。12 ＋ 18 ＝ 30、残り 18、18 ÷ 3 ＝ 6日 ✓</p></div><button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',2)">STEP 1 を見る ▼</button><div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">2</span><span>総合確認 第2問</span></div><div class="card"><div class="clabel cf">総合確認 第2問　3人の交代</div><div class="cf-cover" id="cover-qc2"><div class="cf-cover-txt">制限時間：<strong>3分</strong></div><button class="start-btn" onclick="startCf('qc2')">▶ 第2問をスタート</button></div><div id="body-qc2" style="display:none"><div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">3:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 3分</span></div></div><div class="q-text">ある仕事を、Aだけですると12日、Bだけですると20日、Cだけですると10日かかります。はじめにAが3日、次にBが5日働き、残りをCが仕上げました。Cは何日働きましたか？</div><div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,1)"><span class="cnum">1</span>4日</button><button class="ch" onclick="ans('qc2',1,1)"><span class="cnum">2</span>5日</button><button class="ch" onclick="ans('qc2',2,1)"><span class="cnum">3</span>6日</button><button class="ch" onclick="ans('qc2',3,1)"><span class="cnum">4</span>8日</button><button class="ch" onclick="ans('qc2',4,1)"><span class="cnum">5</span>10日</button></div></div><div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">残り <span class="frac"><span>1</span><span>2</span></span> ÷ <span class="frac"><span>1</span><span>10</span></span> ＝ 5日 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">A：<span class="frac"><span>1</span><span>12</span></span> × 3 ＝ <span class="frac"><span>1</span><span>4</span></span>、B：<span class="frac"><span>1</span><span>20</span></span> × 5 ＝ <span class="frac"><span>1</span><span>4</span></span>。残りは 1 － <span class="frac"><span>1</span><span>2</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span> です。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc2"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div id="qc2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>A：<span class="frac"><span>1</span><span>4</span></span>、B：<span class="frac"><span>1</span><span>4</span></span>。合計 <span class="frac"><span>1</span><span>2</span></span>。残り <span class="frac"><span>1</span><span>2</span></span> ÷ <span class="frac"><span>1</span><span>10</span></span> ＝ <strong>5日</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc2"><div class="clabel kai">段階解説</div><div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　区間ごとの仕事量</h4><p>Aが3日：<span class="frac"><span>1</span><span>12</span></span> × 3 ＝ <span class="frac"><span>1</span><span>4</span></span>
+Bが5日：<span class="frac"><span>1</span><span>20</span></span> × 5 ＝ <span class="frac"><span>1</span><span>4</span></span>
+合計 ＝ <span class="frac"><span>1</span><span>4</span></span> ＋ <span class="frac"><span>1</span><span>4</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span></p></div><div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　残りとCの日数</h4><p>残り ＝ 1 － <span class="frac"><span>1</span><span>2</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span>
+Cの1日 ＝ <span class="frac"><span>1</span><span>10</span></span>
+<span class="frac"><span>1</span><span>2</span></span> ÷ <span class="frac"><span>1</span><span>10</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span> × 10 ＝ <strong>5日</strong>
+【確かめ】全体を60：Aは5、Bは3、Cは6。15 ＋ 15 ＝ 30、残り 30、30 ÷ 6 ＝ 5日 ✓</p></div><button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',2)">STEP 1 を見る ▼</button><div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">3</span><span>総合確認 第3問</span></div><div class="card"><div class="clabel cf">総合確認 第3問　まん中のBは何日？</div><div class="cf-cover" id="cover-qc3"><div class="cf-cover-txt">制限時間：<strong>3分</strong></div><button class="start-btn" onclick="startCf('qc3')">▶ 第3問をスタート</button></div><div id="body-qc3" style="display:none"><div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">3:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 3分</span></div></div><div class="q-text">ある仕事を、Aだけですると24日、Bだけですると40日かかります。はじめにAが8日働き、次にBが何日か働き、最後にAが4日働いて、ちょうど仕事が終わりました。Bは何日働きましたか？</div><div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,3)"><span class="cnum">1</span>10日</button><button class="ch" onclick="ans('qc3',1,3)"><span class="cnum">2</span>15日</button><button class="ch" onclick="ans('qc3',2,3)"><span class="cnum">3</span>25日</button><button class="ch" onclick="ans('qc3',3,3)"><span class="cnum">4</span>20日</button><button class="ch" onclick="ans('qc3',4,3)"><span class="cnum">5</span>40日</button></div></div><div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">Aは合計12日で <span class="frac"><span>1</span><span>2</span></span>。Bの分 <span class="frac"><span>1</span><span>2</span></span> ÷ <span class="frac"><span>1</span><span>40</span></span> ＝ 20日 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">Aは 8 ＋ 4 ＝ 12日ぶん働いたので、<span class="frac"><span>1</span><span>24</span></span> × 12 ＝ <span class="frac"><span>1</span><span>2</span></span> です。1から引いて、Bの1日でわります。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc3"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div id="qc3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>Aの分 <span class="frac"><span>1</span><span>24</span></span> × 12 ＝ <span class="frac"><span>1</span><span>2</span></span>。Bの分 <span class="frac"><span>1</span><span>2</span></span> ÷ <span class="frac"><span>1</span><span>40</span></span> ＝ <strong>20日</strong></div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc3"><div class="clabel kai">段階解説</div><div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　Aの分をまとめて出します</h4><p>Aは 8 ＋ 4 ＝ 12日 働いた
+<span class="frac"><span>1</span><span>24</span></span> × 12 ＝ <span class="frac"><span>12</span><span>24</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span></p></div><div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　Bの日数を出します</h4><p>Bの分 ＝ 1 － <span class="frac"><span>1</span><span>2</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span>
+<span class="frac"><span>1</span><span>2</span></span> ÷ <span class="frac"><span>1</span><span>40</span></span> ＝ <span class="frac"><span>1</span><span>2</span></span> × 40 ＝ <strong>20日</strong>
+【確かめ】全体を120とおく：Aは5、Bは3。A：5 × 12 ＝ 60、Bの分 60、60 ÷ 3 ＝ 20日 ✓</p></div><button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',2)">STEP 1 を見る ▼</button><div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="result-card" id="cf-result" style="display:none"><div class="rc-title">📊 総合確認の結果</div><div class="rc-score" id="rc-score"></div><div class="rc-msg" id="rc-msg"></div></div><div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a href="SPI_shigoto_index.html" class="unav-btn unav-idx">☰ 単元一覧へ</a><a href="SPI_shigoto_p10.html" class="unav-btn unav-next">次：パターン10 途中で休む・途中から加わる →</a></div></div></div>
+</main>
+<script>
+const CFG={"key": "spi_shigoto_p09", "PR": ["q1", "q2", "q3", "q4", "q5"], "CF": ["qc1", "qc2", "qc3"], "LIM": {"qc1": 150, "qc2": 180, "qc3": 180}, "GOAL": {"q1": "2分", "q2": "3分", "q3": "3分", "q4": "3分", "q5": "3分"}};
+const answered={};
+const timers={};
+const miniAnswered={};
+const stepRev={};
+const cfRes={};
+const cfSecs={};
+const pageSeen={};
+let pracDone=0,cfDone=0,cfOk=0;
+
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered[CFG.PR[0]])startTimer(CFG.PR[0]);
+}
+
+/* ───── 演習：経過時間を表示するタイマー（目安のみ） ───── */
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tw=document.getElementById('t'+qid.slice(1));
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/240,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(pct>.8?' warn':''));
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=m+':'+String(s).padStart(2,'0');
+    if(msg){
+      const goal=msg.querySelector('.goal');const g=goal?goal.outerHTML:'';
+      if(sec<60)msg.innerHTML='自力で考えましょう。'+g;
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+/* ───── 確認：本当にカウントダウンして締め切るタイマー ───── */
+function startCf(qid){
+  if(answered[qid]||timers[qid])return;
+  document.getElementById('cover-'+qid).style.display='none';
+  document.getElementById('body-'+qid).style.display='block';
+  const lim=CFG.LIM[qid];
+  const start=Date.now();cfSecs[qid]=0;
+  const ring=document.getElementById('ring-'+qid);
+  const fg=ring.querySelector('.tfg'),txt=ring.querySelector('.tcenter');
+  const msg=ring.parentNode.querySelector('.timer-msg');
+  function tick(){
+    const sec=Math.floor((Date.now()-start)/1000);
+    cfSecs[qid]=Math.min(sec,lim);
+    const left=Math.max(lim-sec,0);
+    const pct=Math.min(sec/lim,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(left<=lim*.15?' danger':(left<=lim*.4?' warn':'')));
+    txt.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    const goal=msg.querySelector('.goal');
+    if(goal){goal.className='goal'+(left<=lim*.15?' danger':'');
+      goal.textContent=left<=0?'時間切れ':(left<=lim*.15?'あと少し！':(left<=lim*.4?'半分を過ぎました':'制限 '+fmt(lim)));}
+    if(left<=0)timeUp(qid);
+  }
+  tick();
+  timers[qid]=setInterval(tick,250);
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return m?(r?m+'分'+r+'秒':m+'分'):r+'秒';}
+
+function paintChoices(qid,idx,correct){
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&idx!==correct){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+}
+function showAfter(qid){
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const isOk=(idx===correct);
+  const isCf=CFG.CF.includes(qid);
+  const tw=document.getElementById(isCf?'tc'+qid.slice(2):'t'+qid.slice(1));
+  if(tw)tw.style.display='none';
+  paintChoices(qid,idx,correct);
+  const fbOk=document.getElementById('fb-ok-'+qid),fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  showAfter(qid);
+  if(isCf){cfRes[qid]=isOk?'ok':'ng';cfDone++;if(isOk)cfOk++;afterCf();}
+  else{
+    pracDone++;const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    if(pracDone===n){document.getElementById('done-pr').style.display='flex';document.getElementById('pr-done').style.display='block';}
+    const nx=CFG.PR[CFG.PR.indexOf(qid)+1];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+}
+
+function timeUp(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const tw=document.getElementById('tc'+qid.slice(2));
+  if(tw)tw.style.display='none';
+  const c=+document.querySelector('#ch-'+qid+' .ch').getAttribute('onclick').match(/,(\d+)\)/)[1];
+  paintChoices(qid,-1,c);
+  document.getElementById('fb-to-'+qid).style.display='flex';
+  showAfter(qid);
+  cfRes[qid]='to';cfDone++;afterCf();
+}
+
+function afterCf(){
+  const n=CFG.CF.length;
+  document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+  document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+  if(cfDone===n){
+    document.getElementById('done-cf').style.display='flex';
+    document.getElementById('unit-nav').style.display='flex';
+    const to=Object.values(cfRes).filter(v=>v==='to').length;
+    const rate=cfOk/n;
+    document.getElementById('rc-score').textContent='正解 '+cfOk+' / '+n+' 問';
+    let msg='';
+    if(rate>=.8)msg='合格ラインです。この調子で次のパターンへ進みましょう。';
+    else if(rate>=.5)msg='あと少しです。間違えた問題の解説を読み直し、「もう一度」で挑戦してみましょう。';
+    else msg='まだ慣れていないだけです。解説タブの例題をもう一度たどってから、再挑戦しましょう。何度やり直しても大丈夫です。';
+    document.getElementById('rc-msg').textContent=to>0?msg+'（時間切れは '+to+' 問でした。まず正確に解ける形をつくり、そのあとで速さを上げていきましょう。）':msg;
+    document.getElementById('cf-result').style.display='block';
+    lsSet(CFG.key+'_score',cfOk+'/'+n);lsSet(CFG.key,'1');
+    setTimeout(()=>document.getElementById('cf-result').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  const isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  const fbOk=document.getElementById('mfb-'+qid+'-ok'),fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';}_launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid]||0;
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]=r+1;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if((stepRev[qid]||0)>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+(stepRev[qid]+1)+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(prefix+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  const isCf=CFG.CF.includes(qid);
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(isCf){
+    const r=cfRes[qid];
+    if(r){cfDone--;if(r==='ok')cfOk--;delete cfRes[qid];}
+    const n=CFG.CF.length;
+    document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+    document.getElementById('done-cf').style.display='none';
+    document.getElementById('cf-result').style.display='none';
+    document.getElementById('unit-nav').style.display='none';
+    var to=document.getElementById('fb-to-'+qid);if(to)to.style.display='none';
+    document.getElementById('cover-'+qid).style.display='block';
+    document.getElementById('body-'+qid).style.display='none';
+    var tw=document.getElementById('tc'+qid.slice(2));if(tw)tw.style.display='flex';
+    const ring=document.getElementById('ring-'+qid);
+    ring.querySelector('.tfg').style.strokeDashoffset=0;ring.querySelector('.tfg').setAttribute('class','tfg');
+    const lim=CFG.LIM[qid];ring.querySelector('.tcenter').textContent=Math.floor(lim/60)+':'+String(lim%60).padStart(2,'0');
+    const g=ring.parentNode.querySelector('.goal');if(g){g.className='goal';g.textContent='制限 '+fmt(lim);}
+  }else{
+    if(pracDone>0)pracDone--;
+    const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    document.getElementById('done-pr').style.display='none';document.getElementById('pr-done').style.display='none';
+    var tw2=document.getElementById('t'+qid.slice(1));if(tw2)tw2.style.display='flex';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  if(!isCf)startTimer(qid);
+  else window.scrollTo({top:document.getElementById('cover-'+qid).getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+
+lsSet(CFG.key,'1');
+
+</script>
+</body>
+</html>

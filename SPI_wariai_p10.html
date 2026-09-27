@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 割合・比 パターン10 2回の増減（○％増えて、そのあと○％減る）</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);line-height:1.7;}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box>strong:first-child{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.bar-wrap{margin:1rem 0;}
+.bar-title{font-size:12px;font-weight:700;color:var(--text3);margin-bottom:.5rem;}
+.bar-row{display:flex;align-items:stretch;width:100%;height:40px;border-radius:8px;overflow:hidden;margin-bottom:5px;}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;text-align:left;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+.timer-ring circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tfg.danger{stroke:var(--pink);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.timer-msg .goal.danger{color:var(--pink);font-weight:700;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.85;line-height:1.7;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.unav-idx{background:#fff;border-color:#bcb8ae;color:#58544c;}
+.unav-idx:hover{border-color:#2055b0;color:#2055b0;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+
+/* ── 追加：分数・図・制限時間つき確認問題 ── */
+.frac{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.3;margin:0 3px;font-size:.92em;font-weight:inherit;}
+.frac>span:first-child{border-bottom:1.5px solid currentColor;padding:0 4px 1px;}
+.frac>span:last-child{padding:1px 4px 0;}
+.diagram{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:.7rem .6rem .5rem;margin:.9rem 0;overflow-x:auto;}
+.diagram svg{display:block;width:100%;height:auto;max-width:620px;margin:0 auto;}
+.diagram .cap{font-size:12px;color:var(--text2);text-align:center;margin-top:.35rem;line-height:1.7;}
+.cf-cover{background:var(--al);border:2px dashed #e0c888;border-radius:12px;padding:1.4rem 1rem;text-align:center;margin-bottom:.6rem;}
+.cf-cover-txt{font-size:13px;color:var(--amber);margin-bottom:.8rem;}
+.cf-cover-txt strong{font-size:16px;}
+.start-btn{background:var(--amber);color:#fff;border:none;border-radius:10px;padding:11px 28px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:background .15s;}
+.start-btn:hover{background:#8a4e00;}
+.result-card{background:linear-gradient(120deg,#1B2A4A,#2055b0);color:#fff;border-radius:var(--r);padding:1.3rem 1.5rem;margin-top:1.4rem;}
+.rc-title{font-size:12px;font-weight:700;letter-spacing:.1em;opacity:.8;margin-bottom:.5rem;}
+.rc-score{font-size:26px;font-weight:700;margin-bottom:.4rem;}
+.rc-msg{font-size:13px;line-height:1.9;opacity:.95;}
+.formula-box .f-eq .frac{margin:0 2px;}
+.exp-box p .frac{font-size:.95em;}
+@media (max-width:480px){.choices,.mini-choices{grid-template-columns:1fr;}.tab-btn{padding:.7rem .8rem;}.card{padding:1.2rem 1.1rem;}.sec-head{margin:-1.2rem -1.1rem 1.1rem;}}
+
+</style>
+</head>
+<body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI 非言語 ／ 割合・比　パターン10　2回の増減（○％増えて、そのあと○％減る）</span></header>
+<nav class="tab-nav">
+  <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+  <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>実践演習<span class="tab-done" id="done-pr">✓</span></button>
+  <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>総合確認<span class="tab-done" id="done-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">パターン10 ─ 2回の増減（○％増えて、そのあと○％減る）</div><div class="page-hdr-desc">20％増やして、20％減らす。足し引きすれば0のはずなのに、もとの量にはもどりません。その理由と、増減が続く問題を、かけ算とひとつの工夫で解けるようにします。</div></div></div><div class="card"><div class="sec-head"><span class="sec-num">1</span>【ポイント】 増減が続くときは、1回ごとに「かけ算」をしていきます</div><div class="body-text">増減が2回、3回と続く問題では、<strong>1回ごとに</strong>「（1＋割合）」か「（1－割合）」をかけます。パターン7で学んだ計算を、順番に重ねるだけです。</div><div class="formula-box"><div class="f-title">🔑 このパターンのポイント</div><div class="formula-line"><span class="f-key">2回の増減</span><span class="f-eq">もとの量 ×（1＋a）×（1－b）　（増えるときは＋、減るときは－）</span></div><div class="formula-line"><span class="f-key">工夫</span><span class="f-eq">もとの量がわからない・書かれていないときは、<strong>100</strong> とおく</span></div><div class="formula-line"><span class="f-key">3回以上</span><span class="f-eq">同じように、順にかけていく（かける順序は変えても答えは同じ）</span></div><div style="font-size:12px;color:var(--text2);margin-top:.5rem;line-height:1.8;">※ 割合の「もとにする量」は、その回の<strong>直前の量</strong>です。</div></div><div class="pink-box"><strong>⚠️ よくある間違い</strong>「20％増えて、20％減ったのだから、＋20 － 20 ＝ 0 で、もとにもどる」という考えはまちがいです。<br>1回目と2回目では、もとにする量がちがいます。増減の％を、そのまま足したり引いたりしてはいけません。実際は 1.2 × 0.8 ＝ 0.96 で、<strong>もとの96％</strong>になります。</div></div><div class="card"><div class="sec-head"><span class="sec-num">2</span>【解説①】 20％増やして20％減らしても、もとにもどらない理由</div><div class="body-text">ある商品が1000円で売られていて、20％値上げしたあと、その値段から20％値下げしたとします。値上げと値下げが同じ20％なので、1000円にもどりそうです。実際に計算してみます。</div><table class="kansan-table"><tr><th>手順</th><th>計算</th><th>値段</th></tr><tr><td>1000円の20％値上げ</td><td>1000 × （1＋0.2）＝ 1000 × 1.2</td><td class="hi">1200円</td></tr><tr><td>その20％値下げ</td><td>1200 × （1－0.2）＝ 1200 × 0.8</td><td class="hig">960円</td></tr></table><div class="diagram"><svg viewBox="0 0 600 186" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">もとの値段　1000円（＝100％）</text><rect x="10.0" y="18" width="450.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="235.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">1000円　100％</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">20％値上げ　→　1000 × 1.2 ＝ 1200円</text><rect x="10.0" y="74" width="450.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="235.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">1000円</text><rect x="460.0" y="74" width="90.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="505.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">＋200円</text><text x="0" y="122" font-size="12" font-weight="700" fill="#58544c">そこから20％値下げ　→　1200 × 0.8 ＝ 960円</text><rect x="10.0" y="130" width="432.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="226.0" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">960円</text><rect x="442.0" y="130" width="108.0" height="34" rx="5" fill="#d93652" stroke="#fff" stroke-width="1.5"/><text x="496.0" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">－240円</text></svg><div class="cap">2回目の「20％」は、1000円ではなく<b>1200円</b>の20％（＝240円）です。だから、値上げで増えた200円より多く減って、960円になります。</div></div><div class="body-text">もとの1000円にはもどらず、<strong>960円</strong>でした。40円安くなっています。<br>理由は、図のとおり、<strong>2回目の20％のもとにする量が、1000円ではなく1200円</strong>だからです。1000円の20％は200円、1200円の20％は240円。増えた分（200円）より、減らした分（240円）のほうが大きいのです。</div><div class="point-box"><strong>📌 思い出そう：「増える」「減る」の計算（パターン7）</strong>20％増える　→　もとの量 ×（1＋0.2）＝ もとの量 × <strong>1.2</strong><br>20％減る　　→　もとの量 ×（1－0.2）＝ もとの量 × <strong>0.8</strong><br>「1」はもとの量そのもの（100％）。そこに増えた割合を足すか、減った割合を引くので、1.2 と 0.8 になります。</div><div class="teal-box"><strong>💡 全体としては何％の変化か</strong>2回の変化をまとめると、1.2 × 0.8 ＝ 0.96。もとの量の96％にあたるので、<strong>全体では4％の減少</strong>です。<br>「増減の割合を、かけ算でまとめる」という見方が、このパターンの中心です。</div></div><div class="card"><div class="sec-head"><span class="sec-num">3</span>【解説②】 もとの量を「100」とおいて確かめる方法</div><div class="body-text">入試や適性検査では、「もとの量」の数字がなく、「20％増えて、そのあと20％減った。全体では何％の変化か」のように、割合だけが書かれた問題がよく出ます。そのときは、<strong>もとの量を100とおく</strong>と、すっきり解けます。</div><div class="diagram"><svg viewBox="0 0 600 186" xmlns="http://www.w3.org/2000/svg" font-family="Noto Sans JP,sans-serif"><text x="0" y="10" font-size="12" font-weight="700" fill="#58544c">もとの量を 100 とおく</text><rect x="10.0" y="18" width="450.0" height="34" rx="5" fill="#2055b0" stroke="#fff" stroke-width="1.5"/><text x="235.0" y="39" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">100</text><text x="0" y="66" font-size="12" font-weight="700" fill="#58544c">20％増える　→　100 × 1.2 ＝ 120</text><rect x="10.0" y="74" width="540.0" height="34" rx="5" fill="#a86000" stroke="#fff" stroke-width="1.5"/><text x="280.0" y="95" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">120</text><text x="0" y="122" font-size="12" font-weight="700" fill="#58544c">20％減る　→　120 × 0.8 ＝ 96</text><rect x="10.0" y="130" width="432.0" height="34" rx="5" fill="#0d9478" stroke="#fff" stroke-width="1.5"/><text x="226.0" y="151" text-anchor="middle" font-size="12.5" font-weight="700" fill="#fff">96</text></svg><div class="cap">もとの量を100とおくと、％の数字がそのまま量になります。最後は96。もとの100より <b>4だけ小さい</b>、つまり <b>4％の減少</b>です。</div></div><div class="body-text">100は、％の計算と相性のよい数です。100の20％は20、120の20％は24と、頭のなかで数を追えます。もとの量を100とおいて計算した結果は、そのまま「もとの量に対する％」を表します。<br>たとえば最後の結果が96なら、もとの100に対して96％です。答えの単位が「％」なら、もとの量は何でもよいので、100とおいて構いません。</div><div class="point-box"><strong>📌 思い出そう：小数のかけ算（1.2 × 0.8）</strong><strong>小数のかけ算は、小数点を無視して整数のようにかけ、あとで小数点をつけます。</strong><br>例）1.2 × 0.8：まず 12 × 8 ＝ 96。かけられる数の小数点以下は1けた、かける数も1けたで、合わせて2けた。<br>96 の右から2けた目に小数点を打って　<strong>0.96</strong>。<br>100 × 1.2 ＝ 120、120 × 0.8 ＝ 96 と、100からたどっても同じ結果になります。</div><div class="teal-box"><strong>💡 100とおく方法の手順</strong>① もとの量を100とおく　② 1回目の増減の計算（× 1.2 など）をする　③ 続けて2回目（× 0.8 など）をする　④ 最後の数を、もとの100と比べる（96なら、100より4少ない ＝ 4％減）</div></div><div class="card"><div class="sec-head"><span class="sec-num">4</span>【解説③】 3回続くとき／かける順序は自由</div><div class="body-text">増減が3回になっても、やることは同じです。1回ごとに、（1＋割合）か（1－割合）をかけます。<br>例）ある店の来場者数が、1年目に20％増え、2年目に25％減り、3年目に10％増えた。3年間の変化を、もとの量を100として追います。</div><table class="kansan-table"><tr><th>年</th><th>計算</th><th>来場者数</th></tr><tr><td>もと</td><td>100とおく</td><td>100</td></tr><tr><td>1年目（20％増）</td><td>100 × 1.2</td><td class="hi">120</td></tr><tr><td>2年目（25％減）</td><td>120 × 0.75</td><td class="hi">90</td></tr><tr><td>3年目（10％増）</td><td>90 × 1.1</td><td class="hig">99</td></tr></table><div class="body-text">最終的に99です。もとの100に対して<strong>1％の減少</strong>です。<br>途中の計算：120 × 0.75 ＝ 120 × <span class="frac"><span>3</span><span>4</span></span> ＝ 30 × 3 ＝ 90。90 × 1.1 ＝ 90 ＋ 9 ＝ 99。<br>1.2 × 0.75 × 1.1 と続けてかけると 0.99 になり、同じ結果になります。</div><div class="teal-box"><strong>💡 かける順序を変えても、答えは同じ</strong>1.2 × 0.8 と 0.8 × 1.2 は、どちらも 0.96 です。3回でも同じで、<strong>順序を入れかえても、最後の数は変わりません</strong>。「値上げのあと値下げ」と「値下げのあと値上げ」は、同じ結果になります。計算しやすい順に並べかえてもかまいません。</div><div class="pink-box"><strong>⚠️ よくある間違い</strong>3回の変化を「＋20 － 25 ＋ 10 ＝ ＋5％」と足し算・引き算でまとめてしまうこと。実際は 0.99 で、1％の減少です。足し算ではなく、<strong>かけ算</strong>でまとめます。</div></div><div class="card"><div class="sec-head"><span class="sec-num">5</span>【解説④】 「○％引きのあと、さらに○％引き」と、もとにもどす割合</div><div class="body-text">店の広告に「全品30％引き。さらにレジで10％引き」とあったとします。合わせて40％引き、と思いがちですが、そうではありません。もとの値段を100として計算します。</div><table class="kansan-table"><tr><th>手順</th><th>計算</th><th>値段</th></tr><tr><td>30％引き</td><td>100 × （1－0.3）＝ 100 × 0.7</td><td class="hi">70</td></tr><tr><td>さらに10％引き</td><td>70 × （1－0.1）＝ 70 × 0.9</td><td class="hig">63</td></tr></table><div class="body-text">63になりました。もとの100に対して、63％の値段です。<strong>引かれた割合は 100 － 63 ＝ 37％</strong>で、40％引きよりも少ない値引きです。<br>2回目の10％は、もとの100ではなく、すでに安くなった70に対しての10％（7）だからです。</div><div class="point-box"><strong>📌 もとにもどすために必要な割合</strong>「20％減ったあと、何％増やせばもとにもどるか」も、100とおくと解けます。<br>100 → 80（20％減）。80から100にもどすには、20増やせばよいので、増加率は<strong>もとにする量（＝今の80）に対して</strong> 20 ÷ 80 ＝ 0.25、つまり<strong>25％</strong>。<br>「同じ20％」では、もとにもどりません。</div><div class="pink-box"><strong>⚠️ 増減の割合は、足し引きできない</strong>30％引きと10％引きを合わせて40％引き、20％減のあと20％増でプラスマイナスゼロ。どちらも「％を足し引きする」考えで、まちがいです。割合が続くときは、<strong>いつも、かけ算でつなぎます</strong>。</div></div><div class="card"><div class="sec-head"><span class="sec-num">6</span>【例題】 1つずつ、順に解いてみましょう</div><div class="clabel ex" style="margin-top:.4rem">例題 1　もとの値段がわかっているとき</div><div class="q-text">ある商品の値段は2000円です。この商品を10％値上げし、そのあとで10％値下げしました。今の値段は何円ですか。</div><div class="body-text">同じ10％でも、2回目の10％は、値上げしたあとの値段に対する10％です。1回ずつかけ算をします。</div><div id="ex1-s0" class="exp-box" style="display:none"><h4>STEP 1　1回目：10％値上げ</h4><p>2000 ×（1＋0.1）＝ 2000 × 1.1 ＝ 2200（円）</p></div><div id="ex1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　2回目：10％値下げ</h4><p>2200 ×（1－0.1）＝ 2200 × 0.9
+2200 × 9 ＝ 19800　→　小数点を戻して　1980
+答え：<strong>1980円</strong></p></div><div id="ex1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　もとの量を100として確かめます</h4><p>100 × 1.1 ＝ 110、110 × 0.9 ＝ 99　→　もとの99％。
+2000 × 0.99 ＝ 2000 － 20 ＝ 1980円 ✓（もとの2000円より20円安くなっています）</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',3)">STEP 1 を見る ▼</button><div id="ex1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 2　もとの量が書かれていないとき（100とおく）</div><div class="q-text">ある商品に、仕入れ値の50％の利益を見こんだ値段（定価）をつけましたが、売れなかったので、定価から30％引きで売りました。この値段は、仕入れ値の何％ですか。</div><div class="body-text">店が商品を仕入れた値段が「仕入れ値」、お客さんに売るために最初につける値段が「定価」です。定価は、仕入れ値に「利益（もうけ）」を上のせした値段になります。この問題では、仕入れ値の金額は書かれていません。仕入れ値を100とおいて、順に計算します。</div><div id="ex2-s0" class="exp-box" style="display:none"><h4>STEP 1　仕入れ値を100とおきます</h4><p>仕入れ値 ＝ 100</p></div><div id="ex2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　定価（50％増し）を求めます</h4><p>100 × 1.5 ＝ 150</p></div><div id="ex2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　30％引きの値段を求めます</h4><p>150 ×（1－0.3）＝ 150 × 0.7
+150 × 7 ＝ 1050　→　小数点を戻して　105</p></div><div id="ex2-s3" class="exp-box" style="display:none"><h4>STEP 4　答えと確かめ</h4><p>仕入れ値100に対して105なので、<strong>105％</strong>。
+式でも 1.5 × 0.7 ＝ 1.05 ✓（50％増しと30％引きを足し引きして 20％増しとしないこと）</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',4)">STEP 1 を見る ▼</button><div id="ex2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">❓ C<span>まだ不安</span></button></div></div></div><hr class="prob-divider"><div class="clabel ex" style="margin-top:.4rem">例題 3　逆向き（もとにもどす割合）</div><div class="q-text">値段を20％引き下げたあとで、その値段を何％値上げすると、もとの値段にもどりますか。</div><div class="body-text">「20％減らしたのだから、20％増やせばもどる」とは限りません。もとの値段を100とおいて考えます。</div><div id="ex3-s0" class="exp-box" style="display:none"><h4>STEP 1　20％引き下げます</h4><p>100 × 0.8 ＝ 80</p></div><div id="ex3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　もとの100にもどすために必要な増加分</h4><p>100 － 80 ＝ 20 増やせばよい</p></div><div id="ex3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　その増加分を、今の値段（80）に対する割合で表します</h4><p>20 ÷ 80 ＝ <span class="frac"><span>1</span><span>4</span></span> ＝ 0.25　→　<strong>25％</strong></p></div><div id="ex3-s3" class="exp-box" style="display:none"><h4>STEP 4　確かめます</h4><p>80 × 1.25 ＝ 80 ＋ 20 ＝ 100 ✓
+また 0.8 × 1.25 ＝ 1 と、かけて1になることからも確かめられます。</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',4)">STEP 1 を見る ▼</button><div id="ex3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">❓ C<span>まだ不安</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト 2回の増減</div><div class="mini-q">ある量が50％増えたあと、20％減りました。最終的な量は、はじめの何％ですか。</div><div class="mini-choices" id="mch-m1"><button class="mch" onclick="miniAns('m1',0,1)"><span class="mcnum">ア</span>130％</button><button class="mch" onclick="miniAns('m1',1,1)"><span class="mcnum">イ</span>120％</button><button class="mch" onclick="miniAns('m1',2,1)"><span class="mcnum">ウ</span>100％</button><button class="mch" onclick="miniAns('m1',3,1)"><span class="mcnum">エ</span>170％</button></div><div class="mini-fb" id="mfb-m1-ok">✅ 正解です！　100 × 1.5 ＝ 150、150 × 0.8 ＝ 120。もとの100に対して <strong>120％</strong></div><div class="mini-fb" id="mfb-m1-ng">❌ 惜しい！　もとを100とおくと、150 → 150 × 0.8 ＝ 120。<strong>120％</strong>です。（130％は、＋50 － 20 と足し引きした間違いです）</div><div class="mini-q" style="margin-top:1rem;">ある商品を10％値上げしたあとで、10％値下げすると、値段はもとの値段の何％になりますか。</div><div class="mini-choices" id="mch-m2"><button class="mch" onclick="miniAns('m2',0,3)"><span class="mcnum">ア</span>100％</button><button class="mch" onclick="miniAns('m2',1,3)"><span class="mcnum">イ</span>101％</button><button class="mch" onclick="miniAns('m2',2,3)"><span class="mcnum">ウ</span>90％</button><button class="mch" onclick="miniAns('m2',3,3)"><span class="mcnum">エ</span>99％</button></div><div class="mini-fb" id="mfb-m2-ok">✅ 正解です！　1.1 × 0.9 ＝ 0.99。もとの <strong>99％</strong></div><div class="mini-fb" id="mfb-m2-ng">❌ 惜しい！　100 × 1.1 ＝ 110、110 × 0.9 ＝ 99。もとの<strong>99％</strong>です。（100％は「＋10 － 10 ＝ 0」の間違いです）</div></div><button class="next-page-btn pr" onclick="switchTab('pr')" style="margin-top:.6rem;">実践演習へ進む →</button></div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">実践演習</div><div class="page-hdr-desc">解説を見ずに自力で解いてみましょう！　ヒントも使えます。全5問</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pb-pr" style="width:0%"></div></div><div class="pb-txt" id="pb-pr-txt">0 / 5 完了</div></div><div class="prob-n"><span class="n n-pr">1</span><span>実践演習 第1問</span></div><div class="card"><div class="clabel pr">実践演習 第1問　やさしい計算①（人数）</div><div class="q-text">あるクラブの部員が、150人から20％増えて、そのあと10％減りました。今の部員は何人ですか。</div><button class="hint-toggle" onclick="toggleHint('h1')">💡 ヒントを見る</button><div class="hint-box" id="h1">1回目は 150 × 1.2、続けて 2回目は、その結果 × 0.9 です。1回ずつ計算して、結果を次に使います。</div><div id="t1" class="timer-wrap"><div class="timer-ring" id="ring-q1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,2)"><span class="cnum">1</span>165人</button><button class="ch" onclick="ans('q1',1,2)"><span class="cnum">2</span>150人</button><button class="ch" onclick="ans('q1',2,2)"><span class="cnum">3</span>162人</button><button class="ch" onclick="ans('q1',3,2)"><span class="cnum">4</span>135人</button></div><div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">150 × 1.2 ＝ 180、180 × 0.9 ＝ 162人 ✓</span></span></div><div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">150 × 1.2 ＝ 180人。さらに 180 × 0.9 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q1')">🔄 もう一度</button></div><div id="q1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>150 × 1.2 ＝ 180、180 × 0.9 ＝ <strong>162人</strong>（165人は＋20％－10％＝＋10％とした間違い）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q1"><div class="clabel kai">段階解説</div><div id="q1-s0" class="exp-box" style="display:none"><h4>STEP 1　20％増えたあと</h4><p>150 × 1.2 ＝ 180（人）</p></div><div id="q1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　10％減ったあと</h4><p>180 × 0.9 ＝ 162（人）　←　180 × 9 ＝ 1620 の小数点を戻します</p></div><div id="q1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>1.2 × 0.9 ＝ 1.08 なので、150 × 1.08 ＝ 150 ＋ 12 ＝ 162 ✓</p></div><button class="reveal-btn" id="rb-q1" onclick="reveal('q1',3)">STEP 1 を見る ▼</button><div id="q1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-kA" onclick="setMark('q1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-kB" onclick="setMark('q1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q1-kC" onclick="setMark('q1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">2</span><span>実践演習 第2問</span></div><div class="card"><div class="clabel pr">実践演習 第2問　30％引きのあと10％引き</div><div class="q-text">定価5000円の商品を、30％引きにしたあと、その値段からさらに10％引きにしました。支払う金額は何円ですか。</div><button class="hint-toggle" onclick="toggleHint('h2')">💡 ヒントを見る</button><div class="hint-box" id="h2">「30％引き ＝ × 0.7」、「10％引き ＝ × 0.9」です。合わせて40％引きの 5000 × 0.6 ではありません。</div><div id="t2" class="timer-wrap"><div class="timer-ring" id="ring-q2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,1)"><span class="cnum">1</span>3000円</button><button class="ch" onclick="ans('q2',1,1)"><span class="cnum">2</span>3150円</button><button class="ch" onclick="ans('q2',2,1)"><span class="cnum">3</span>3500円</button><button class="ch" onclick="ans('q2',3,1)"><span class="cnum">4</span>3850円</button></div><div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">5000 × 0.7 ＝ 3500、3500 × 0.9 ＝ 3150円 ✓</span></span></div><div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">5000 × 0.7 ＝ 3500円。さらに 3500 × 0.9 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q2')">🔄 もう一度</button></div><div id="q2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>5000 × 0.7 ＝ 3500、3500 × 0.9 ＝ <strong>3150円</strong>（3000円は40％引きとした間違い）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q2"><div class="clabel kai">段階解説</div><div id="q2-s0" class="exp-box" style="display:none"><h4>STEP 1　30％引きにします</h4><p>5000 × 0.7 ＝ 3500（円）</p></div><div id="q2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　さらに10％引きにします</h4><p>3500 × 0.9 ＝ 3150（円）</p></div><div id="q2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>0.7 × 0.9 ＝ 0.63。5000 × 0.63 ＝ 3150 ✓（37％引きにあたります）</p></div><button class="reveal-btn" id="rb-q2" onclick="reveal('q2',3)">STEP 1 を見る ▼</button><div id="q2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-kA" onclick="setMark('q2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-kB" onclick="setMark('q2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q2-kC" onclick="setMark('q2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">3</span><span>実践演習 第3問</span></div><div class="card"><div class="clabel pr">実践演習 第3問　もとの量を100とおく</div><div class="q-text">ある店の売上が、A年は前年より25％増え、B年はA年より40％減りました。B年の売上は、A年の前の年の売上の何％ですか。</div><button class="hint-toggle" onclick="toggleHint('h3')">💡 ヒントを見る</button><div class="hint-box" id="h3">A年の前の年の売上を100とおきます。100 × 1.25 でA年、それに × 0.6（40％減）でB年です。</div><div id="t3" class="timer-wrap"><div class="timer-ring" id="ring-q3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,0)"><span class="cnum">1</span>75％</button><button class="ch" onclick="ans('q3',1,0)"><span class="cnum">2</span>85％</button><button class="ch" onclick="ans('q3',2,0)"><span class="cnum">3</span>125％</button><button class="ch" onclick="ans('q3',3,0)"><span class="cnum">4</span>65％</button></div><div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">100 × 1.25 ＝ 125、125 × 0.6 ＝ 75。75％ ✓</span></span></div><div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">100 × 1.25 ＝ 125。125 × 0.6 を計算して、100と比べます。</span></span><button class="reset-btn" onclick="resetQ('q3')">🔄 もう一度</button></div><div id="q3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>100 → 125 → 75。もとの<strong>75％</strong>（85％は＋25－40と足し引きした間違いです）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q3"><div class="clabel kai">段階解説</div><div id="q3-s0" class="exp-box" style="display:none"><h4>STEP 1　A年の前の年を100とおきます</h4><p>100</p></div><div id="q3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　A年、B年の順に計算します</h4><p>A年：100 × 1.25 ＝ 125
+B年：125 × 0.6 ＝ 75</p></div><div id="q3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　もとと比べます</h4><p>100に対して75なので<strong>75％</strong>
+確かめ：1.25 × 0.6 ＝ 0.75 ✓</p></div><button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">STEP 1 を見る ▼</button><div id="q3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-kA" onclick="setMark('q3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-kB" onclick="setMark('q3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q3-kC" onclick="setMark('q3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">4</span><span>実践演習 第4問</span></div><div class="card"><div class="clabel pr">実践演習 第4問　3回続く増減</div><div class="q-text">ある学校の生徒数は、400人でした。1年目に25％増え、2年目に20％減り、3年目に10％増えました。3年目の生徒数は何人ですか。</div><button class="hint-toggle" onclick="toggleHint('h4')">💡 ヒントを見る</button><div class="hint-box" id="h4">400 × 1.25 ＝ 500、次に × 0.8、最後に × 1.1 と、順に3回かけます。</div><div id="t4" class="timer-wrap"><div class="timer-ring" id="ring-q4"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 4分以内</span></div></div><div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,3)"><span class="cnum">1</span>460人</button><button class="ch" onclick="ans('q4',1,3)"><span class="cnum">2</span>400人</button><button class="ch" onclick="ans('q4',2,3)"><span class="cnum">3</span>430人</button><button class="ch" onclick="ans('q4',3,3)"><span class="cnum">4</span>440人</button></div><div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">500 × 0.8 ＝ 400、400 × 1.1 ＝ 440人 ✓</span></span></div><div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">1年目 500人、2年目 500 × 0.8 ＝ 400人、3年目 400 × 1.1 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q4')">🔄 もう一度</button></div><div id="q4-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>400 → 500 → 400 → <strong>440人</strong>（460人は＋25－20＋10 ＝ ＋15％とした間違い）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q4"><div class="clabel kai">段階解説</div><div id="q4-s0" class="exp-box" style="display:none"><h4>STEP 1　1年目（25％増）</h4><p>400 × 1.25 ＝ 500（人）</p></div><div id="q4-s1" class="exp-box blue" style="display:none"><h4>STEP 2　2年目（20％減）</h4><p>500 × 0.8 ＝ 400（人）</p></div><div id="q4-s2" class="exp-box amber" style="display:none"><h4>STEP 3　3年目（10％増）</h4><p>400 × 1.1 ＝ <strong>440人</strong>
+確かめ：1.25 × 0.8 × 1.1 ＝ 1 × 1.1 ＝ 1.1。400 × 1.1 ＝ 440 ✓</p></div><button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">STEP 1 を見る ▼</button><div id="q4-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-kA" onclick="setMark('q4-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-kB" onclick="setMark('q4-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q4-kC" onclick="setMark('q4-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-pr">5</span><span>実践演習 第5問</span></div><div class="card"><div class="clabel pr">実践演習 第5問　もとにもどす割合</div><div class="q-text">値段を25％値上げしたあとで、何％値下げすると、もとの値段にもどりますか。</div><button class="hint-toggle" onclick="toggleHint('h5')">💡 ヒントを見る</button><div class="hint-box" id="h5">もとの値段を100とおくと、値上げ後は125です。125から100へ何だけ下げるか。それを125に対する割合にします。</div><div id="t5" class="timer-wrap"><div class="timer-ring" id="ring-q5"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">0:00</div></div><div class="timer-msg">自力で考えましょう。<span class="goal">目標 3分以内</span></div></div><div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,1)"><span class="cnum">1</span>25％</button><button class="ch" onclick="ans('q5',1,1)"><span class="cnum">2</span>20％</button><button class="ch" onclick="ans('q5',2,1)"><span class="cnum">3</span>15％</button><button class="ch" onclick="ans('q5',3,1)"><span class="cnum">4</span>30％</button></div><div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">（125 － 100）÷ 125 ＝ 0.2 → 20％ ✓</span></span></div><div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">😢</span><span class="fb-text">おしい！もう一度！<span class="fb-sub">下げる幅は 125 － 100 ＝ 25。もとにする量は今の値段125なので、25 ÷ 125 を計算します。</span></span><button class="reset-btn" onclick="resetQ('q5')">🔄 もう一度</button></div><div id="q5-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>25 ÷ 125 ＝ 0.2 → <strong>20％</strong>（25％では、125 × 0.75 ＝ 93.75 となり、もとにもどりません）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-q5"><div class="clabel kai">段階解説</div><div id="q5-s0" class="exp-box" style="display:none"><h4>STEP 1　100とおいて値上げします</h4><p>100 × 1.25 ＝ 125</p></div><div id="q5-s1" class="exp-box blue" style="display:none"><h4>STEP 2　もとにもどす下げ幅</h4><p>125 － 100 ＝ 25</p></div><div id="q5-s2" class="exp-box amber" style="display:none"><h4>STEP 3　今の値段（125）に対する割合</h4><p>25 ÷ 125 ＝ 0.2　→　<strong>20％</strong>
+確かめ：125 × 0.8 ＝ 100 ✓</p></div><button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">STEP 1 を見る ▼</button><div id="q5-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-kA" onclick="setMark('q5-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-kB" onclick="setMark('q5-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="q5-kC" onclick="setMark('q5-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div id="pr-done" style="display:none"><div class="teal-box" style="margin-top:1.4rem"><strong>🎉 実践演習 完了！</strong>おつかれさまでした。次はいよいよ総合確認です。ここからは制限時間があります。解き方を思い出しながら、落ち着いて挑戦しましょう。</div><button class="next-page-btn cf" onclick="switchTab('cf')">総合確認へ進む →</button></div></div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">総合確認（制限時間つき）</div><div class="page-hdr-desc">SPI本番のつもりで挑戦しましょう。全3問・ヒントなし。「スタート」を押すとカウントダウンが始まり、時間切れになると自動で締め切られます。</div></div></div><div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pb-cf" style="width:0%"></div></div><div class="pb-txt" id="pb-cf-txt">0 / 3 完了</div></div><div class="teal-box"><strong>💡 はじめに</strong>時間切れになっても、点数が下がるだけで何も困りません。落ち着いて、解説で「どこに時間がかかったか」を確認し、もう一度挑戦すれば大丈夫です。わからない問題で粘りすぎず、「やり方を思い出せない」と感じたら、いったん解説を見て覚えるのも立派な勉強です。</div><div class="prob-n"><span class="n n-cf">1</span><span>総合確認 第1問</span></div><div class="card"><div class="clabel cf">総合確認 第1問　2回の増減から、もとの量を逆算</div><div class="cf-cover" id="cover-qc1"><div class="cf-cover-txt">制限時間：<strong>3分</strong></div><button class="start-btn" onclick="startCf('qc1')">▶ 第1問をスタート</button></div><div id="body-qc1" style="display:none"><div id="tc1" class="timer-wrap"><div class="timer-ring" id="ring-qc1"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">3:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 3分</span></div></div><div class="q-text">ある商品を20％値上げしたあと、その値段から20％値下げしたら、4800円になりました。はじめの値段は何円でしたか。</div><div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,2)"><span class="cnum">1</span>4608円</button><button class="ch" onclick="ans('qc1',1,2)"><span class="cnum">2</span>5760円</button><button class="ch" onclick="ans('qc1',2,2)"><span class="cnum">3</span>5000円</button><button class="ch" onclick="ans('qc1',3,2)"><span class="cnum">4</span>6000円</button><button class="ch" onclick="ans('qc1',4,2)"><span class="cnum">5</span>4800円</button></div></div><div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">1.2 × 0.8 ＝ 0.96。4800 ÷ 0.96 ＝ 5000円 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">全体で 1.2 × 0.8 ＝ 0.96（はじめの96％）が4800円です。はじめの値段 ＝ 4800 ÷ 0.96。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc1"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc1')">🔄 もう一度</button></div><div id="qc1-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>4800円は、はじめの値段の 1.2 × 0.8 ＝ 0.96 倍。はじめの値段 ＝ 4800 ÷ 0.96 ＝ <strong>5000円</strong>（4608円は 4800 × 0.96 とした間違いです）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc1"><div class="clabel kai">段階解説</div><div id="qc1-s0" class="exp-box" style="display:none"><h4>STEP 1　全体の割合を求めます</h4><p>1.2 × 0.8 ＝ 0.96
+（はじめの値段の96％が、4800円ということです）</p></div><div id="qc1-s1" class="exp-box blue" style="display:none"><h4>STEP 2　はじめの値段を求めます（パターン8で学んだ、もとの量の求め方）</h4><p>はじめの値段 ＝ 4800 ÷ 0.96 ＝ 480000 ÷ 96 ＝ <strong>5000円</strong></p></div><div id="qc1-s2" class="exp-box amber" style="display:none"><h4>STEP 3　確かめます</h4><p>5000 × 1.2 ＝ 6000、6000 × 0.8 ＝ 4800 ✓</p></div><button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',3)">STEP 1 を見る ▼</button><div id="qc1-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-kA" onclick="setMark('qc1-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-kB" onclick="setMark('qc1-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc1-kC" onclick="setMark('qc1-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">2</span><span>総合確認 第2問</span></div><div class="card"><div class="clabel cf">総合確認 第2問　3回の増減</div><div class="cf-cover" id="cover-qc2"><div class="cf-cover-txt">制限時間：<strong>3分</strong></div><button class="start-btn" onclick="startCf('qc2')">▶ 第2問をスタート</button></div><div id="body-qc2" style="display:none"><div id="tc2" class="timer-wrap"><div class="timer-ring" id="ring-qc2"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">3:00</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 3分</span></div></div><div class="q-text">ある市の人口は、5000人でした。1年目に20％増え、2年目に25％減り、3年目に20％減りました。3年目の人口は何人ですか。</div><div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,0)"><span class="cnum">1</span>3600人</button><button class="ch" onclick="ans('qc2',1,0)"><span class="cnum">2</span>3750人</button><button class="ch" onclick="ans('qc2',2,0)"><span class="cnum">3</span>4000人</button><button class="ch" onclick="ans('qc2',3,0)"><span class="cnum">4</span>4200人</button><button class="ch" onclick="ans('qc2',4,0)"><span class="cnum">5</span>3500人</button></div></div><div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">6000 → 4500 → 3600人 ✓</span></span></div><div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">5000 × 1.2 ＝ 6000、6000 × 0.75 ＝ 4500、4500 × 0.8 を計算します。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc2"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc2')">🔄 もう一度</button></div><div id="qc2-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>5000 × 1.2 ＝ 6000、6000 × 0.75 ＝ 4500、4500 × 0.8 ＝ <strong>3600人</strong>（3750人は＋20－25－20 ＝ －25％とした間違い）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc2"><div class="clabel kai">段階解説</div><div id="qc2-s0" class="exp-box" style="display:none"><h4>STEP 1　1年目（20％増）</h4><p>5000 × 1.2 ＝ 6000（人）</p></div><div id="qc2-s1" class="exp-box blue" style="display:none"><h4>STEP 2　2年目（25％減）</h4><p>6000 × 0.75 ＝ 6000 × <span class="frac"><span>3</span><span>4</span></span> ＝ 4500（人）</p></div><div id="qc2-s2" class="exp-box amber" style="display:none"><h4>STEP 3　3年目（20％減）</h4><p>4500 × 0.8 ＝ <strong>3600人</strong>
+確かめ：1.2 × 0.75 × 0.8 ＝ 0.72。5000 × 0.72 ＝ 3600 ✓</p></div><button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',3)">STEP 1 を見る ▼</button><div id="qc2-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-kA" onclick="setMark('qc2-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-kB" onclick="setMark('qc2-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc2-kC" onclick="setMark('qc2-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><hr class="prob-divider"><div class="prob-n"><span class="n n-cf">3</span><span>総合確認 第3問</span></div><div class="card"><div class="clabel cf">総合確認 第3問　2回の割引の合計</div><div class="cf-cover" id="cover-qc3"><div class="cf-cover-txt">制限時間：<strong>2分30秒</strong></div><button class="start-btn" onclick="startCf('qc3')">▶ 第3問をスタート</button></div><div id="body-qc3" style="display:none"><div id="tc3" class="timer-wrap"><div class="timer-ring" id="ring-qc3"><svg viewBox="0 0 44 44"><circle class="tbg" cx="22" cy="22" r="20"/><circle class="tfg" cx="22" cy="22" r="20"/></svg><div class="tcenter">2:30</div></div><div class="timer-msg">のこり時間　<span class="goal">制限 2分30秒</span></div></div><div class="q-text">ある商品を、定価の30％引きにしたあと、さらにその値段の20％引きにしました。定価に対して、何％引きにしたことになりますか。</div><div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,4)"><span class="cnum">1</span>56％</button><button class="ch" onclick="ans('qc3',1,4)"><span class="cnum">2</span>50％</button><button class="ch" onclick="ans('qc3',2,4)"><span class="cnum">3</span>6％</button><button class="ch" onclick="ans('qc3',3,4)"><span class="cnum">4</span>14％</button><button class="ch" onclick="ans('qc3',4,4)"><span class="cnum">5</span>44％</button></div></div><div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">🎉</span><span class="fb-text">正解！<span class="fb-sub">0.7 × 0.8 ＝ 0.56（定価の56％）。100％ － 56％ ＝ 44％引き ✓</span></span></div><div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">😢</span><span class="fb-text">おしい！<span class="fb-sub">定価を100とすると、100 × 0.7 ＝ 70、70 × 0.8 ＝ 56。引かれた割合は 100 － 56。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div class="fb-ng" id="fb-to-qc3"><span class="fb-icon">⏰</span><span class="fb-text">時間切れです。<span class="fb-sub">正解は上の緑のボタンです。解説で解き方を確認して、もう一度挑戦しましょう。</span></span><button class="reset-btn" onclick="resetQ('qc3')">🔄 もう一度</button></div><div id="qc3-res" style="display:none"><div class="point-box"><strong>解法のカギ</strong>定価100 → 70 → 56。56％の値段で、割引は 100 － 56 ＝ <strong>44％</strong>（50％は足し算、56％は「支払う割合」の答えです）</div><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div><div class="card kai-card" id="kai-qc3"><div class="clabel kai">段階解説</div><div id="qc3-s0" class="exp-box" style="display:none"><h4>STEP 1　定価を100とおいて、30％引き</h4><p>100 × 0.7 ＝ 70</p></div><div id="qc3-s1" class="exp-box blue" style="display:none"><h4>STEP 2　さらに20％引き</h4><p>70 × 0.8 ＝ 56</p></div><div id="qc3-s2" class="exp-box amber" style="display:none"><h4>STEP 3　引かれた割合を求めます</h4><p>100 － 56 ＝ 44　→　<strong>44％引き</strong>
+確かめ：0.7 × 0.8 ＝ 0.56。1 － 0.56 ＝ 0.44 ✓</p></div><button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',3)">STEP 1 を見る ▼</button><div id="qc3-fin" style="display:none"><div class="abc-wrap"><div class="abc-lbl">理解度をマーク</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-kA" onclick="setMark('qc3-k','A')">✅ A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-kB" onclick="setMark('qc3-k','B')">📖 B<span>解説でわかった</span></button><button class="abc-btn abc-C" id="qc3-kC" onclick="setMark('qc3-k','C')">❓ C<span>わからなかった</span></button></div></div></div></div><div class="result-card" id="cf-result" style="display:none"><div class="rc-title">📊 総合確認の結果</div><div class="rc-score" id="rc-score"></div><div class="rc-msg" id="rc-msg"></div></div><div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a href="SPI_wariai_index.html" class="unav-btn unav-idx">☰ 単元一覧へ</a><a href="SPI_wariai_p11.html" class="unav-btn unav-next">次：パターン11 比ってなに？（比の表し方・簡単な比） →</a></div></div></div>
+</main>
+<script>
+const CFG={"key": "spi_wariai_p10", "PR": ["q1", "q2", "q3", "q4", "q5"], "CF": ["qc1", "qc2", "qc3"], "LIM": {"qc1": 180, "qc2": 180, "qc3": 150}, "GOAL": {"q1": "3分", "q2": "3分", "q3": "3分", "q4": "4分", "q5": "3分"}};
+const answered={};
+const timers={};
+const miniAnswered={};
+const stepRev={};
+const cfRes={};
+const cfSecs={};
+const pageSeen={};
+let pracDone=0,cfDone=0,cfOk=0;
+
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+
+function switchTab(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  ['ex','pr','cf'].forEach(t=>{document.getElementById('tab-'+t).className='tab-btn';});
+  document.getElementById('page-'+tab).classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(tab==='pr'&&!answered[CFG.PR[0]])startTimer(CFG.PR[0]);
+}
+
+/* ───── 演習：経過時間を表示するタイマー（目安のみ） ───── */
+function startTimer(qid){
+  if(timers[qid]||answered[qid])return;
+  const start=Date.now();
+  tick(0);
+  timers[qid]=setInterval(()=>tick(Math.floor((Date.now()-start)/1000)),1000);
+  function tick(sec){
+    const ring=document.getElementById('ring-'+qid);if(!ring)return;
+    const fg=ring.querySelector('.tfg');
+    const txt=ring.querySelector('.tcenter');
+    const tw=document.getElementById('t'+qid.slice(1));
+    const msg=tw?tw.querySelector('.timer-msg'):null;
+    const pct=Math.min(sec/240,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(pct>.8?' warn':''));
+    const m=Math.floor(sec/60),s=sec%60;
+    txt.textContent=m+':'+String(s).padStart(2,'0');
+    if(msg){
+      const goal=msg.querySelector('.goal');const g=goal?goal.outerHTML:'';
+      if(sec<60)msg.innerHTML='自力で考えましょう。'+g;
+      else if(sec<240)msg.innerHTML='じっくり考えています…<span class="goal">まだ大丈夫！</span>';
+      else msg.innerHTML='解説を見て確認しましょう。';
+    }
+  }
+}
+function stopTimer(qid){clearInterval(timers[qid]);timers[qid]=null;}
+
+/* ───── 確認：本当にカウントダウンして締め切るタイマー ───── */
+function startCf(qid){
+  if(answered[qid]||timers[qid])return;
+  document.getElementById('cover-'+qid).style.display='none';
+  document.getElementById('body-'+qid).style.display='block';
+  const lim=CFG.LIM[qid];
+  const start=Date.now();cfSecs[qid]=0;
+  const ring=document.getElementById('ring-'+qid);
+  const fg=ring.querySelector('.tfg'),txt=ring.querySelector('.tcenter');
+  const msg=ring.parentNode.querySelector('.timer-msg');
+  function tick(){
+    const sec=Math.floor((Date.now()-start)/1000);
+    cfSecs[qid]=Math.min(sec,lim);
+    const left=Math.max(lim-sec,0);
+    const pct=Math.min(sec/lim,1);
+    fg.style.strokeDashoffset=126*pct;
+    fg.setAttribute('class','tfg'+(left<=lim*.15?' danger':(left<=lim*.4?' warn':'')));
+    txt.textContent=Math.floor(left/60)+':'+String(left%60).padStart(2,'0');
+    const goal=msg.querySelector('.goal');
+    if(goal){goal.className='goal'+(left<=lim*.15?' danger':'');
+      goal.textContent=left<=0?'時間切れ':(left<=lim*.15?'あと少し！':(left<=lim*.4?'半分を過ぎました':'制限 '+fmt(lim)));}
+    if(left<=0)timeUp(qid);
+  }
+  tick();
+  timers[qid]=setInterval(tick,250);
+}
+function fmt(s){const m=Math.floor(s/60),r=s%60;return m?(r?m+'分'+r+'秒':m+'分'):r+'秒';}
+
+function paintChoices(qid,idx,correct){
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='ch ok';b.querySelector('.cnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&idx!==correct){b.className='ch ng';b.querySelector('.cnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+}
+function showAfter(qid){
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='block';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='flex';
+  var kc=document.getElementById('kai-'+qid);
+  if(kc){kc.style.display='block';setTimeout(function(){kc.scrollIntoView({behavior:'smooth',block:'start'});},120);}
+}
+
+function ans(qid,idx,correct){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const isOk=(idx===correct);
+  const isCf=CFG.CF.includes(qid);
+  const tw=document.getElementById(isCf?'tc'+qid.slice(2):'t'+qid.slice(1));
+  if(tw)tw.style.display='none';
+  paintChoices(qid,idx,correct);
+  const fbOk=document.getElementById('fb-ok-'+qid),fbNg=document.getElementById('fb-ng-'+qid);
+  if(isOk){if(fbOk)fbOk.style.display='flex';_launchConfetti();}
+  else{if(fbNg)fbNg.style.display='flex';}
+  showAfter(qid);
+  if(isCf){cfRes[qid]=isOk?'ok':'ng';cfDone++;if(isOk)cfOk++;afterCf();}
+  else{
+    pracDone++;const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    if(pracDone===n){document.getElementById('done-pr').style.display='flex';document.getElementById('pr-done').style.display='block';}
+    const nx=CFG.PR[CFG.PR.indexOf(qid)+1];
+    if(nx&&!answered[nx])setTimeout(()=>startTimer(nx),300);
+  }
+}
+
+function timeUp(qid){
+  if(answered[qid])return;
+  answered[qid]=true;
+  stopTimer(qid);
+  const tw=document.getElementById('tc'+qid.slice(2));
+  if(tw)tw.style.display='none';
+  const c=+document.querySelector('#ch-'+qid+' .ch').getAttribute('onclick').match(/,(\d+)\)/)[1];
+  paintChoices(qid,-1,c);
+  document.getElementById('fb-to-'+qid).style.display='flex';
+  showAfter(qid);
+  cfRes[qid]='to';cfDone++;afterCf();
+}
+
+function afterCf(){
+  const n=CFG.CF.length;
+  document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+  document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+  if(cfDone===n){
+    document.getElementById('done-cf').style.display='flex';
+    document.getElementById('unit-nav').style.display='flex';
+    const to=Object.values(cfRes).filter(v=>v==='to').length;
+    const rate=cfOk/n;
+    document.getElementById('rc-score').textContent='正解 '+cfOk+' / '+n+' 問';
+    let msg='';
+    if(rate>=.8)msg='合格ラインです。この調子で次のパターンへ進みましょう。';
+    else if(rate>=.5)msg='あと少しです。間違えた問題の解説を読み直し、「もう一度」で挑戦してみましょう。';
+    else msg='まだ慣れていないだけです。解説タブの例題をもう一度たどってから、再挑戦しましょう。何度やり直しても大丈夫です。';
+    document.getElementById('rc-msg').textContent=to>0?msg+'（時間切れは '+to+' 問でした。まず正確に解ける形をつくり、そのあとで速さを上げていきましょう。）':msg;
+    document.getElementById('cf-result').style.display='block';
+    lsSet(CFG.key+'_score',cfOk+'/'+n);lsSet(CFG.key,'1');
+    setTimeout(()=>document.getElementById('cf-result').scrollIntoView({behavior:'smooth',block:'center'}),400);
+  }
+}
+
+function miniAns(qid,idx,correct){
+  if(miniAnswered[qid])return;
+  miniAnswered[qid]=true;
+  const isOk=(idx===correct);
+  document.querySelectorAll('#mch-'+qid+' .mch').forEach(function(b,i){
+    b.disabled=true;
+    if(i===correct){b.className='mch ok';b.querySelector('.mcnum').style.cssText='background:var(--teal);color:#fff';}
+    else if(i===idx&&!isOk){b.className='mch ng';b.querySelector('.mcnum').style.cssText='background:var(--pink);color:#fff';}
+  });
+  const fbOk=document.getElementById('mfb-'+qid+'-ok'),fbNg=document.getElementById('mfb-'+qid+'-ng');
+  if(isOk){if(fbOk){fbOk.className='mini-fb ok';fbOk.style.display='block';}_launchConfetti();}
+  else{if(fbNg){fbNg.className='mini-fb ng';fbNg.style.display='block';}}
+}
+
+function reveal(qid,total){
+  const r=stepRev[qid]||0;
+  const el=document.getElementById(qid+'-s'+r);
+  if(el){el.style.display='block';stepRev[qid]=r+1;setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  const btn=document.getElementById('rb-'+qid);
+  if((stepRev[qid]||0)>=total){
+    btn.style.display='none';
+    const fin=document.getElementById(qid+'-fin');
+    if(fin){fin.style.display='block';setTimeout(()=>fin.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}
+  }else{btn.textContent='STEP '+(stepRev[qid]+1)+' を見る ▼';}
+}
+
+function toggleHint(id){const b=document.getElementById(id);b.style.display=b.style.display==='block'?'none':'block';}
+
+function setMark(prefix,m){
+  ['A','B','C'].forEach(x=>{const el=document.getElementById(prefix+x);if(el)el.classList.toggle('on',x===m);});
+}
+
+function resetQ(qid){
+  const isCf=CFG.CF.includes(qid);
+  delete answered[qid];stopTimer(qid);delete timers[qid];
+  if(isCf){
+    const r=cfRes[qid];
+    if(r){cfDone--;if(r==='ok')cfOk--;delete cfRes[qid];}
+    const n=CFG.CF.length;
+    document.getElementById('pb-cf').style.width=(cfDone/n*100)+'%';
+    document.getElementById('pb-cf-txt').textContent=cfDone+' / '+n+' 完了';
+    document.getElementById('done-cf').style.display='none';
+    document.getElementById('cf-result').style.display='none';
+    document.getElementById('unit-nav').style.display='none';
+    var to=document.getElementById('fb-to-'+qid);if(to)to.style.display='none';
+    document.getElementById('cover-'+qid).style.display='block';
+    document.getElementById('body-'+qid).style.display='none';
+    var tw=document.getElementById('tc'+qid.slice(2));if(tw)tw.style.display='flex';
+    const ring=document.getElementById('ring-'+qid);
+    ring.querySelector('.tfg').style.strokeDashoffset=0;ring.querySelector('.tfg').setAttribute('class','tfg');
+    const lim=CFG.LIM[qid];ring.querySelector('.tcenter').textContent=Math.floor(lim/60)+':'+String(lim%60).padStart(2,'0');
+    const g=ring.parentNode.querySelector('.goal');if(g){g.className='goal';g.textContent='制限 '+fmt(lim);}
+  }else{
+    if(pracDone>0)pracDone--;
+    const n=CFG.PR.length;
+    document.getElementById('pb-pr').style.width=(pracDone/n*100)+'%';
+    document.getElementById('pb-pr-txt').textContent=pracDone+' / '+n+' 完了';
+    document.getElementById('done-pr').style.display='none';document.getElementById('pr-done').style.display='none';
+    var tw2=document.getElementById('t'+qid.slice(1));if(tw2)tw2.style.display='flex';
+  }
+  var fbOk=document.getElementById('fb-ok-'+qid);if(fbOk)fbOk.style.display='none';
+  var fbNg=document.getElementById('fb-ng-'+qid);if(fbNg)fbNg.style.display='none';
+  var res=document.getElementById(qid+'-res');if(res)res.style.display='none';
+  var cn=document.getElementById('cn-'+qid);if(cn)cn.style.display='none';
+  var kc=document.getElementById('kai-'+qid);if(kc)kc.style.display='none';
+  document.querySelectorAll('#ch-'+qid+' .ch').forEach(function(b){
+    b.disabled=false;b.className='ch';
+    var c=b.querySelector('.cnum');if(c)c.style.cssText='';
+  });
+  document.querySelectorAll('[id^="'+qid+'-s"]').forEach(function(el){el.style.display='none';});
+  stepRev[qid]=0;
+  var rb=document.getElementById('rb-'+qid);if(rb){rb.style.display='';rb.textContent='STEP 1 を見る ▼';}
+  var fin=document.getElementById(qid+'-fin');if(fin)fin.style.display='none';
+  if(!isCf)startTimer(qid);
+  else window.scrollTo({top:document.getElementById('cover-'+qid).getBoundingClientRect().top+window.scrollY-120,behavior:'smooth'});
+}
+
+function _launchConfetti(){
+  var cv=document.getElementById('_gamba_cf');
+  if(!cv){cv=document.createElement('canvas');cv.id='_gamba_cf';cv.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9999;';document.body.appendChild(cv);}
+  var ctx=cv.getContext('2d');cv.width=window.innerWidth;cv.height=window.innerHeight;
+  var pts=[],run=true;
+  for(var i=0;i<200;i++)pts.push({x:Math.random()*cv.width,y:-Math.random()*cv.height*0.5,s:Math.random()*8+4,c:'hsl('+Math.floor(Math.random()*360)+',80%,60%)',sp:Math.random()*4+2,r:Math.random()*Math.PI*2,rv:(Math.random()-.5)*.15});
+  (function step(){if(!run)return;requestAnimationFrame(step);ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(function(p){p.y+=p.sp;p.r+=p.rv;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);ctx.restore();});})();
+  setTimeout(function(){run=false;ctx.clearRect(0,0,cv.width,cv.height);},3500);
+}
+
+lsSet(CFG.key,'1');
+
+</script>
+</body>
+</html>
