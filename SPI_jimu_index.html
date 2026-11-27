@@ -260,11 +260,77 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 .uc-main{text-decoration:none;color:inherit}
 .uc-main:hover .uc-title{color:var(--blue)}
 .cat-note{font-size:12px;color:var(--text2);margin:-.2rem 0 .7rem;line-height:1.7}
+/* ---- 推論 ---- */
+.cand{border-collapse:collapse;margin:8px 0;font-size:14px}
+.cand th,.cand td{border:1px solid #cfcabd;padding:5px 9px;text-align:center;min-width:34px}
+.cand th{background:#f1eee6}
+.cand td.y{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.one{background:#0d9478;color:#fff;font-weight:700}
+.cand td.n{color:#c9c4b6}
+.cand td.q{color:#a8a393}
+.cand td.w{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.l{background:#fdeaee;color:#d93652;font-weight:700}
+.cand td.x{background:#f1eee6}
+.jd{margin:6px 0;padding:8px 12px;border-radius:8px;background:#faf8f2;border:1px solid #e4dfd2;font-size:14.5px;line-height:1.8}
+.jd.S{border-left:5px solid #0d9478}.jd.F{border-left:5px solid #d93652}.jd.U{border-left:5px solid #a86000}
+.tg{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:700;color:#fff;margin-right:6px}
+.tg.S{background:#0d9478}.tg.F{background:#d93652}.tg.U{background:#a86000}
+.cond-list{margin:6px 0 6px 0;padding:8px 12px 8px 30px;background:#fffdf8;border:1px dashed #d9c58c;border-radius:8px;line-height:1.9;font-size:14.5px}
+svg.fig{max-width:100%;height:auto}
+/* ---- 模擬試験 ---- */
+.mbar{position:sticky;top:0;z-index:50;background:#2a2820;color:#fff;display:flex;align-items:center;gap:14px;padding:8px 14px;font-size:14px}
+.mbar .tm{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;min-width:76px}
+.mbar .tm.warn{color:#ff8a9c}
+.mbar .pg{flex:1;text-align:center;opacity:.85}
+.mbar button{background:#d93652;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.mq{display:flex;gap:10px;margin:10px 0;padding:12px;background:#fff;border:1.5px solid #e4dfd2;border-radius:12px;scroll-margin-top:60px}
+.mq.done{background:#f6fbf9;border-color:#a8d9cb}
+.mq-n{flex:0 0 34px;height:34px;border-radius:50%;background:#2a2820;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.mq-b{flex:1;min-width:0}
+.mq-ch{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.mq-btn{border:1.5px solid #cfcabd;background:#fff;border-radius:10px;padding:8px 14px;font-size:16px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.mq-btn .cnum{font-weight:700;color:#58544c}
+.mq-btn.sel{background:#2055b0;color:#fff;border-color:#2055b0}
+.mq-btn.sel .cnum{color:#fff}
+.mq-btn.ok{background:#e8f6f1;border-color:#0d9478;color:#0d6b55}
+.mq-btn.ng{background:#fdeaee;border-color:#d93652;color:#a8132c}
+.m-sum{text-align:center;padding:18px;background:#fffdf8;border:2px solid #e0c888;border-radius:14px;margin:12px 0}
+.m-sum .big{font-size:42px;font-weight:700;color:#0d9478}
+.m-sum .sub{font-size:14px;color:#58544c;line-height:1.8}
+.m-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.m-tools button,.m-tools a{border:1.5px solid #bcb8ae;background:#fff;border-radius:10px;padding:8px 14px;font-size:14px;cursor:pointer;text-decoration:none;color:#2a2820;font-family:inherit}
+.m-tools .on{background:#2a2820;color:#fff}
+.start-btn{display:block;width:100%;max-width:360px;margin:16px auto;padding:14px;border:0;border-radius:12px;background:#0d9478;color:#fff;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+details.rv{margin-top:8px;background:#faf8f2;border-radius:8px;padding:6px 10px}
+details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
+.rv .exp-box{display:block !important}
+.m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:8px 0 16px}
+.m-set{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.m-set a{display:inline-block;padding:6px 14px;border:1.5px solid #bcb8ae;border-radius:8px;text-decoration:none;color:#2a2820;font-weight:700;background:#fff}
+.m-set a.best{border-color:#0d9478;background:#e8f6f1}
+.m-set small{display:block;font-weight:400;font-size:11px;color:#58544c}
+/* ---- 復習 ---- */
+.tab-btn.active-rv{color:#6b21a8;border-bottom-color:#6b21a8;}
+.pip-rv{background:#f3e8ff;color:#6b21a8;}
+.tab-badge{min-width:16px;height:16px;border-radius:8px;background:#d93652;color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.later-btn{background:#fff;border:1.5px dashed #6b21a8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#6b21a8;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.later-btn.on{background:#f3e8ff;border-style:solid}
+.rv-gh{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.rv-gh span{font-size:12px;color:var(--text2)}
+.m-btn{margin-left:auto;background:#6b21a8;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rv-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:12px}
+.rv-tag{background:#f3e8ff;color:#6b21a8;border-radius:10px;padding:1px 8px;font-weight:700}
+.rv-st{color:var(--teal);font-weight:700}
+.rv-del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:inherit;text-decoration:underline}
+.review-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:#6b21a8;background:#f3e8ff;border:1.5px solid #d4b5f0;border-radius:var(--r);padding:.8rem 1.1rem;margin-bottom:1.2rem;font-weight:700;font-size:14px}
+.review-link .rc{margin-left:auto;font-family:'DM Mono',monospace}
 </style></head><body>
 <header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 事務処理・文章題・確率・表とグラフ</span></header>
 <main>
 <div class="page-title-block"><div class="ptb-icon">SPI</div><div><div class="ptb-label">SPI-N ／ SPI-H 対策コース</div><div class="ptb-title">事務処理検査・文章題・確率・表とグラフ</div>
 <div class="ptb-desc">各単元は「解説 → 演習5問 → 確認6問」。困ったら「ヒント1→2→3」で少しずつ考え方を見られます。</div></div></div>
+<a class="review-link" href="SPI_review.html">📝 復習する<span style="font-weight:400;font-size:12px">（まちがえた問題・あとで復習の問題）</span><span class="rc" id="rvcount"></span></a>
+<script>(function(){try{var o=JSON.parse(localStorage.getItem('spi_review_v1')||'{}');document.getElementById('rvcount').textContent=Object.keys(o).length+'問';}catch(e){}})();</script>
 <div class="exam-badges">
 <div class="exam-badge"><span class="eb-icon">📚</span><span><strong>全11単元</strong></span></div>
 <div class="exam-badge"><span class="eb-icon">✏️</span><span>演習・確認 <strong>121問</strong>＋例題・ミニテスト</span></div>

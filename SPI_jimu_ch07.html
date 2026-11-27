@@ -260,12 +260,77 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 .uc-main{text-decoration:none;color:inherit}
 .uc-main:hover .uc-title{color:var(--blue)}
 .cat-note{font-size:12px;color:var(--text2);margin:-.2rem 0 .7rem;line-height:1.7}
+/* ---- 推論 ---- */
+.cand{border-collapse:collapse;margin:8px 0;font-size:14px}
+.cand th,.cand td{border:1px solid #cfcabd;padding:5px 9px;text-align:center;min-width:34px}
+.cand th{background:#f1eee6}
+.cand td.y{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.one{background:#0d9478;color:#fff;font-weight:700}
+.cand td.n{color:#c9c4b6}
+.cand td.q{color:#a8a393}
+.cand td.w{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.l{background:#fdeaee;color:#d93652;font-weight:700}
+.cand td.x{background:#f1eee6}
+.jd{margin:6px 0;padding:8px 12px;border-radius:8px;background:#faf8f2;border:1px solid #e4dfd2;font-size:14.5px;line-height:1.8}
+.jd.S{border-left:5px solid #0d9478}.jd.F{border-left:5px solid #d93652}.jd.U{border-left:5px solid #a86000}
+.tg{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:700;color:#fff;margin-right:6px}
+.tg.S{background:#0d9478}.tg.F{background:#d93652}.tg.U{background:#a86000}
+.cond-list{margin:6px 0 6px 0;padding:8px 12px 8px 30px;background:#fffdf8;border:1px dashed #d9c58c;border-radius:8px;line-height:1.9;font-size:14.5px}
+svg.fig{max-width:100%;height:auto}
+/* ---- 模擬試験 ---- */
+.mbar{position:sticky;top:0;z-index:50;background:#2a2820;color:#fff;display:flex;align-items:center;gap:14px;padding:8px 14px;font-size:14px}
+.mbar .tm{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;min-width:76px}
+.mbar .tm.warn{color:#ff8a9c}
+.mbar .pg{flex:1;text-align:center;opacity:.85}
+.mbar button{background:#d93652;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.mq{display:flex;gap:10px;margin:10px 0;padding:12px;background:#fff;border:1.5px solid #e4dfd2;border-radius:12px;scroll-margin-top:60px}
+.mq.done{background:#f6fbf9;border-color:#a8d9cb}
+.mq-n{flex:0 0 34px;height:34px;border-radius:50%;background:#2a2820;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.mq-b{flex:1;min-width:0}
+.mq-ch{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.mq-btn{border:1.5px solid #cfcabd;background:#fff;border-radius:10px;padding:8px 14px;font-size:16px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.mq-btn .cnum{font-weight:700;color:#58544c}
+.mq-btn.sel{background:#2055b0;color:#fff;border-color:#2055b0}
+.mq-btn.sel .cnum{color:#fff}
+.mq-btn.ok{background:#e8f6f1;border-color:#0d9478;color:#0d6b55}
+.mq-btn.ng{background:#fdeaee;border-color:#d93652;color:#a8132c}
+.m-sum{text-align:center;padding:18px;background:#fffdf8;border:2px solid #e0c888;border-radius:14px;margin:12px 0}
+.m-sum .big{font-size:42px;font-weight:700;color:#0d9478}
+.m-sum .sub{font-size:14px;color:#58544c;line-height:1.8}
+.m-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.m-tools button,.m-tools a{border:1.5px solid #bcb8ae;background:#fff;border-radius:10px;padding:8px 14px;font-size:14px;cursor:pointer;text-decoration:none;color:#2a2820;font-family:inherit}
+.m-tools .on{background:#2a2820;color:#fff}
+.start-btn{display:block;width:100%;max-width:360px;margin:16px auto;padding:14px;border:0;border-radius:12px;background:#0d9478;color:#fff;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+details.rv{margin-top:8px;background:#faf8f2;border-radius:8px;padding:6px 10px}
+details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
+.rv .exp-box{display:block !important}
+.m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:8px 0 16px}
+.m-set{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.m-set a{display:inline-block;padding:6px 14px;border:1.5px solid #bcb8ae;border-radius:8px;text-decoration:none;color:#2a2820;font-weight:700;background:#fff}
+.m-set a.best{border-color:#0d9478;background:#e8f6f1}
+.m-set small{display:block;font-weight:400;font-size:11px;color:#58544c}
+/* ---- 復習 ---- */
+.tab-btn.active-rv{color:#6b21a8;border-bottom-color:#6b21a8;}
+.pip-rv{background:#f3e8ff;color:#6b21a8;}
+.tab-badge{min-width:16px;height:16px;border-radius:8px;background:#d93652;color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.later-btn{background:#fff;border:1.5px dashed #6b21a8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#6b21a8;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.later-btn.on{background:#f3e8ff;border-style:solid}
+.rv-gh{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.rv-gh span{font-size:12px;color:var(--text2)}
+.m-btn{margin-left:auto;background:#6b21a8;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rv-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:12px}
+.rv-tag{background:#f3e8ff;color:#6b21a8;border-radius:10px;padding:1px 8px;font-weight:700}
+.rv-st{color:var(--teal);font-weight:700}
+.rv-del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:inherit;text-decoration:underline}
+.review-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:#6b21a8;background:#f3e8ff;border:1.5px solid #d4b5f0;border-radius:var(--r);padding:.8rem 1.1rem;margin-bottom:1.2rem;font-weight:700;font-size:14px}
+.review-link .rc{margin-left:auto;font-family:'DM Mono',monospace}
 </style></head><body>
 <header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 文章題Ⅱ③ 集合</span></header>
 <nav class="tab-nav">
 <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
 <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>演習<span class="tab-done" id="tabdone-pr">✓</span></button>
 <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>確認<span class="tab-done" id="tabdone-cf">✓</span></button>
+<button class="tab-btn" id="tab-rv" onclick="switchTab('rv')"><span class="tab-pip pip-rv">復</span>復習<span class="tab-badge" id="rvbadge"></span></button>
 </nav>
 <main>
 <div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">文章題Ⅱ③ 集合（ベン図）</div><div class="page-hdr-desc">ベン図と「全体＝A＋B−両方＋どちらでもない」で集合の問題を解きます。</div></div></div>
@@ -284,7 +349,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-pr">1</div><span>演習問題 1 / 5</span></div>
 <div class="card" id="card-q1"><div class="clabel pr">演習問題</div>
 <div class="q-text">139人の生徒に国語と理科の試験を行った。国語の合格者は88人、理科の合格者は82人で、2科目とも不合格であったものは16人だった。2科目とも合格したものは何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-q1-1" onclick="hint('q1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q1-2" disabled onclick="hint('q1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q1-3" disabled onclick="hint('q1',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q1-1" onclick="hint('q1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q1-2" disabled onclick="hint('q1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q1-3" disabled onclick="hint('q1',3)">💡 ヒント3</button><button class="later-btn" id="lb-q1" onclick="later('q1')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q1-1"><b>ヒント1</b>ベン図をかきます。外枠が全体、2つの円が国語・理科の合格者です。</div>
 <div class="hint-box" id="hint-q1-2"><b>ヒント2</b>少なくとも1科目合格した人は、全体 139 から不合格 16 を引いて 123人。</div>
 <div class="hint-box" id="hint-q1-3"><b>ヒント3</b>88＋82 は「両方合格した人を2回数えた」合計です。それが 123 より何人多いかを考えます。</div>
@@ -304,7 +369,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-pr">2</div><span>演習問題 2 / 5</span></div>
 <div class="card" id="card-q2"><div class="clabel pr">演習問題</div>
 <div class="q-text">128人にアンケートをした。数学が好きな人は71人、英語が好きな人は63人、両方好きな人は24人だった。どちらも好きでない人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-q2-1" onclick="hint('q2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q2-2" disabled onclick="hint('q2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q2-3" disabled onclick="hint('q2',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q2-1" onclick="hint('q2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q2-2" disabled onclick="hint('q2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q2-3" disabled onclick="hint('q2',3)">💡 ヒント3</button><button class="later-btn" id="lb-q2" onclick="later('q2')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q2-1"><b>ヒント1</b>ベン図で、「数学だけ」「両方」「英語だけ」「どちらでもない」の4つの部分に分けます。</div>
 <div class="hint-box" id="hint-q2-2"><b>ヒント2</b>両方 24人は、数学 にも 英語 にも含まれています。「だけ」の人数は、それぞれから両方を引きます。</div>
 <div class="hint-box" id="hint-q2-3"><b>ヒント3</b>数学だけ ＝ 71−24 ＝ 47人、英語だけ ＝ 63−24 ＝ 39人。</div>
@@ -324,7 +389,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-pr">3</div><span>演習問題 3 / 5</span></div>
 <div class="card" id="card-q3"><div class="clabel pr">演習問題</div>
 <div class="q-text">118人にアンケートをした。ラーメンが好きな人は78人、カレーが好きな人は56人、両方好きな人は30人だった。ラーメンだけが好きな人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-q3-1" onclick="hint('q3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q3-2" disabled onclick="hint('q3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q3-3" disabled onclick="hint('q3',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q3-1" onclick="hint('q3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q3-2" disabled onclick="hint('q3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q3-3" disabled onclick="hint('q3',3)">💡 ヒント3</button><button class="later-btn" id="lb-q3" onclick="later('q3')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q3-1"><b>ヒント1</b>ベン図で、「ラーメンだけ」「両方」「カレーだけ」「どちらでもない」の4つの部分に分けます。</div>
 <div class="hint-box" id="hint-q3-2"><b>ヒント2</b>両方 30人は、ラーメン にも カレー にも含まれています。「だけ」の人数は、それぞれから両方を引きます。</div>
 <div class="hint-box" id="hint-q3-3"><b>ヒント3</b>ラーメンだけ ＝ 78−30 ＝ 48人、カレーだけ ＝ 56−30 ＝ 26人。</div>
@@ -344,7 +409,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-pr">4</div><span>演習問題 4 / 5</span></div>
 <div class="card" id="card-q4"><div class="clabel pr">演習問題</div>
 <div class="q-text">学生240人にアンケートをした。結果は次のとおりである。<table class="dtable"><tr><th>質問</th><th>はい</th><th>いいえ</th></tr><tr><td>部活動に入っていますか</td><td>94人</td><td>146人</td></tr><tr><td>アルバイトをしたことはありますか</td><td>68人</td><td>172人</td></tr></table>「部活動に入っていますか」に「はい」と答えて、「アルバイトをしたことはありますか」にも「はい」と答えた人は 65人いた。「部活動に入っていますか」に「いいえ」と答えて、「アルバイトをしたことはありますか」に「はい」と答えた人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-q4-1" onclick="hint('q4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q4-2" disabled onclick="hint('q4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q4-3" disabled onclick="hint('q4',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q4-1" onclick="hint('q4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q4-2" disabled onclick="hint('q4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q4-3" disabled onclick="hint('q4',3)">💡 ヒント3</button><button class="later-btn" id="lb-q4" onclick="later('q4')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q4-1"><b>ヒント1</b>2つの質問の「はい」の人どうしの重なりが、ベン図の真ん中（両方）です。</div>
 <div class="hint-box" id="hint-q4-2"><b>ヒント2</b>表の「はい」の人数と、与えられた「両方はい」の人数をベン図に書き込みます。</div>
 <div class="hint-box" id="hint-q4-3"><b>ヒント3</b>2問目「はい」68人のうち、両方「はい」の 65人を引きます。</div>
@@ -364,7 +429,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-pr">5</div><span>演習問題 5 / 5</span></div>
 <div class="card" id="card-q5"><div class="clabel pr">演習問題</div>
 <div class="q-text">77人にアンケートをした。数学が好きな人は50人、英語が好きな人は55人、両方好きな人は38人だった。少なくとも一方が好きな人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-q5-1" onclick="hint('q5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q5-2" disabled onclick="hint('q5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q5-3" disabled onclick="hint('q5',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q5-1" onclick="hint('q5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q5-2" disabled onclick="hint('q5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q5-3" disabled onclick="hint('q5',3)">💡 ヒント3</button><button class="later-btn" id="lb-q5" onclick="later('q5')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q5-1"><b>ヒント1</b>ベン図で、「数学だけ」「両方」「英語だけ」「どちらでもない」の4つの部分に分けます。</div>
 <div class="hint-box" id="hint-q5-2"><b>ヒント2</b>両方 38人は、数学 にも 英語 にも含まれています。「だけ」の人数は、それぞれから両方を引きます。</div>
 <div class="hint-box" id="hint-q5-3"><b>ヒント3</b>数学だけ ＝ 50−38 ＝ 12人、英語だけ ＝ 55−38 ＝ 17人。</div>
@@ -389,7 +454,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-cf">1</div><span>確認問題 1 / 6</span></div>
 <div class="card" id="card-qc1"><div class="clabel cf">確認問題</div>
 <div class="q-text">117人の生徒に国語と理科の試験を行った。国語の合格者は73人、理科の合格者は53人で、2科目とも不合格であったものは8人だった。2科目とも合格したものは何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc1-1" onclick="hint('qc1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc1-2" disabled onclick="hint('qc1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc1-3" disabled onclick="hint('qc1',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc1-1" onclick="hint('qc1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc1-2" disabled onclick="hint('qc1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc1-3" disabled onclick="hint('qc1',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc1" onclick="later('qc1')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc1-1"><b>ヒント1</b>ベン図をかきます。外枠が全体、2つの円が国語・理科の合格者です。</div>
 <div class="hint-box" id="hint-qc1-2"><b>ヒント2</b>少なくとも1科目合格した人は、全体 117 から不合格 8 を引いて 109人。</div>
 <div class="hint-box" id="hint-qc1-3"><b>ヒント3</b>73＋53 は「両方合格した人を2回数えた」合計です。それが 109 より何人多いかを考えます。</div>
@@ -409,7 +474,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-cf">2</div><span>確認問題 2 / 6</span></div>
 <div class="card" id="card-qc2"><div class="clabel cf">確認問題</div>
 <div class="q-text">81人にアンケートをした。ラーメンが好きな人は34人、カレーが好きな人は42人、両方好きな人は15人だった。どちらか一方だけが好きな人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc2-1" onclick="hint('qc2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc2-2" disabled onclick="hint('qc2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc2-3" disabled onclick="hint('qc2',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc2-1" onclick="hint('qc2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc2-2" disabled onclick="hint('qc2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc2-3" disabled onclick="hint('qc2',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc2" onclick="later('qc2')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc2-1"><b>ヒント1</b>ベン図で、「ラーメンだけ」「両方」「カレーだけ」「どちらでもない」の4つの部分に分けます。</div>
 <div class="hint-box" id="hint-qc2-2"><b>ヒント2</b>両方 15人は、ラーメン にも カレー にも含まれています。「だけ」の人数は、それぞれから両方を引きます。</div>
 <div class="hint-box" id="hint-qc2-3"><b>ヒント3</b>ラーメンだけ ＝ 34−15 ＝ 19人、カレーだけ ＝ 42−15 ＝ 27人。</div>
@@ -429,7 +494,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-cf">3</div><span>確認問題 3 / 6</span></div>
 <div class="card" id="card-qc3"><div class="clabel cf">確認問題</div>
 <div class="q-text">学生180人にアンケートをした。結果は次のとおりである。<table class="dtable"><tr><th>質問</th><th>はい</th><th>いいえ</th></tr><tr><td>旅行は好きですか</td><td>82人</td><td>98人</td></tr><tr><td>沖縄に行ったことはありますか</td><td>71人</td><td>109人</td></tr></table>「旅行は好きですか」に「はい」と答えて、「沖縄に行ったことはありますか」にも「はい」と答えた人は 39人いた。「旅行は好きですか」に「はい」と答えて、「沖縄に行ったことはありますか」に「いいえ」と答えた人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc3-1" onclick="hint('qc3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc3-2" disabled onclick="hint('qc3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc3-3" disabled onclick="hint('qc3',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc3-1" onclick="hint('qc3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc3-2" disabled onclick="hint('qc3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc3-3" disabled onclick="hint('qc3',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc3" onclick="later('qc3')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc3-1"><b>ヒント1</b>2つの質問の「はい」の人どうしの重なりが、ベン図の真ん中（両方）です。</div>
 <div class="hint-box" id="hint-qc3-2"><b>ヒント2</b>表の「はい」の人数と、与えられた「両方はい」の人数をベン図に書き込みます。</div>
 <div class="hint-box" id="hint-qc3-3"><b>ヒント3</b>1問目「はい」82人のうち、両方「はい」の 39人を引きます。</div>
@@ -449,7 +514,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-cf">4</div><span>確認問題 4 / 6</span></div>
 <div class="card" id="card-qc4"><div class="clabel cf">確認問題</div>
 <div class="q-text">学生200人にアンケートをした。結果は次のとおりである。<table class="dtable"><tr><th>質問</th><th>はい</th><th>いいえ</th></tr><tr><td>旅行は好きですか</td><td>103人</td><td>97人</td></tr><tr><td>沖縄に行ったことはありますか</td><td>55人</td><td>145人</td></tr></table>「旅行は好きですか」に「はい」と答えて、「沖縄に行ったことはありますか」にも「はい」と答えた人は 50人いた。2つとも「いいえ」と答えた人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc4-1" onclick="hint('qc4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc4-2" disabled onclick="hint('qc4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc4-3" disabled onclick="hint('qc4',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc4-1" onclick="hint('qc4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc4-2" disabled onclick="hint('qc4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc4-3" disabled onclick="hint('qc4',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc4" onclick="later('qc4')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc4-1"><b>ヒント1</b>2つの質問の「はい」の人どうしの重なりが、ベン図の真ん中（両方）です。</div>
 <div class="hint-box" id="hint-qc4-2"><b>ヒント2</b>表の「はい」の人数と、与えられた「両方はい」の人数をベン図に書き込みます。</div>
 <div class="hint-box" id="hint-qc4-3"><b>ヒント3</b>少なくとも一方「はい」の人は 103＋55−50 ＝ 108人。全体からこれを引きます。</div>
@@ -469,7 +534,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-cf">5</div><span>確認問題 5 / 6</span></div>
 <div class="card" id="card-qc5"><div class="clabel cf">確認問題</div>
 <div class="q-text">118人にアンケートをした。読書が好きな人は68人、映画が好きな人は83人、両方好きな人は40人だった。どちらも好きでない人は何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc5-1" onclick="hint('qc5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc5-2" disabled onclick="hint('qc5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc5-3" disabled onclick="hint('qc5',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc5-1" onclick="hint('qc5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc5-2" disabled onclick="hint('qc5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc5-3" disabled onclick="hint('qc5',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc5" onclick="later('qc5')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc5-1"><b>ヒント1</b>ベン図で、「読書だけ」「両方」「映画だけ」「どちらでもない」の4つの部分に分けます。</div>
 <div class="hint-box" id="hint-qc5-2"><b>ヒント2</b>両方 40人は、読書 にも 映画 にも含まれています。「だけ」の人数は、それぞれから両方を引きます。</div>
 <div class="hint-box" id="hint-qc5-3"><b>ヒント3</b>読書だけ ＝ 68−40 ＝ 28人、映画だけ ＝ 83−40 ＝ 43人。</div>
@@ -489,7 +554,7 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div class="prob-n"><div class="n n-cf">6</div><span>確認問題 6 / 6</span></div>
 <div class="card" id="card-qc6"><div class="clabel cf">確認問題</div>
 <div class="q-text">130人の生徒に数学と英語の試験を行った。数学の合格者は82人、英語の合格者は56人で、2科目とも不合格であったものは16人だった。2科目とも合格したものは何人か。</div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc6-1" onclick="hint('qc6',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc6-2" disabled onclick="hint('qc6',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc6-3" disabled onclick="hint('qc6',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc6-1" onclick="hint('qc6',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc6-2" disabled onclick="hint('qc6',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc6-3" disabled onclick="hint('qc6',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc6" onclick="later('qc6')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc6-1"><b>ヒント1</b>ベン図をかきます。外枠が全体、2つの円が数学・英語の合格者です。</div>
 <div class="hint-box" id="hint-qc6-2"><b>ヒント2</b>少なくとも1科目合格した人は、全体 130 から不合格 16 を引いて 114人。</div>
 <div class="hint-box" id="hint-qc6-3"><b>ヒント3</b>82＋56 は「両方合格した人を2回数えた」合計です。それが 114 より何人多いかを考えます。</div>
@@ -509,22 +574,109 @@ circle{fill:none;stroke-width:3;stroke-linecap:round;}
 <div id="done-cf" class="teal-box" style="display:none;text-align:center"><strong>🏆 確認問題 完了！</strong><span class="sc"></span><br>この単元をクリアしました！</div>
 <div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a class="unav-btn unav-next" href="SPI_jimu_ch08.html">次：順列・組合せ →</a><a class="unav-btn" style="border-color:#bcb8ae;color:#58544c;background:#fff" href="SPI_jimu_index.html">単元一覧へ戻る</a></div></div>
 </div>
+<div class="page" id="page-rv"><div id="rv-root"></div></div>
 </main>
 <script>
-var UNIT="ch07",LS='spi_jimu_';
+var UNIT="ch07",LS='spi_jimu_',COURSE='jimu',UTITLE="文章題Ⅱ③ 集合（ベン図）",RV_FILTER=function(x){return x.u===COURSE+':'+UNIT;};
 var PR_IDS=["q1", "q2", "q3", "q4", "q5"],CF_IDS=["qc1", "qc2", "qc3", "qc4", "qc5", "qc6"],TM={"q1": 150, "q2": 120, "q3": 120, "q4": 150, "q5": 120, "qc1": 150, "qc2": 120, "qc3": 150, "qc4": 150, "qc5": 120, "qc6": 150},MWHY={"m1_1": "<b>4つの部分に分ける</b>　<div class=\"fig\"><svg viewBox=\"0 0 300 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\"><rect x=\"6\" y=\"6\" width=\"288\" height=\"163\" rx=\"8\" fill=\"#fff\" stroke=\"#58544c\" stroke-width=\"1.5\"/><circle cx=\"115\" cy=\"92\" r=\"58\" fill=\"#d93652\" fill-opacity=\".18\" stroke=\"#d93652\" stroke-width=\"2\"/><circle cx=\"185\" cy=\"92\" r=\"58\" fill=\"#0d9478\" fill-opacity=\".18\" stroke=\"#0d9478\" stroke-width=\"2\"/><text x=\"85\" y=\"26\" font-size=\"13\" fill=\"#d93652\" font-weight=\"700\" text-anchor=\"middle\">電車</text><text x=\"215\" y=\"26\" font-size=\"13\" fill=\"#0d9478\" font-weight=\"700\" text-anchor=\"middle\">バス</text><text x=\"82\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">39</text><text x=\"150\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">23</text><text x=\"218\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">14</text><text x=\"30\" y=\"158\" font-size=\"15\" font-weight=\"700\" text-anchor=\"middle\">？</text><text x=\"270\" y=\"22\" font-size=\"10\" fill=\"#58544c\" text-anchor=\"end\">外枠＝全体</text></svg></div><br><b>各部分の人数</b>　電車だけ ＝ 62 − 23 ＝ 39人<br>バスだけ ＝ 37 − 23 ＝ 14人<br><b>答え</b>　全体 82 − (39＋23＋14) ＝ <span class=\"hl-t\">6人</span>", "m2_1": "<b>ベン図に表す</b>　<div class=\"fig\"><svg viewBox=\"0 0 300 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\"><rect x=\"6\" y=\"6\" width=\"288\" height=\"163\" rx=\"8\" fill=\"#fff\" stroke=\"#58544c\" stroke-width=\"1.5\"/><circle cx=\"115\" cy=\"92\" r=\"58\" fill=\"#d93652\" fill-opacity=\".18\" stroke=\"#d93652\" stroke-width=\"2\"/><circle cx=\"185\" cy=\"92\" r=\"58\" fill=\"#0d9478\" fill-opacity=\".18\" stroke=\"#0d9478\" stroke-width=\"2\"/><text x=\"85\" y=\"26\" font-size=\"13\" fill=\"#d93652\" font-weight=\"700\" text-anchor=\"middle\">国語</text><text x=\"215\" y=\"26\" font-size=\"13\" fill=\"#0d9478\" font-weight=\"700\" text-anchor=\"middle\">理科</text><text x=\"82\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\"></text><text x=\"150\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">x</text><text x=\"218\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\"></text><text x=\"30\" y=\"158\" font-size=\"15\" font-weight=\"700\" text-anchor=\"middle\">4</text><text x=\"270\" y=\"22\" font-size=\"10\" fill=\"#58544c\" text-anchor=\"end\">外枠＝全体</text></svg></div>「両方」を x人とします。<br><b>式を立てる</b>　全体 ＝ (国語の人数＋理科の人数−x) ＋ 不合格<br>130 ＝ 82 ＋ 82 − x ＋ 4<br><b>解く</b>　130 ＝ 164 − x ＋ 4<br>x ＝ 164 ＋ 4 − 130 ＝ <span class=\"hl-t\">38人</span>", "m3_1": "<b>4つの部分に分ける</b>　<div class=\"fig\"><svg viewBox=\"0 0 300 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\"><rect x=\"6\" y=\"6\" width=\"288\" height=\"163\" rx=\"8\" fill=\"#fff\" stroke=\"#58544c\" stroke-width=\"1.5\"/><circle cx=\"115\" cy=\"92\" r=\"58\" fill=\"#d93652\" fill-opacity=\".18\" stroke=\"#d93652\" stroke-width=\"2\"/><circle cx=\"185\" cy=\"92\" r=\"58\" fill=\"#0d9478\" fill-opacity=\".18\" stroke=\"#0d9478\" stroke-width=\"2\"/><text x=\"85\" y=\"26\" font-size=\"13\" fill=\"#d93652\" font-weight=\"700\" text-anchor=\"middle\">サッカー</text><text x=\"215\" y=\"26\" font-size=\"13\" fill=\"#0d9478\" font-weight=\"700\" text-anchor=\"middle\">野球</text><text x=\"82\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">43</text><text x=\"150\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">15</text><text x=\"218\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">32</text><text x=\"30\" y=\"158\" font-size=\"15\" font-weight=\"700\" text-anchor=\"middle\">4</text><text x=\"270\" y=\"22\" font-size=\"10\" fill=\"#58544c\" text-anchor=\"end\">外枠＝全体</text></svg></div><br><b>各部分の人数</b>　サッカーだけ ＝ 58 − 15 ＝ 43人<br>野球だけ ＝ 47 − 15 ＝ 32人<br><b>答え</b>　<span class=\"hl-t\">43人</span>", "m4_1": "<b>ベン図に表す</b>　<div class=\"fig\"><svg viewBox=\"0 0 300 175\" xmlns=\"http://www.w3.org/2000/svg\" font-family=\"sans-serif\"><rect x=\"6\" y=\"6\" width=\"288\" height=\"163\" rx=\"8\" fill=\"#fff\" stroke=\"#58544c\" stroke-width=\"1.5\"/><circle cx=\"115\" cy=\"92\" r=\"58\" fill=\"#d93652\" fill-opacity=\".18\" stroke=\"#d93652\" stroke-width=\"2\"/><circle cx=\"185\" cy=\"92\" r=\"58\" fill=\"#0d9478\" fill-opacity=\".18\" stroke=\"#0d9478\" stroke-width=\"2\"/><text x=\"85\" y=\"26\" font-size=\"13\" fill=\"#d93652\" font-weight=\"700\" text-anchor=\"middle\">1問目はい</text><text x=\"215\" y=\"26\" font-size=\"13\" fill=\"#0d9478\" font-weight=\"700\" text-anchor=\"middle\">2問目はい</text><text x=\"82\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">68</text><text x=\"150\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">21</text><text x=\"218\" y=\"98\" font-size=\"17\" font-weight=\"700\" text-anchor=\"middle\">23</text><text x=\"30\" y=\"158\" font-size=\"15\" font-weight=\"700\" text-anchor=\"middle\">38</text><text x=\"270\" y=\"22\" font-size=\"10\" fill=\"#58544c\" text-anchor=\"end\">外枠＝全体</text></svg></div>真ん中が「両方はい」＝21人です。<br><b>部分の人数を出す</b>　1問目だけ「はい」 ＝ 89 − 21 ＝ 68人<br>2問目だけ「はい」 ＝ 44 − 21 ＝ 23人<br>どちらも「いいえ」 ＝ 150 − (68＋21＋23) ＝ 38人<br><b>答え</b>　<span class=\"hl-t\">23人</span>（2問目「はい」 − 両方「はい」）"};
+/* ===== 復習（まちがい・あとで復習）===== */
+var RVK='spi_review_v1';
+function rvLoad(){try{return JSON.parse(localStorage.getItem(RVK)||'{}');}catch(e){return {};}}
+function rvSave(o){try{localStorage.setItem(RVK,JSON.stringify(o));}catch(e){}}
+function rvAdd(id,item){var o=rvLoad();if(o[id]){o[id].streak=0;if(item.why==='later')o[id].why='later';}else{item.streak=0;o[id]=item;}rvSave(o);rvBadge();}
+function rvDel(id){var o=rvLoad();delete o[id];rvSave(o);rvBadge();}
+function rvItems(f){var o=rvLoad();return Object.keys(o).map(function(k){var x=o[k];x.id=k;return x;}).filter(function(x){return !f||f(x);});}
+function rvBadge(){var b=document.getElementById('rvbadge');if(!b||typeof RV_FILTER==='undefined')return;var n=rvItems(RV_FILTER).length;b.textContent=n?n:'';b.style.display=n?'inline-flex':'none';}
+function rvCapture(q,why){
+  try{
+    var card=document.getElementById('card-'+q),chw=document.getElementById('ch-'+q);if(!card||!chw)return;
+    var bs=chw.querySelectorAll('.ch');
+    var a=+bs[0].getAttribute('onclick').match(/,(\d+)\)/)[1];
+    var ch=[].map.call(bs,function(b){return b.innerHTML.replace(/<span class="cnum">.*?<\/span>/,'');});
+    var steps=[].map.call(document.getElementById('kai-'+q).querySelectorAll('.exp-box'),function(e){var c=e.cloneNode(true);var h=c.querySelector('h4');var t=h.innerHTML.replace(/^STEP \d+　/,'');h.remove();return [t,c.innerHTML];});
+    var hints=[1,2,3].map(function(k){var h=document.getElementById('hint-'+q+'-'+k);return h?h.innerHTML.replace(/^<b>ヒント\d<\/b>/,''):'';});
+    var kp=document.getElementById(q+'-res').querySelector('.point-box');
+    rvAdd(COURSE+':'+UNIT+':'+q,{u:COURSE+':'+UNIT,ut:UTITLE,why:why,q:card.querySelector('.q-text').innerHTML,ch:ch,a:a,steps:steps,hints:hints,key:kp?kp.innerHTML.replace(/^<strong>.*?<\/strong>/,''):''});
+  }catch(e){}
+}
+function later(q){
+  var id=COURSE+':'+UNIT+':'+q,b=document.getElementById('lb-'+q),o=rvLoad();
+  if(o[id]&&o[id].why==='later'){rvDel(id);b.classList.remove('on');b.textContent='🔖 あとで復習';return;}
+  rvCapture(q,'later');b.classList.add('on');b.textContent='🔖 復習リストに入れました（もう一度押すと取り消し）';
+}
+var RVS={queue:[],i:0,ok:0,grad:0,root:null,filter:null,cur:null};
+var RVWHY={wrong:'まちがい',later:'あとで復習',mark:'理解度B・C',mogi:'模擬試験'};
+function rvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function rvMount(rootId,filter){
+  RVS.root=document.getElementById(rootId);RVS.filter=filter||null;rvList();
+}
+function rvList(){
+  var items=rvItems(RVS.filter),r=RVS.root;
+  if(!items.length){r.innerHTML='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題</div><p class="body-text">いまは、復習する問題がありません。🎉<br>演習・確認問題でまちがえた問題や、「🔖 あとで復習」を押した問題が、ここに集まります。</p></div>';return;}
+  var g={};items.forEach(function(x){(g[x.ut]=g[x.ut]||[]).push(x);});
+  var h='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題（'+items.length+'問）</div><p class="body-text">まちがえた問題と、「あとで復習」「理解度B・C」にした問題です。<b>2回続けて正解すると、リストから外れます。</b></p><button class="start-btn" onclick="rvStart(null)">ぜんぶ復習する（'+items.length+'問）</button></div>';
+  Object.keys(g).forEach(function(t,gi){
+    h+='<div class="card"><div class="rv-gh"><b>'+rvEsc(t)+'</b><span>'+g[t].length+'問</span><button class="m-btn" onclick="rvStart('+gi+')">この単元を復習</button></div>';
+    g[t].forEach(function(x){h+='<div class="rv-row"><span class="rv-tag">'+RVWHY[x.why||'wrong']+'</span><span class="rv-st">'+(x.streak?'あと1回で卒業':'')+'</span><button class="rv-del" onclick="rvRemove(\''+x.id.replace(/'/g,"\\'")+'\')">リストから外す</button></div>';});
+    h+='</div>';
+  });
+  r.innerHTML=h;RVS.groups=Object.keys(g);
+}
+function rvRemove(id){if(!confirm('この問題を復習リストから外しますか？'))return;rvDel(id);rvList();}
+function rvStart(gi){
+  var items=rvItems(RVS.filter);
+  if(gi!==null&&RVS.groups)items=items.filter(function(x){return x.ut===RVS.groups[gi];});
+  for(var i=items.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=items[i];items[i]=items[j];items[j]=t;}
+  RVS.queue=items;RVS.i=0;RVS.ok=0;RVS.grad=0;rvShow();
+}
+function rvShow(){
+  var r=RVS.root,x=RVS.queue[RVS.i];
+  if(!x){
+    var left=rvItems(RVS.filter).length;
+    r.innerHTML='<div class="m-sum"><div>復習おつかれさまでした</div><div class="big">'+RVS.ok+' / '+RVS.queue.length+'</div><div class="sub">正解 '+RVS.ok+'問　／　リストから卒業 '+RVS.grad+'問<br>のこり '+left+'問</div></div><div class="m-tools"><button onclick="rvList();window.scrollTo(0,0)">一覧へ</button>'+(left?'<button onclick="rvStart(null)">のこりをもう一度</button>':'')+'</div>';
+    window.scrollTo(0,0);return;
+  }
+  RVS.cur=x;RVS.hint=0;
+  var h='<div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" style="width:'+(RVS.i/RVS.queue.length*100)+'%"></div></div><div class="pb-txt">'+(RVS.i+1)+' / '+RVS.queue.length+'</div></div>';
+  h+='<div class="card"><div class="clabel pr">復習　'+rvEsc(x.ut)+'</div><div class="q-text">'+x.q+'</div>';
+  var hs=(x.hints||[]).filter(function(t){return t;});
+  if(hs.length){h+='<div class="hint-row">';for(var k=1;k<=hs.length;k++)h+='<button class="hint-btn" id="rh-'+k+'"'+(k>1?' disabled':'')+' onclick="rvHint('+k+')">💡 ヒント'+k+'</button>';h+='</div>';hs.forEach(function(t,k){h+='<div class="hint-box" id="rhb-'+(k+1)+'"><b>ヒント'+(k+1)+'</b>'+t+'</div>';});}
+  h+='<div class="choices" id="rch">';
+  x.ch.forEach(function(c,i){h+='<button class="ch" onclick="rvAns('+i+')"><span class="cnum">'+'ABCDEFG'.charAt(i)+'</span>'+c+'</button>';});
+  h+='</div><div id="rfb"></div></div>';
+  r.innerHTML=h;window.scrollTo(0,0);
+}
+function rvHint(k){document.getElementById('rhb-'+k).style.display='block';document.getElementById('rh-'+k).classList.add('used');var n=document.getElementById('rh-'+(k+1));if(n)n.disabled=false;}
+function rvAns(i){
+  var x=RVS.cur,bs=document.querySelectorAll('#rch .ch');
+  bs.forEach(function(b){b.disabled=true;});bs[x.a].classList.add('ok');
+  var o=rvLoad(),it=o[x.id],msg;
+  if(i===x.a){
+    RVS.ok++;var s=(it&&it.streak||0)+1;
+    if(s>=2){rvDel(x.id);RVS.grad++;msg='⭕ 正解！2回続けて正解したので、<b>リストから卒業</b>です。🎓';}
+    else{if(it){it.streak=s;rvSave(o);}msg='⭕ 正解！あと<b>1回</b>正解すると卒業です。';}
+  }else{bs[i].classList.add('ng');if(it){it.streak=0;rvSave(o);}msg='❌ 正解は <b>'+'ABCDEFG'.charAt(x.a)+'</b> です。解説を読んで、もう一度挑戦しましょう。';}
+  var h='<div class="'+(i===x.a?'fb-ok':'fb-ng')+'" style="display:flex"><span class="fb-text">'+msg+'</span></div>';
+  x.steps.forEach(function(s,k){h+='<div class="exp-box'+['',' blue',' amber'][k%3]+'" style="display:block"><h4>STEP '+(k+1)+'　'+s[0]+'</h4>'+s[1]+'</div>';});
+  if(x.key)h+='<div class="point-box"><strong>🔑 解法のカギ</strong>'+x.key+'</div>';
+  h+='<button class="start-btn" onclick="RVS.i++;rvShow()">'+(RVS.i+1>=RVS.queue.length?'結果を見る':'次の問題へ')+'</button>';
+  document.getElementById('rfb').innerHTML=h;rvBadge();
+  setTimeout(function(){var e=document.getElementById('rfb');if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
 var answered={},stepRev={},timers={},miniAnswered={},correctN={};
 function $(i){return document.getElementById(i);}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function switchTab(n){
-  ['ex','pr','cf'].forEach(function(t){
+  ['ex','pr','cf','rv'].forEach(function(t){
     $('page-'+t).classList.toggle('active',t===n);
-    var b=$('tab-'+t);b.classList.remove('active-ex','active-pr','active-cf');
+    var b=$('tab-'+t);b.classList.remove('active-ex','active-pr','active-cf','active-rv');
     if(t===n)b.classList.add('active-'+t);
   });
   window.scrollTo(0,0);
   if(n==='pr')startNext(PR_IDS);
   if(n==='cf')startNext(CF_IDS);
+  if(n==='rv')rvMount('rv-root',RV_FILTER);
 }
 function startNext(ids){for(var i=0;i<ids.length;i++){if(!answered[ids[i]]){startTimer(ids[i]);return;}}}
 function startTimer(q){
@@ -564,6 +716,7 @@ function ans(q,i,c){
   stopTimer(q);
   if(i===c){$('fb-ok-'+q).style.display='flex';correctN[q]=1;}
   else{bs[i].classList.add('ng');$('fb-ng-'+q).style.display='flex';correctN[q]=0;}
+  if(i!==c)setTimeout(function(){rvCapture(q,'wrong');},0);
   answered[q]=true;
   $(q+'-res').style.display='block';
   $('cn-'+q).style.display='flex';
@@ -596,7 +749,8 @@ function reveal(q,t){
   if(i>=t){rb.style.display='none';var f=$(q+'-fin');if(f)f.style.display='block';}
   else rb.textContent='次のSTEPを見る ('+(i+1)+'/'+t+')';
 }
-function setMark(p,m){['A','B','C'].forEach(function(x){var b=$(p+x);if(b)b.classList.toggle('on',x===m);});}
+function setMark(p,m){
+  var mm=p.match(/^(qc?\d+)-m$/);if(mm&&(m==='B'||m==='C'))rvCapture(mm[1],'mark');['A','B','C'].forEach(function(x){var b=$(p+x);if(b)b.classList.toggle('on',x===m);});}
 function launchConfetti(){
   var c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:999';
   c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);
@@ -607,4 +761,5 @@ function launchConfetti(){
 window.addEventListener('load',function(){window.scrollTo(0,0);});
 
 for(var k in TM){stepRev[k]=1;}
+rvBadge();
 </script></body></html>

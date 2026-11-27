@@ -309,12 +309,28 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 .m-set a{display:inline-block;padding:6px 14px;border:1.5px solid #bcb8ae;border-radius:8px;text-decoration:none;color:#2a2820;font-weight:700;background:#fff}
 .m-set a.best{border-color:#0d9478;background:#e8f6f1}
 .m-set small{display:block;font-weight:400;font-size:11px;color:#58544c}
+/* ---- 復習 ---- */
+.tab-btn.active-rv{color:#6b21a8;border-bottom-color:#6b21a8;}
+.pip-rv{background:#f3e8ff;color:#6b21a8;}
+.tab-badge{min-width:16px;height:16px;border-radius:8px;background:#d93652;color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.later-btn{background:#fff;border:1.5px dashed #6b21a8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#6b21a8;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.later-btn.on{background:#f3e8ff;border-style:solid}
+.rv-gh{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.rv-gh span{font-size:12px;color:var(--text2)}
+.m-btn{margin-left:auto;background:#6b21a8;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rv-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:12px}
+.rv-tag{background:#f3e8ff;color:#6b21a8;border-radius:10px;padding:1px 8px;font-weight:700}
+.rv-st{color:var(--teal);font-weight:700}
+.rv-del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:inherit;text-decoration:underline}
+.review-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:#6b21a8;background:#f3e8ff;border:1.5px solid #d4b5f0;border-radius:var(--r);padding:.8rem 1.1rem;margin-bottom:1.2rem;font-weight:700;font-size:14px}
+.review-link .rc{margin-left:auto;font-family:'DM Mono',monospace}
 </style></head><body>
 <header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 推論④ 論理</span></header>
 <nav class="tab-nav">
 <button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
 <button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>演習<span class="tab-done" id="tabdone-pr">✓</span></button>
 <button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>確認<span class="tab-done" id="tabdone-cf">✓</span></button>
+<button class="tab-btn" id="tab-rv" onclick="switchTab('rv')"><span class="tab-pip pip-rv">復</span>復習<span class="tab-badge" id="rvbadge"></span></button>
 </nav>
 <main>
 <div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">推論④ 論理（確実にいえること）</div><div class="page-hdr-desc">「確実」「必ずしも誤りではない」の違いと、「Xが正しければYも必ず正しい」の判断を学びます。</div></div></div>
@@ -331,7 +347,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-pr">1</div><span>演習問題 1 / 5</span></div>
 <div class="card" id="card-q1"><div class="clabel pr">演習問題</div>
 <div class="q-text">A, B, C, D の4人がパーティーに来るかどうかについて、次のことがわかっている。<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　Dは来る</li><li><b>ⅱ</b>　Dが来るなら、Bも来る</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　Aが来ればBも来る</li><li><b>イ</b>　Cが来ればBも来る</li><li><b>ウ</b>　AとBはどちらも来ない</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-q1-1" onclick="hint('q1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q1-2" disabled onclick="hint('q1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q1-3" disabled onclick="hint('q1',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q1-1" onclick="hint('q1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q1-2" disabled onclick="hint('q1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q1-3" disabled onclick="hint('q1',3)">💡 ヒント3</button><button class="later-btn" id="lb-q1" onclick="later('q1')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q1-1"><b>ヒント1</b>4人がそれぞれ「来る・来ない」の2通りなので、全部で16通り。条件に合わない場合を消していきます。</div>
 <div class="hint-box" id="hint-q1-2"><b>ヒント2</b>条件「Dは来る」を入れると、のこりは<b>8通り</b>。つぎの条件も入れていきます。</div>
 <div class="hint-box" id="hint-q1-3"><b>ヒント3</b>条件をすべて入れると<b>4通り</b>。ア～ウを1つずつ、<b>すべての場合で成り立つか</b>調べます。</div>
@@ -352,7 +368,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-pr">2</div><span>演習問題 2 / 5</span></div>
 <div class="card" id="card-q2"><div class="clabel pr">演習問題</div>
 <div class="q-text">袋の中の玉について、次の報告があった。（報告の内容には、それぞれ詳しさの違いがある）<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　玉は全部で9個以上あった</li><li><b>ⅱ</b>　玉は全部で8個以上あった</li><li><b>ⅲ</b>　白玉が3個以上あった</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　ⅰが正しければ、ⅱも必ず正しい</li><li><b>イ</b>　ⅲが正しければ、ⅰも必ず正しい</li><li><b>ウ</b>　ⅱが正しければ、ⅲも必ず正しい</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-q2-1" onclick="hint('q2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q2-2" disabled onclick="hint('q2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q2-3" disabled onclick="hint('q2',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q2-1" onclick="hint('q2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q2-2" disabled onclick="hint('q2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q2-3" disabled onclick="hint('q2',3)">💡 ヒント3</button><button class="later-btn" id="lb-q2" onclick="later('q2')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q2-1"><b>ヒント1</b>まず、ⅰ・ⅱ・ⅲがそれぞれ<b>何をはっきりいっているか</b>を整理します。数や種類が「確実にわかる」部分と「わからない」部分を分けます。</div>
 <div class="hint-box" id="hint-q2-2"><b>ヒント2</b>「Xが正しければYも必ず正しい」は、Xが成り立つ場合に<b>Yが成り立たない例（反例）</b>が1つでもあれば誤りです。反例を探しましょう。</div>
 <div class="hint-box" id="hint-q2-3"><b>ヒント3</b>ア・イ・ウを1つずつ、<b>反例が作れるか</b>で判定します。反例が作れなければ「必ず正しい」です。</div>
@@ -374,7 +390,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-pr">3</div><span>演習問題 3 / 5</span></div>
 <div class="card" id="card-q3"><div class="clabel pr">演習問題</div>
 <div class="q-text">A, B, C, D の4人がパーティーに来るかどうかについて、次のことがわかっている。<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　AとDのどちらか一方だけが来る</li><li><b>ⅱ</b>　AとCは2人そろっては来ない</li><li><b>ⅲ</b>　Bが来るなら、Cも来る</li></ul><div class="q-sub">次の推論ア～ウのうち、必ずしも誤りとはいえないのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　AとDは両方来る</li><li><b>イ</b>　Dは来ない</li><li><b>ウ</b>　Bが来ればDも来る</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-q3-1" onclick="hint('q3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q3-2" disabled onclick="hint('q3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q3-3" disabled onclick="hint('q3',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q3-1" onclick="hint('q3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q3-2" disabled onclick="hint('q3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q3-3" disabled onclick="hint('q3',3)">💡 ヒント3</button><button class="later-btn" id="lb-q3" onclick="later('q3')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q3-1"><b>ヒント1</b>4人がそれぞれ「来る・来ない」の2通りなので、全部で16通り。条件に合わない場合を消していきます。</div>
 <div class="hint-box" id="hint-q3-2"><b>ヒント2</b>条件「AとDのどちらか一方だけが来る」を入れると、のこりは<b>8通り</b>。つぎの条件も入れていきます。</div>
 <div class="hint-box" id="hint-q3-3"><b>ヒント3</b>条件をすべて入れると<b>4通り</b>。ア～ウを1つずつ、<b>成り立つ場合が1つでもあるか</b>調べます。</div>
@@ -396,7 +412,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-pr">4</div><span>演習問題 4 / 5</span></div>
 <div class="card" id="card-q4"><div class="clabel pr">演習問題</div>
 <div class="q-text">コンビニのレジの中の硬貨について、次の報告があった。（報告の内容には、それぞれ詳しさの違いがある）<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　1円硬貨が2枚以上あった</li><li><b>ⅱ</b>　少なくとも2種類の硬貨があった</li><li><b>ⅲ</b>　1円硬貨があった</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　ⅲが正しければ、ⅱも必ず正しい</li><li><b>イ</b>　ⅰが正しければ、ⅲも必ず正しい</li><li><b>ウ</b>　ⅱが正しければ、ⅲも必ず正しい</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-q4-1" onclick="hint('q4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q4-2" disabled onclick="hint('q4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q4-3" disabled onclick="hint('q4',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q4-1" onclick="hint('q4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q4-2" disabled onclick="hint('q4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q4-3" disabled onclick="hint('q4',3)">💡 ヒント3</button><button class="later-btn" id="lb-q4" onclick="later('q4')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q4-1"><b>ヒント1</b>まず、ⅰ・ⅱ・ⅲがそれぞれ<b>何をはっきりいっているか</b>を整理します。数や種類が「確実にわかる」部分と「わからない」部分を分けます。</div>
 <div class="hint-box" id="hint-q4-2"><b>ヒント2</b>「Xが正しければYも必ず正しい」は、Xが成り立つ場合に<b>Yが成り立たない例（反例）</b>が1つでもあれば誤りです。反例を探しましょう。</div>
 <div class="hint-box" id="hint-q4-3"><b>ヒント3</b>ア・イ・ウを1つずつ、<b>反例が作れるか</b>で判定します。反例が作れなければ「必ず正しい」です。</div>
@@ -418,7 +434,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-pr">5</div><span>演習問題 5 / 5</span></div>
 <div class="card" id="card-q5"><div class="clabel pr">演習問題</div>
 <div class="q-text">A, B, C, D の4人がパーティーに来るかどうかについて、次のことがわかっている。<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　Cは来ない</li><li><b>ⅱ</b>　Aは来る</li><li><b>ⅲ</b>　BとCのどちらか一方だけが来る</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　Dは来ない</li><li><b>イ</b>　Dが来ればBも来る</li><li><b>ウ</b>　Aが来ればDも来る</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-q5-1" onclick="hint('q5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q5-2" disabled onclick="hint('q5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q5-3" disabled onclick="hint('q5',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q5-1" onclick="hint('q5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q5-2" disabled onclick="hint('q5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q5-3" disabled onclick="hint('q5',3)">💡 ヒント3</button><button class="later-btn" id="lb-q5" onclick="later('q5')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-q5-1"><b>ヒント1</b>4人がそれぞれ「来る・来ない」の2通りなので、全部で16通り。条件に合わない場合を消していきます。</div>
 <div class="hint-box" id="hint-q5-2"><b>ヒント2</b>条件「Cは来ない」を入れると、のこりは<b>8通り</b>。つぎの条件も入れていきます。</div>
 <div class="hint-box" id="hint-q5-3"><b>ヒント3</b>条件をすべて入れると<b>2通り</b>。ア～ウを1つずつ、<b>すべての場合で成り立つか</b>調べます。</div>
@@ -445,7 +461,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-cf">1</div><span>確認問題 1 / 6</span></div>
 <div class="card" id="card-qc1"><div class="clabel cf">確認問題</div>
 <div class="q-text">コンビニのレジの中の硬貨について、次の報告があった。（報告の内容には、それぞれ詳しさの違いがある）<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　10円硬貨が2枚以上あった</li><li><b>ⅱ</b>　10円硬貨があった</li><li><b>ⅲ</b>　10円硬貨がちょうど2枚あった</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　ⅰが正しければ、ⅲも必ず正しい</li><li><b>イ</b>　ⅰが正しければ、ⅱも必ず正しい</li><li><b>ウ</b>　ⅱが正しければ、ⅰも必ず正しい</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc1-1" onclick="hint('qc1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc1-2" disabled onclick="hint('qc1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc1-3" disabled onclick="hint('qc1',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc1-1" onclick="hint('qc1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc1-2" disabled onclick="hint('qc1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc1-3" disabled onclick="hint('qc1',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc1" onclick="later('qc1')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc1-1"><b>ヒント1</b>まず、ⅰ・ⅱ・ⅲがそれぞれ<b>何をはっきりいっているか</b>を整理します。数や種類が「確実にわかる」部分と「わからない」部分を分けます。</div>
 <div class="hint-box" id="hint-qc1-2"><b>ヒント2</b>「Xが正しければYも必ず正しい」は、Xが成り立つ場合に<b>Yが成り立たない例（反例）</b>が1つでもあれば誤りです。反例を探しましょう。</div>
 <div class="hint-box" id="hint-qc1-3"><b>ヒント3</b>ア・イ・ウを1つずつ、<b>反例が作れるか</b>で判定します。反例が作れなければ「必ず正しい」です。</div>
@@ -467,7 +483,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-cf">2</div><span>確認問題 2 / 6</span></div>
 <div class="card" id="card-qc2"><div class="clabel cf">確認問題</div>
 <div class="q-text">A, B, C, D の4人がパーティーに来るかどうかについて、次のことがわかっている。<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　Bは来ない</li><li><b>ⅱ</b>　Cが来るなら、Aも来る</li><li><b>ⅲ</b>　CとDは2人そろっては来ない</li></ul><div class="q-sub">次の推論ア～ウのうち、必ずしも誤りとはいえないのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　CとDの少なくとも一方は来る</li><li><b>イ</b>　Dが来ればAも来る</li><li><b>ウ</b>　AとBは両方来る</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc2-1" onclick="hint('qc2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc2-2" disabled onclick="hint('qc2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc2-3" disabled onclick="hint('qc2',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc2-1" onclick="hint('qc2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc2-2" disabled onclick="hint('qc2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc2-3" disabled onclick="hint('qc2',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc2" onclick="later('qc2')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc2-1"><b>ヒント1</b>4人がそれぞれ「来る・来ない」の2通りなので、全部で16通り。条件に合わない場合を消していきます。</div>
 <div class="hint-box" id="hint-qc2-2"><b>ヒント2</b>条件「Bは来ない」を入れると、のこりは<b>8通り</b>。つぎの条件も入れていきます。</div>
 <div class="hint-box" id="hint-qc2-3"><b>ヒント3</b>条件をすべて入れると<b>5通り</b>。ア～ウを1つずつ、<b>成り立つ場合が1つでもあるか</b>調べます。</div>
@@ -489,7 +505,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-cf">3</div><span>確認問題 3 / 6</span></div>
 <div class="card" id="card-qc3"><div class="clabel cf">確認問題</div>
 <div class="q-text">A, B, C, D の4人がパーティーに来るかどうかについて、次のことがわかっている。<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　AとBの少なくとも一方は来る</li><li><b>ⅱ</b>　CとDの少なくとも一方は来る</li><li><b>ⅲ</b>　AとDは2人そろっては来ない</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　Cは来ない</li><li><b>イ</b>　BとCの少なくとも一方は来る</li><li><b>ウ</b>　Aが来ればCも来る</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc3-1" onclick="hint('qc3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc3-2" disabled onclick="hint('qc3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc3-3" disabled onclick="hint('qc3',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc3-1" onclick="hint('qc3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc3-2" disabled onclick="hint('qc3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc3-3" disabled onclick="hint('qc3',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc3" onclick="later('qc3')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc3-1"><b>ヒント1</b>4人がそれぞれ「来る・来ない」の2通りなので、全部で16通り。条件に合わない場合を消していきます。</div>
 <div class="hint-box" id="hint-qc3-2"><b>ヒント2</b>条件「AとBの少なくとも一方は来る」を入れると、のこりは<b>12通り</b>。つぎの条件も入れていきます。</div>
 <div class="hint-box" id="hint-qc3-3"><b>ヒント3</b>条件をすべて入れると<b>5通り</b>。ア～ウを1つずつ、<b>すべての場合で成り立つか</b>調べます。</div>
@@ -511,7 +527,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-cf">4</div><span>確認問題 4 / 6</span></div>
 <div class="card" id="card-qc4"><div class="clabel cf">確認問題</div>
 <div class="q-text">コンビニのレジの中の硬貨について、次の報告があった。（報告の内容には、それぞれ詳しさの違いがある）<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　5円硬貨がちょうど6枚あった</li><li><b>ⅱ</b>　硬貨は全部で7枚以上あった</li><li><b>ⅲ</b>　硬貨は全部で8枚以上あった</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　ⅱが正しければ、ⅲも必ず正しい</li><li><b>イ</b>　ⅲが正しければ、ⅰも必ず正しい</li><li><b>ウ</b>　ⅲが正しければ、ⅱも必ず正しい</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc4-1" onclick="hint('qc4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc4-2" disabled onclick="hint('qc4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc4-3" disabled onclick="hint('qc4',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc4-1" onclick="hint('qc4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc4-2" disabled onclick="hint('qc4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc4-3" disabled onclick="hint('qc4',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc4" onclick="later('qc4')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc4-1"><b>ヒント1</b>まず、ⅰ・ⅱ・ⅲがそれぞれ<b>何をはっきりいっているか</b>を整理します。数や種類が「確実にわかる」部分と「わからない」部分を分けます。</div>
 <div class="hint-box" id="hint-qc4-2"><b>ヒント2</b>「Xが正しければYも必ず正しい」は、Xが成り立つ場合に<b>Yが成り立たない例（反例）</b>が1つでもあれば誤りです。反例を探しましょう。</div>
 <div class="hint-box" id="hint-qc4-3"><b>ヒント3</b>ア・イ・ウを1つずつ、<b>反例が作れるか</b>で判定します。反例が作れなければ「必ず正しい」です。</div>
@@ -533,7 +549,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-cf">5</div><span>確認問題 5 / 6</span></div>
 <div class="card" id="card-qc5"><div class="clabel cf">確認問題</div>
 <div class="q-text">A, B, C, D の4人がパーティーに来るかどうかについて、次のことがわかっている。<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　BとDのどちらか一方だけが来る</li><li><b>ⅱ</b>　BとCは2人そろっては来ない</li><li><b>ⅲ</b>　Aが来るなら、Bも来る</li></ul><div class="q-sub">次の推論ア～ウのうち、必ずしも誤りとはいえないのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　BとDはどちらも来ない</li><li><b>イ</b>　Cが来ればAも来る</li><li><b>ウ</b>　AとCは両方来る</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc5-1" onclick="hint('qc5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc5-2" disabled onclick="hint('qc5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc5-3" disabled onclick="hint('qc5',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc5-1" onclick="hint('qc5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc5-2" disabled onclick="hint('qc5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc5-3" disabled onclick="hint('qc5',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc5" onclick="later('qc5')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc5-1"><b>ヒント1</b>4人がそれぞれ「来る・来ない」の2通りなので、全部で16通り。条件に合わない場合を消していきます。</div>
 <div class="hint-box" id="hint-qc5-2"><b>ヒント2</b>条件「BとDのどちらか一方だけが来る」を入れると、のこりは<b>8通り</b>。つぎの条件も入れていきます。</div>
 <div class="hint-box" id="hint-qc5-3"><b>ヒント3</b>条件をすべて入れると<b>4通り</b>。ア～ウを1つずつ、<b>成り立つ場合が1つでもあるか</b>調べます。</div>
@@ -555,7 +571,7 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div class="prob-n"><div class="n n-cf">6</div><span>確認問題 6 / 6</span></div>
 <div class="card" id="card-qc6"><div class="clabel cf">確認問題</div>
 <div class="q-text">コンビニのレジの中の硬貨について、次の報告があった。（報告の内容には、それぞれ詳しさの違いがある）<ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ⅰ</b>　硬貨は全部で4枚以上あった</li><li><b>ⅱ</b>　1円硬貨がちょうど6枚あった</li><li><b>ⅲ</b>　1円硬貨が4枚以上あった</li></ul><div class="q-sub">次の推論ア～ウのうち、必ず正しいのはどれか。</div><ul class="cond-list" style="list-style:none;padding-left:12px"><li><b>ア</b>　ⅰが正しければ、ⅱも必ず正しい</li><li><b>イ</b>　ⅲが正しければ、ⅰも必ず正しい</li><li><b>ウ</b>　ⅱが正しければ、ⅰも必ず正しい</li></ul></div>
-<div class="hint-row"><button class="hint-btn" id="hb-qc6-1" onclick="hint('qc6',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc6-2" disabled onclick="hint('qc6',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc6-3" disabled onclick="hint('qc6',3)">💡 ヒント3</button></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc6-1" onclick="hint('qc6',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc6-2" disabled onclick="hint('qc6',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc6-3" disabled onclick="hint('qc6',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc6" onclick="later('qc6')">🔖 あとで復習</button></div>
 <div class="hint-box" id="hint-qc6-1"><b>ヒント1</b>まず、ⅰ・ⅱ・ⅲがそれぞれ<b>何をはっきりいっているか</b>を整理します。数や種類が「確実にわかる」部分と「わからない」部分を分けます。</div>
 <div class="hint-box" id="hint-qc6-2"><b>ヒント2</b>「Xが正しければYも必ず正しい」は、Xが成り立つ場合に<b>Yが成り立たない例（反例）</b>が1つでもあれば誤りです。反例を探しましょう。</div>
 <div class="hint-box" id="hint-qc6-3"><b>ヒント3</b>ア・イ・ウを1つずつ、<b>反例が作れるか</b>で判定します。反例が作れなければ「必ず正しい」です。</div>
@@ -577,22 +593,109 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 <div id="done-cf" class="teal-box" style="display:none;text-align:center"><strong>🏆 確認問題 完了！</strong><span class="sc"></span><br>この単元をクリアしました！</div>
 <div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a class="unav-btn" style="border-color:#bcb8ae;color:#58544c;background:#fff" href="SPI_suiron_index.html">単元一覧へ戻る</a></div></div>
 </div>
+<div class="page" id="page-rv"><div id="rv-root"></div></div>
 </main>
 <script>
-var UNIT="s04",LS='spi_suiron_';
+var UNIT="s04",LS='spi_suiron_',COURSE='suiron',UTITLE="推論④ 論理（確実にいえること）",RV_FILTER=function(x){return x.u===COURSE+':'+UNIT;};
 var PR_IDS=["q1", "q2", "q3", "q4", "q5"],CF_IDS=["qc1", "qc2", "qc3", "qc4", "qc5", "qc6"],TM={"q1": 150, "q2": 150, "q3": 150, "q4": 150, "q5": 150, "qc1": 150, "qc2": 150, "qc3": 150, "qc4": 150, "qc5": 150, "qc6": 150},MWHY={"m1_1": "<b>条件を整理する</b>　<p>4人それぞれが「来る（○）」か「来ない（×）」かの組み合わせは全部で16通りです。条件に合うものだけをのこします。</p><ol class=\"cond-list\"><li>BとDのどちらか一方だけが来る</li><li>Aは来ない</li><li>AとDのどちらか一方だけが来る</li></ol><p>「<b>確実に正しい</b>」＝のこった<b>すべて</b>の場合で成り立つ。「<b>必ずしも誤りではない</b>」＝のこった場合の<b>どれか1つでも</b>成り立つ。</p><br><b>条件ⅰを入れる（のこり8通り）</b>　<p>条件「BとDのどちらか一方だけが来る」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>3</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>4</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td></tr><tr><th>5</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>6</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>7</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>8</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td></tr></table><br><b>条件ⅱを入れる（のこり4通り）</b>　<p>条件「Aは来ない」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>3</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>4</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td></tr></table><br><b>条件ⅲを入れる（のこり2通り）</b>　<p>条件「AとDのどちらか一方だけが来る」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td></tr></table><br><b>すべての場合で調べる</b>　<p>のこった<b>2通り</b>を表にしました。ア～ウを、この表のすべての行に当てはめます。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td></tr></table><div class=\"jd U\"><span class=\"tg U\">どちらともいえない</span><b>ア</b>　AとCはどちらも来ない</div><div class=\"jd F\"><span class=\"tg F\">誤り</span><b>イ</b>　AとBは両方来る</div><div class=\"jd U\"><span class=\"tg U\">どちらともいえない</span><b>ウ</b>　BとCはどちらも来ない</div><p>「必ずしも誤りではない」は「確実に正しい」と「どちらともいえない」の両方です（<b>誤り</b>だけが×）。答えは <span class=\"hl-t\">アとウ</span> です。</p>", "m2_1": "<b>報告の内容を整理する</b>　<p>それぞれの報告が<b>何を確実にいっているか</b>を整理します。「あった」は<b>1つ以上</b>、「○以上」は<b>それ以上いくつでもよい</b>、「少なくとも」は<b>最低ライン</b>です。</p><ol class=\"cond-list\"><li><b>ⅰ</b>　1円硬貨が6枚以上あった</li><li><b>ⅱ</b>　1円硬貨が5枚以上あった</li><li><b>ⅲ</b>　硬貨は全部で9枚以上あった</li></ol><p>「Xが正しければYも必ず正しい」とは、<b>Xが成り立つどんな場合でも、Yも成り立つ</b>ということです。1つでもYが成り立たない場合（反例）があれば、「必ず正しい」とはいえません。</p><br><b>アを調べる</b>　<div class=\"jd S\"><span class=\"tg S\">正しい</span><b>ア</b>　ⅰが正しければ、ⅱも必ず正しい</div><p>ⅰ「1円硬貨が6枚以上あった」が成り立つ場合を（個数を変えて）どれだけ調べても、ⅱ「1円硬貨が5枚以上あった」も成り立ちます。<b>反例がない</b>ので、必ず正しいといえます。</p><p>たとえば（1円8枚、5円0枚、10円0枚）のとき、ⅰもⅱも正しくなっています。</p><br><b>イを調べる</b>　<div class=\"jd F\"><span class=\"tg F\">誤り</span><b>イ</b>　ⅱが正しければ、ⅲも必ず正しい</div><p><b>反例</b>を探します。たとえば（1円5枚、5円0枚、10円0枚）のとき、ⅱ「1円硬貨が5枚以上あった」は正しいのに、ⅲ「硬貨は全部で9枚以上あった」は<b>誤り</b>です。</p><p>このような場合がありえるので、「必ず正しい」とはいえません。</p><br><b>ウを調べる</b>　<div class=\"jd F\"><span class=\"tg F\">誤り</span><b>ウ</b>　ⅲが正しければ、ⅱも必ず正しい</div><p><b>反例</b>を探します。たとえば（1円0枚、5円0枚、10円9枚）のとき、ⅲ「硬貨は全部で9枚以上あった」は正しいのに、ⅱ「1円硬貨が5枚以上あった」は<b>誤り</b>です。</p><p>このような場合がありえるので、「必ず正しい」とはいえません。</p><br><b>答えを出す</b>　<p>必ず正しいのは <b>ア</b>。答えは <span class=\"hl-t\">アのみ</span> です。</p>", "m3_1": "<b>条件を整理する</b>　<p>4人それぞれが「来る（○）」か「来ない（×）」かの組み合わせは全部で16通りです。条件に合うものだけをのこします。</p><ol class=\"cond-list\"><li>Cは来ない</li><li>Dが来るなら、Aも来る</li><li>BとDの少なくとも一方は来る</li></ol><p>「<b>確実に正しい</b>」＝のこった<b>すべて</b>の場合で成り立つ。「<b>必ずしも誤りではない</b>」＝のこった場合の<b>どれか1つでも</b>成り立つ。</p><br><b>条件ⅰを入れる（のこり8通り）</b>　<p>条件「Cは来ない」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>3</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>4</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>5</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>6</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>7</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>8</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td></tr></table><br><b>条件ⅱを入れる（のこり6通り）</b>　<p>条件「Dが来るなら、Aも来る」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>3</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>4</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>5</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>6</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td></tr></table><br><b>条件ⅲを入れる（のこり4通り）</b>　<p>条件「BとDの少なくとも一方は来る」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>2</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>3</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>4</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td></tr></table><br><b>すべての場合で調べる</b>　<p>のこった<b>4通り</b>を表にしました。ア～ウを、この表のすべての行に当てはめます。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>2</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>3</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>4</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td></tr></table><div class=\"jd S\"><span class=\"tg S\">確実に正しい</span><b>ア</b>　AとBの少なくとも一方は来る</div><div class=\"jd U\"><span class=\"tg U\">どちらともいえない</span><b>イ</b>　Aが来ればBも来る</div><div class=\"jd U\"><span class=\"tg U\">どちらともいえない</span><b>ウ</b>　AとDはどちらも来ない</div><p>「確実に正しい」のは<b>ア</b>。答えは <span class=\"hl-t\">アのみ</span> です。</p>", "m3_2": "<b>条件を整理する</b>　<p>4人それぞれが「来る（○）」か「来ない（×）」かの組み合わせは全部で16通りです。条件に合うものだけをのこします。</p><ol class=\"cond-list\"><li>AとDのどちらか一方だけが来る</li><li>Cは来る</li><li>AとBの少なくとも一方は来る</li></ol><p>「<b>確実に正しい</b>」＝のこった<b>すべて</b>の場合で成り立つ。「<b>必ずしも誤りではない</b>」＝のこった場合の<b>どれか1つでも</b>成り立つ。</p><br><b>条件ⅰを入れる（のこり8通り）</b>　<p>条件「AとDのどちらか一方だけが来る」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>3</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td></tr><tr><th>4</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>5</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>6</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td></tr><tr><th>7</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"n\">×</td></tr><tr><th>8</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td></tr></table><br><b>条件ⅱを入れる（のこり4通り）</b>　<p>条件「Cは来る」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>3</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td></tr><tr><th>4</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td></tr></table><br><b>条件ⅲを入れる（のこり3通り）</b>　<p>条件「AとBの少なくとも一方は来る」に合わない場合を消します。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td></tr><tr><th>3</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td></tr></table><br><b>すべての場合で調べる</b>　<p>のこった<b>3通り</b>を表にしました。ア～ウを、この表のすべての行に当てはめます。</p><table class=\"cand\"><tr><th>場合</th><th>A</th><th>B</th><th>C</th><th>D</th></tr><tr><th>1</th><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td></tr><tr><th>2</th><td class=\"w\">○</td><td class=\"n\">×</td><td class=\"w\">○</td><td class=\"n\">×</td></tr><tr><th>3</th><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"w\">○</td><td class=\"n\">×</td></tr></table><div class=\"jd F\"><span class=\"tg F\">誤り</span><b>ア</b>　Cは来ない</div><div class=\"jd F\"><span class=\"tg F\">誤り</span><b>イ</b>　AとCはどちらも来ない</div><div class=\"jd U\"><span class=\"tg U\">どちらともいえない</span><b>ウ</b>　BとCは両方来る</div><p>「必ずしも誤りではない」は「確実に正しい」と「どちらともいえない」の両方です（<b>誤り</b>だけが×）。答えは <span class=\"hl-t\">ウのみ</span> です。</p>"};
+/* ===== 復習（まちがい・あとで復習）===== */
+var RVK='spi_review_v1';
+function rvLoad(){try{return JSON.parse(localStorage.getItem(RVK)||'{}');}catch(e){return {};}}
+function rvSave(o){try{localStorage.setItem(RVK,JSON.stringify(o));}catch(e){}}
+function rvAdd(id,item){var o=rvLoad();if(o[id]){o[id].streak=0;if(item.why==='later')o[id].why='later';}else{item.streak=0;o[id]=item;}rvSave(o);rvBadge();}
+function rvDel(id){var o=rvLoad();delete o[id];rvSave(o);rvBadge();}
+function rvItems(f){var o=rvLoad();return Object.keys(o).map(function(k){var x=o[k];x.id=k;return x;}).filter(function(x){return !f||f(x);});}
+function rvBadge(){var b=document.getElementById('rvbadge');if(!b||typeof RV_FILTER==='undefined')return;var n=rvItems(RV_FILTER).length;b.textContent=n?n:'';b.style.display=n?'inline-flex':'none';}
+function rvCapture(q,why){
+  try{
+    var card=document.getElementById('card-'+q),chw=document.getElementById('ch-'+q);if(!card||!chw)return;
+    var bs=chw.querySelectorAll('.ch');
+    var a=+bs[0].getAttribute('onclick').match(/,(\d+)\)/)[1];
+    var ch=[].map.call(bs,function(b){return b.innerHTML.replace(/<span class="cnum">.*?<\/span>/,'');});
+    var steps=[].map.call(document.getElementById('kai-'+q).querySelectorAll('.exp-box'),function(e){var c=e.cloneNode(true);var h=c.querySelector('h4');var t=h.innerHTML.replace(/^STEP \d+　/,'');h.remove();return [t,c.innerHTML];});
+    var hints=[1,2,3].map(function(k){var h=document.getElementById('hint-'+q+'-'+k);return h?h.innerHTML.replace(/^<b>ヒント\d<\/b>/,''):'';});
+    var kp=document.getElementById(q+'-res').querySelector('.point-box');
+    rvAdd(COURSE+':'+UNIT+':'+q,{u:COURSE+':'+UNIT,ut:UTITLE,why:why,q:card.querySelector('.q-text').innerHTML,ch:ch,a:a,steps:steps,hints:hints,key:kp?kp.innerHTML.replace(/^<strong>.*?<\/strong>/,''):''});
+  }catch(e){}
+}
+function later(q){
+  var id=COURSE+':'+UNIT+':'+q,b=document.getElementById('lb-'+q),o=rvLoad();
+  if(o[id]&&o[id].why==='later'){rvDel(id);b.classList.remove('on');b.textContent='🔖 あとで復習';return;}
+  rvCapture(q,'later');b.classList.add('on');b.textContent='🔖 復習リストに入れました（もう一度押すと取り消し）';
+}
+var RVS={queue:[],i:0,ok:0,grad:0,root:null,filter:null,cur:null};
+var RVWHY={wrong:'まちがい',later:'あとで復習',mark:'理解度B・C',mogi:'模擬試験'};
+function rvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function rvMount(rootId,filter){
+  RVS.root=document.getElementById(rootId);RVS.filter=filter||null;rvList();
+}
+function rvList(){
+  var items=rvItems(RVS.filter),r=RVS.root;
+  if(!items.length){r.innerHTML='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題</div><p class="body-text">いまは、復習する問題がありません。🎉<br>演習・確認問題でまちがえた問題や、「🔖 あとで復習」を押した問題が、ここに集まります。</p></div>';return;}
+  var g={};items.forEach(function(x){(g[x.ut]=g[x.ut]||[]).push(x);});
+  var h='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題（'+items.length+'問）</div><p class="body-text">まちがえた問題と、「あとで復習」「理解度B・C」にした問題です。<b>2回続けて正解すると、リストから外れます。</b></p><button class="start-btn" onclick="rvStart(null)">ぜんぶ復習する（'+items.length+'問）</button></div>';
+  Object.keys(g).forEach(function(t,gi){
+    h+='<div class="card"><div class="rv-gh"><b>'+rvEsc(t)+'</b><span>'+g[t].length+'問</span><button class="m-btn" onclick="rvStart('+gi+')">この単元を復習</button></div>';
+    g[t].forEach(function(x){h+='<div class="rv-row"><span class="rv-tag">'+RVWHY[x.why||'wrong']+'</span><span class="rv-st">'+(x.streak?'あと1回で卒業':'')+'</span><button class="rv-del" onclick="rvRemove(\''+x.id.replace(/'/g,"\\'")+'\')">リストから外す</button></div>';});
+    h+='</div>';
+  });
+  r.innerHTML=h;RVS.groups=Object.keys(g);
+}
+function rvRemove(id){if(!confirm('この問題を復習リストから外しますか？'))return;rvDel(id);rvList();}
+function rvStart(gi){
+  var items=rvItems(RVS.filter);
+  if(gi!==null&&RVS.groups)items=items.filter(function(x){return x.ut===RVS.groups[gi];});
+  for(var i=items.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=items[i];items[i]=items[j];items[j]=t;}
+  RVS.queue=items;RVS.i=0;RVS.ok=0;RVS.grad=0;rvShow();
+}
+function rvShow(){
+  var r=RVS.root,x=RVS.queue[RVS.i];
+  if(!x){
+    var left=rvItems(RVS.filter).length;
+    r.innerHTML='<div class="m-sum"><div>復習おつかれさまでした</div><div class="big">'+RVS.ok+' / '+RVS.queue.length+'</div><div class="sub">正解 '+RVS.ok+'問　／　リストから卒業 '+RVS.grad+'問<br>のこり '+left+'問</div></div><div class="m-tools"><button onclick="rvList();window.scrollTo(0,0)">一覧へ</button>'+(left?'<button onclick="rvStart(null)">のこりをもう一度</button>':'')+'</div>';
+    window.scrollTo(0,0);return;
+  }
+  RVS.cur=x;RVS.hint=0;
+  var h='<div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" style="width:'+(RVS.i/RVS.queue.length*100)+'%"></div></div><div class="pb-txt">'+(RVS.i+1)+' / '+RVS.queue.length+'</div></div>';
+  h+='<div class="card"><div class="clabel pr">復習　'+rvEsc(x.ut)+'</div><div class="q-text">'+x.q+'</div>';
+  var hs=(x.hints||[]).filter(function(t){return t;});
+  if(hs.length){h+='<div class="hint-row">';for(var k=1;k<=hs.length;k++)h+='<button class="hint-btn" id="rh-'+k+'"'+(k>1?' disabled':'')+' onclick="rvHint('+k+')">💡 ヒント'+k+'</button>';h+='</div>';hs.forEach(function(t,k){h+='<div class="hint-box" id="rhb-'+(k+1)+'"><b>ヒント'+(k+1)+'</b>'+t+'</div>';});}
+  h+='<div class="choices" id="rch">';
+  x.ch.forEach(function(c,i){h+='<button class="ch" onclick="rvAns('+i+')"><span class="cnum">'+'ABCDEFG'.charAt(i)+'</span>'+c+'</button>';});
+  h+='</div><div id="rfb"></div></div>';
+  r.innerHTML=h;window.scrollTo(0,0);
+}
+function rvHint(k){document.getElementById('rhb-'+k).style.display='block';document.getElementById('rh-'+k).classList.add('used');var n=document.getElementById('rh-'+(k+1));if(n)n.disabled=false;}
+function rvAns(i){
+  var x=RVS.cur,bs=document.querySelectorAll('#rch .ch');
+  bs.forEach(function(b){b.disabled=true;});bs[x.a].classList.add('ok');
+  var o=rvLoad(),it=o[x.id],msg;
+  if(i===x.a){
+    RVS.ok++;var s=(it&&it.streak||0)+1;
+    if(s>=2){rvDel(x.id);RVS.grad++;msg='⭕ 正解！2回続けて正解したので、<b>リストから卒業</b>です。🎓';}
+    else{if(it){it.streak=s;rvSave(o);}msg='⭕ 正解！あと<b>1回</b>正解すると卒業です。';}
+  }else{bs[i].classList.add('ng');if(it){it.streak=0;rvSave(o);}msg='❌ 正解は <b>'+'ABCDEFG'.charAt(x.a)+'</b> です。解説を読んで、もう一度挑戦しましょう。';}
+  var h='<div class="'+(i===x.a?'fb-ok':'fb-ng')+'" style="display:flex"><span class="fb-text">'+msg+'</span></div>';
+  x.steps.forEach(function(s,k){h+='<div class="exp-box'+['',' blue',' amber'][k%3]+'" style="display:block"><h4>STEP '+(k+1)+'　'+s[0]+'</h4>'+s[1]+'</div>';});
+  if(x.key)h+='<div class="point-box"><strong>🔑 解法のカギ</strong>'+x.key+'</div>';
+  h+='<button class="start-btn" onclick="RVS.i++;rvShow()">'+(RVS.i+1>=RVS.queue.length?'結果を見る':'次の問題へ')+'</button>';
+  document.getElementById('rfb').innerHTML=h;rvBadge();
+  setTimeout(function(){var e=document.getElementById('rfb');if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
 var answered={},stepRev={},timers={},miniAnswered={},correctN={};
 function $(i){return document.getElementById(i);}
 function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
 function switchTab(n){
-  ['ex','pr','cf'].forEach(function(t){
+  ['ex','pr','cf','rv'].forEach(function(t){
     $('page-'+t).classList.toggle('active',t===n);
-    var b=$('tab-'+t);b.classList.remove('active-ex','active-pr','active-cf');
+    var b=$('tab-'+t);b.classList.remove('active-ex','active-pr','active-cf','active-rv');
     if(t===n)b.classList.add('active-'+t);
   });
   window.scrollTo(0,0);
   if(n==='pr')startNext(PR_IDS);
   if(n==='cf')startNext(CF_IDS);
+  if(n==='rv')rvMount('rv-root',RV_FILTER);
 }
 function startNext(ids){for(var i=0;i<ids.length;i++){if(!answered[ids[i]]){startTimer(ids[i]);return;}}}
 function startTimer(q){
@@ -632,6 +735,7 @@ function ans(q,i,c){
   stopTimer(q);
   if(i===c){$('fb-ok-'+q).style.display='flex';correctN[q]=1;}
   else{bs[i].classList.add('ng');$('fb-ng-'+q).style.display='flex';correctN[q]=0;}
+  if(i!==c)setTimeout(function(){rvCapture(q,'wrong');},0);
   answered[q]=true;
   $(q+'-res').style.display='block';
   $('cn-'+q).style.display='flex';
@@ -664,7 +768,8 @@ function reveal(q,t){
   if(i>=t){rb.style.display='none';var f=$(q+'-fin');if(f)f.style.display='block';}
   else rb.textContent='次のSTEPを見る ('+(i+1)+'/'+t+')';
 }
-function setMark(p,m){['A','B','C'].forEach(function(x){var b=$(p+x);if(b)b.classList.toggle('on',x===m);});}
+function setMark(p,m){
+  var mm=p.match(/^(qc?\d+)-m$/);if(mm&&(m==='B'||m==='C'))rvCapture(mm[1],'mark');['A','B','C'].forEach(function(x){var b=$(p+x);if(b)b.classList.toggle('on',x===m);});}
 function launchConfetti(){
   var c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:999';
   c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);
@@ -675,4 +780,5 @@ function launchConfetti(){
 window.addEventListener('load',function(){window.scrollTo(0,0);});
 
 for(var k in TM){stepRev[k]=1;}
+rvBadge();
 </script></body></html>

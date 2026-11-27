@@ -309,11 +309,28 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 .m-set a{display:inline-block;padding:6px 14px;border:1.5px solid #bcb8ae;border-radius:8px;text-decoration:none;color:#2a2820;font-weight:700;background:#fff}
 .m-set a.best{border-color:#0d9478;background:#e8f6f1}
 .m-set small{display:block;font-weight:400;font-size:11px;color:#58544c}
+/* ---- 復習 ---- */
+.tab-btn.active-rv{color:#6b21a8;border-bottom-color:#6b21a8;}
+.pip-rv{background:#f3e8ff;color:#6b21a8;}
+.tab-badge{min-width:16px;height:16px;border-radius:8px;background:#d93652;color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.later-btn{background:#fff;border:1.5px dashed #6b21a8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#6b21a8;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.later-btn.on{background:#f3e8ff;border-style:solid}
+.rv-gh{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.rv-gh span{font-size:12px;color:var(--text2)}
+.m-btn{margin-left:auto;background:#6b21a8;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rv-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:12px}
+.rv-tag{background:#f3e8ff;color:#6b21a8;border-radius:10px;padding:1px 8px;font-weight:700}
+.rv-st{color:var(--teal);font-weight:700}
+.rv-del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:inherit;text-decoration:underline}
+.review-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:#6b21a8;background:#f3e8ff;border:1.5px solid #d4b5f0;border-radius:var(--r);padding:.8rem 1.1rem;margin-bottom:1.2rem;font-weight:700;font-size:14px}
+.review-link .rc{margin-left:auto;font-family:'DM Mono',monospace}
 </style></head><body>
 <header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 推論（SPI-H）</span></header>
 <main>
 <div class="page-title-block"><div class="ptb-icon">SPI</div><div><div class="ptb-label">SPI-H 非言語検査</div><div class="ptb-title">推論 マスターコース</div>
 <div class="ptb-desc">各単元は「解説 → 演習5問 → 確認6問」。困ったら「ヒント1→2→3」で、少しずつ考え方を見られます。</div></div></div>
+<a class="review-link" href="SPI_review.html">📝 復習する<span style="font-weight:400;font-size:12px">（まちがえた問題・あとで復習の問題）</span><span class="rc" id="rvcount"></span></a>
+<script>(function(){try{var o=JSON.parse(localStorage.getItem('spi_review_v1')||'{}');document.getElementById('rvcount').textContent=Object.keys(o).length+'問';}catch(e){}})();</script>
 <div class="exam-badges">
 <div class="exam-badge"><span class="eb-icon">📚</span><span><strong>全4単元</strong></span></div>
 <div class="exam-badge"><span class="eb-icon">✏️</span><span>演習・確認 <strong>44問</strong>＋例題・ミニテスト</span></div>

@@ -309,6 +309,21 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 .m-set a{display:inline-block;padding:6px 14px;border:1.5px solid #bcb8ae;border-radius:8px;text-decoration:none;color:#2a2820;font-weight:700;background:#fff}
 .m-set a.best{border-color:#0d9478;background:#e8f6f1}
 .m-set small{display:block;font-weight:400;font-size:11px;color:#58544c}
+/* ---- 復習 ---- */
+.tab-btn.active-rv{color:#6b21a8;border-bottom-color:#6b21a8;}
+.pip-rv{background:#f3e8ff;color:#6b21a8;}
+.tab-badge{min-width:16px;height:16px;border-radius:8px;background:#d93652;color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.later-btn{background:#fff;border:1.5px dashed #6b21a8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#6b21a8;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.later-btn.on{background:#f3e8ff;border-style:solid}
+.rv-gh{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.rv-gh span{font-size:12px;color:var(--text2)}
+.m-btn{margin-left:auto;background:#6b21a8;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rv-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:12px}
+.rv-tag{background:#f3e8ff;color:#6b21a8;border-radius:10px;padding:1px 8px;font-weight:700}
+.rv-st{color:var(--teal);font-weight:700}
+.rv-del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:inherit;text-decoration:underline}
+.review-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:#6b21a8;background:#f3e8ff;border:1.5px solid #d4b5f0;border-radius:var(--r);padding:.8rem 1.1rem;margin-bottom:1.2rem;font-weight:700;font-size:14px}
+.review-link .rc{margin-left:auto;font-family:'DM Mono',monospace}
 </style></head><body>
 <header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 模擬試験</span></header>
 <main>
@@ -334,6 +349,91 @@ details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
 </main>
 <div class="index-footer">GAMBA ／ 江原予備校</div>
 <script>
+/* ===== 復習（まちがい・あとで復習）===== */
+var RVK='spi_review_v1';
+function rvLoad(){try{return JSON.parse(localStorage.getItem(RVK)||'{}');}catch(e){return {};}}
+function rvSave(o){try{localStorage.setItem(RVK,JSON.stringify(o));}catch(e){}}
+function rvAdd(id,item){var o=rvLoad();if(o[id]){o[id].streak=0;if(item.why==='later')o[id].why='later';}else{item.streak=0;o[id]=item;}rvSave(o);rvBadge();}
+function rvDel(id){var o=rvLoad();delete o[id];rvSave(o);rvBadge();}
+function rvItems(f){var o=rvLoad();return Object.keys(o).map(function(k){var x=o[k];x.id=k;return x;}).filter(function(x){return !f||f(x);});}
+function rvBadge(){var b=document.getElementById('rvbadge');if(!b||typeof RV_FILTER==='undefined')return;var n=rvItems(RV_FILTER).length;b.textContent=n?n:'';b.style.display=n?'inline-flex':'none';}
+function rvCapture(q,why){
+  try{
+    var card=document.getElementById('card-'+q),chw=document.getElementById('ch-'+q);if(!card||!chw)return;
+    var bs=chw.querySelectorAll('.ch');
+    var a=+bs[0].getAttribute('onclick').match(/,(\d+)\)/)[1];
+    var ch=[].map.call(bs,function(b){return b.innerHTML.replace(/<span class="cnum">.*?<\/span>/,'');});
+    var steps=[].map.call(document.getElementById('kai-'+q).querySelectorAll('.exp-box'),function(e){var c=e.cloneNode(true);var h=c.querySelector('h4');var t=h.innerHTML.replace(/^STEP \d+　/,'');h.remove();return [t,c.innerHTML];});
+    var hints=[1,2,3].map(function(k){var h=document.getElementById('hint-'+q+'-'+k);return h?h.innerHTML.replace(/^<b>ヒント\d<\/b>/,''):'';});
+    var kp=document.getElementById(q+'-res').querySelector('.point-box');
+    rvAdd(COURSE+':'+UNIT+':'+q,{u:COURSE+':'+UNIT,ut:UTITLE,why:why,q:card.querySelector('.q-text').innerHTML,ch:ch,a:a,steps:steps,hints:hints,key:kp?kp.innerHTML.replace(/^<strong>.*?<\/strong>/,''):''});
+  }catch(e){}
+}
+function later(q){
+  var id=COURSE+':'+UNIT+':'+q,b=document.getElementById('lb-'+q),o=rvLoad();
+  if(o[id]&&o[id].why==='later'){rvDel(id);b.classList.remove('on');b.textContent='🔖 あとで復習';return;}
+  rvCapture(q,'later');b.classList.add('on');b.textContent='🔖 復習リストに入れました（もう一度押すと取り消し）';
+}
+var RVS={queue:[],i:0,ok:0,grad:0,root:null,filter:null,cur:null};
+var RVWHY={wrong:'まちがい',later:'あとで復習',mark:'理解度B・C',mogi:'模擬試験'};
+function rvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function rvMount(rootId,filter){
+  RVS.root=document.getElementById(rootId);RVS.filter=filter||null;rvList();
+}
+function rvList(){
+  var items=rvItems(RVS.filter),r=RVS.root;
+  if(!items.length){r.innerHTML='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題</div><p class="body-text">いまは、復習する問題がありません。🎉<br>演習・確認問題でまちがえた問題や、「🔖 あとで復習」を押した問題が、ここに集まります。</p></div>';return;}
+  var g={};items.forEach(function(x){(g[x.ut]=g[x.ut]||[]).push(x);});
+  var h='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題（'+items.length+'問）</div><p class="body-text">まちがえた問題と、「あとで復習」「理解度B・C」にした問題です。<b>2回続けて正解すると、リストから外れます。</b></p><button class="start-btn" onclick="rvStart(null)">ぜんぶ復習する（'+items.length+'問）</button></div>';
+  Object.keys(g).forEach(function(t,gi){
+    h+='<div class="card"><div class="rv-gh"><b>'+rvEsc(t)+'</b><span>'+g[t].length+'問</span><button class="m-btn" onclick="rvStart('+gi+')">この単元を復習</button></div>';
+    g[t].forEach(function(x){h+='<div class="rv-row"><span class="rv-tag">'+RVWHY[x.why||'wrong']+'</span><span class="rv-st">'+(x.streak?'あと1回で卒業':'')+'</span><button class="rv-del" onclick="rvRemove(\''+x.id.replace(/'/g,"\\'")+'\')">リストから外す</button></div>';});
+    h+='</div>';
+  });
+  r.innerHTML=h;RVS.groups=Object.keys(g);
+}
+function rvRemove(id){if(!confirm('この問題を復習リストから外しますか？'))return;rvDel(id);rvList();}
+function rvStart(gi){
+  var items=rvItems(RVS.filter);
+  if(gi!==null&&RVS.groups)items=items.filter(function(x){return x.ut===RVS.groups[gi];});
+  for(var i=items.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=items[i];items[i]=items[j];items[j]=t;}
+  RVS.queue=items;RVS.i=0;RVS.ok=0;RVS.grad=0;rvShow();
+}
+function rvShow(){
+  var r=RVS.root,x=RVS.queue[RVS.i];
+  if(!x){
+    var left=rvItems(RVS.filter).length;
+    r.innerHTML='<div class="m-sum"><div>復習おつかれさまでした</div><div class="big">'+RVS.ok+' / '+RVS.queue.length+'</div><div class="sub">正解 '+RVS.ok+'問　／　リストから卒業 '+RVS.grad+'問<br>のこり '+left+'問</div></div><div class="m-tools"><button onclick="rvList();window.scrollTo(0,0)">一覧へ</button>'+(left?'<button onclick="rvStart(null)">のこりをもう一度</button>':'')+'</div>';
+    window.scrollTo(0,0);return;
+  }
+  RVS.cur=x;RVS.hint=0;
+  var h='<div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" style="width:'+(RVS.i/RVS.queue.length*100)+'%"></div></div><div class="pb-txt">'+(RVS.i+1)+' / '+RVS.queue.length+'</div></div>';
+  h+='<div class="card"><div class="clabel pr">復習　'+rvEsc(x.ut)+'</div><div class="q-text">'+x.q+'</div>';
+  var hs=(x.hints||[]).filter(function(t){return t;});
+  if(hs.length){h+='<div class="hint-row">';for(var k=1;k<=hs.length;k++)h+='<button class="hint-btn" id="rh-'+k+'"'+(k>1?' disabled':'')+' onclick="rvHint('+k+')">💡 ヒント'+k+'</button>';h+='</div>';hs.forEach(function(t,k){h+='<div class="hint-box" id="rhb-'+(k+1)+'"><b>ヒント'+(k+1)+'</b>'+t+'</div>';});}
+  h+='<div class="choices" id="rch">';
+  x.ch.forEach(function(c,i){h+='<button class="ch" onclick="rvAns('+i+')"><span class="cnum">'+'ABCDEFG'.charAt(i)+'</span>'+c+'</button>';});
+  h+='</div><div id="rfb"></div></div>';
+  r.innerHTML=h;window.scrollTo(0,0);
+}
+function rvHint(k){document.getElementById('rhb-'+k).style.display='block';document.getElementById('rh-'+k).classList.add('used');var n=document.getElementById('rh-'+(k+1));if(n)n.disabled=false;}
+function rvAns(i){
+  var x=RVS.cur,bs=document.querySelectorAll('#rch .ch');
+  bs.forEach(function(b){b.disabled=true;});bs[x.a].classList.add('ok');
+  var o=rvLoad(),it=o[x.id],msg;
+  if(i===x.a){
+    RVS.ok++;var s=(it&&it.streak||0)+1;
+    if(s>=2){rvDel(x.id);RVS.grad++;msg='⭕ 正解！2回続けて正解したので、<b>リストから卒業</b>です。🎓';}
+    else{if(it){it.streak=s;rvSave(o);}msg='⭕ 正解！あと<b>1回</b>正解すると卒業です。';}
+  }else{bs[i].classList.add('ng');if(it){it.streak=0;rvSave(o);}msg='❌ 正解は <b>'+'ABCDEFG'.charAt(x.a)+'</b> です。解説を読んで、もう一度挑戦しましょう。';}
+  var h='<div class="'+(i===x.a?'fb-ok':'fb-ng')+'" style="display:flex"><span class="fb-text">'+msg+'</span></div>';
+  x.steps.forEach(function(s,k){h+='<div class="exp-box'+['',' blue',' amber'][k%3]+'" style="display:block"><h4>STEP '+(k+1)+'　'+s[0]+'</h4>'+s[1]+'</div>';});
+  if(x.key)h+='<div class="point-box"><strong>🔑 解法のカギ</strong>'+x.key+'</div>';
+  h+='<button class="start-btn" onclick="RVS.i++;rvShow()">'+(RVS.i+1>=RVS.queue.length?'結果を見る':'次の問題へ')+'</button>';
+  document.getElementById('rfb').innerHTML=h;rvBadge();
+  setTimeout(function(){var e=document.getElementById('rfb');if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
 var Q=[{"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">概括（ガイコツ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「概括」の正しい読みは<b>ガイカツ</b>です。"], ["判定", "（ ）内は「ガイコツ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">凡例（ハンレイ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「凡例」の正しい読みは<b>ハンレイ</b>です。"], ["判定", "（ ）内は「ハンレイ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">建立（コンリュウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「建立」の正しい読みは<b>コンリュウ</b>です。"], ["判定", "（ ）内は「コンリュウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">社会の<u>チツジョ</u>（秩序）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「チツジョ」は <b>秩序</b> と書きます。"], ["判定", "（ ）内は「秩序」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">容赦（ヨウシャ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「容赦」の正しい読みは<b>ヨウシャ</b>です。"], ["判定", "（ ）内は「ヨウシャ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">悪党を<u>イチモウダジン</u>（一網打進）にする</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「イチモウダジン」は <b>一網打尽</b> と書きます。"], ["判定", "（ ）内は「一網打進」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">人権を<u>ヨウゴ</u>（擁獲）する</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ヨウゴ」は <b>擁護</b> と書きます。"], ["判定", "（ ）内は「擁獲」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>セイレンケッパク</u>（清廉結白）な人柄</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「セイレンケッパク」は <b>清廉潔白</b> と書きます。"], ["判定", "（ ）内は「清廉結白」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">試験<u>ハンイ</u>（範用）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ハンイ」は <b>範囲</b> と書きます。"], ["判定", "（ ）内は「範用」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>セイレンケッパク</u>（清廉結白）な人柄</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「セイレンケッパク」は <b>清廉潔白</b> と書きます。"], ["判定", "（ ）内は「清廉結白」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>タイダ</u>（怠堕）な生活</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「タイダ」は <b>怠惰</b> と書きます。"], ["判定", "（ ）内は「怠堕」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">建立（コンリュウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「建立」の正しい読みは<b>コンリュウ</b>です。"], ["判定", "（ ）内は「コンリュウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">容赦（ヨウゲ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「容赦」の正しい読みは<b>ヨウシャ</b>です。"], ["判定", "（ ）内は「ヨウゲ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">堪能（タンノウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「堪能」の正しい読みは<b>タンノウ</b>です。"], ["判定", "（ ）内は「タンノウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>セイミツ</u>（清密）機械</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「セイミツ」は <b>精密</b> と書きます。"], ["判定", "（ ）内は「清密」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">建立（コンリュウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「建立」の正しい読みは<b>コンリュウ</b>です。"], ["判定", "（ ）内は「コンリュウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">概括（ガイカツ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「概括」の正しい読みは<b>ガイカツ</b>です。"], ["判定", "（ ）内は「ガイカツ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">悪党を<u>イチモウダジン</u>（一網打進）にする</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「イチモウダジン」は <b>一網打尽</b> と書きます。"], ["判定", "（ ）内は「一網打進」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">脆弱（キジャク）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「脆弱」の正しい読みは<b>ゼイジャク</b>です。"], ["判定", "（ ）内は「キジャク」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">暗躍（アンカク）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「暗躍」の正しい読みは<b>アンヤク</b>です。"], ["判定", "（ ）内は「アンカク」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゼッタイゼツメイ</u>（絶対絶命）のピンチだ</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゼッタイゼツメイ」は <b>絶体絶命</b> と書きます。"], ["判定", "（ ）内は「絶対絶命」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">和やかな<u>フンイキ</u>（雲囲気）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「フンイキ」は <b>雰囲気</b> と書きます。"], ["判定", "（ ）内は「雲囲気」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">捺印（ダツイン）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「捺印」の正しい読みは<b>ナツイン</b>です。"], ["判定", "（ ）内は「ダツイン」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">漸次（ザンジ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「漸次」の正しい読みは<b>ゼンジ</b>です。"], ["判定", "（ ）内は「ザンジ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>エイコセイスイ</u>（栄古盛衰）は世の習い</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「エイコセイスイ」は <b>栄枯盛衰</b> と書きます。"], ["判定", "（ ）内は「栄古盛衰」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>カンゼンムケツ</u>（完全無欠）の人物</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「カンゼンムケツ」は <b>完全無欠</b> と書きます。"], ["判定", "（ ）内は「完全無欠」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">慰謝料（イシャリョウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「慰謝料」の正しい読みは<b>イシャリョウ</b>です。"], ["判定", "（ ）内は「イシャリョウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">試験<u>ハンイ</u>（範囲）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ハンイ」は <b>範囲</b> と書きます。"], ["判定", "（ ）内は「範囲」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">漸次（ゼンジ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「漸次」の正しい読みは<b>ゼンジ</b>です。"], ["判定", "（ ）内は「ゼンジ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">出納（スイトウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「出納」の正しい読みは<b>スイトウ</b>です。"], ["判定", "（ ）内は「スイトウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">境内（ケイダイ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「境内」の正しい読みは<b>ケイダイ</b>です。"], ["判定", "（ ）内は「ケイダイ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">感情を<u>ヨクセイ</u>（抑制）する</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ヨクセイ」は <b>抑制</b> と書きます。"], ["判定", "（ ）内は「抑制」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">建立（コンリュウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「建立」の正しい読みは<b>コンリュウ</b>です。"], ["判定", "（ ）内は「コンリュウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">漸次（ザンジ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「漸次」の正しい読みは<b>ゼンジ</b>です。"], ["判定", "（ ）内は「ザンジ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>シンショウボウダイ</u>（針小棒大）に話す</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「シンショウボウダイ」は <b>針小棒大</b> と書きます。"], ["判定", "（ ）内は「針小棒大」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">殺到（サットウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「殺到」の正しい読みは<b>サットウ</b>です。"], ["判定", "（ ）内は「サットウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">悪党を<u>イチモウダジン</u>（一網打尽）にする</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「イチモウダジン」は <b>一網打尽</b> と書きます。"], ["判定", "（ ）内は「一網打尽」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">凡例（ボンレイ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「凡例」の正しい読みは<b>ハンレイ</b>です。"], ["判定", "（ ）内は「ボンレイ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゴンゴドウダン</u>（言語道断）の行いだ</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ゴンゴドウダン」は <b>言語道断</b> と書きます。"], ["判定", "（ ）内は「言語道断」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゼッタイゼツメイ</u>（絶体絶命）のピンチだ</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ゼッタイゼツメイ」は <b>絶体絶命</b> と書きます。"], ["判定", "（ ）内は「絶体絶命」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">漸次（ゼンジ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「漸次」の正しい読みは<b>ゼンジ</b>です。"], ["判定", "（ ）内は「ゼンジ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">脆弱（ゼイジャク）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「脆弱」の正しい読みは<b>ゼイジャク</b>です。"], ["判定", "（ ）内は「ゼイジャク」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">払拭（フッシキ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「払拭」の正しい読みは<b>フッショク</b>です。"], ["判定", "（ ）内は「フッシキ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ホンマツテントウ</u>（本末転倒）の話だ</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ホンマツテントウ」は <b>本末転倒</b> と書きます。"], ["判定", "（ ）内は「本末転倒」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">潜在（センザイ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「潜在」の正しい読みは<b>センザイ</b>です。"], ["判定", "（ ）内は「センザイ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>イクドウオン</u>（異口同音）に賛成する</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「イクドウオン」は <b>異口同音</b> と書きます。"], ["判定", "（ ）内は「異口同音」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゼッタイゼツメイ</u>（絶対絶命）のピンチだ</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゼッタイゼツメイ」は <b>絶体絶命</b> と書きます。"], ["判定", "（ ）内は「絶対絶命」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">容赦（ヨウゲ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「容赦」の正しい読みは<b>ヨウシャ</b>です。"], ["判定", "（ ）内は「ヨウゲ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>シュウチテッテイ</u>（周知撤底）を図る</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「シュウチテッテイ」は <b>周知徹底</b> と書きます。"], ["判定", "（ ）内は「周知撤底」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">潜在（ゼンザイ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「潜在」の正しい読みは<b>センザイ</b>です。"], ["判定", "（ ）内は「ゼンザイ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}],EX={"id": "n5", "set": "C", "title": "SPI-N 検査Ⅴ 漢字の正誤（縮小版）", "n": 50, "sec": 180};
 var sel=[],left=EX.sec,timer=null,used=0,fin=false,showAll=false;
 function $(i){return document.getElementById(i);}
@@ -375,9 +475,10 @@ function finish(auto){
   if(ok>best)s_(LSK,JSON.stringify({ok:ok,date:ds}));
   var msg=rate>=90?'すばらしい！この調子です。':rate>=70?'よくできています。まちがえた問題を見直しましょう。':rate>=50?'あと一歩。解説を読んで、もう一度挑戦しましょう。':'まずは解説コースでやり方を確認してから、再挑戦しましょう。';
   var h='<div class="m-sum"><div>'+EX.title+'（セット'+EX.set+'）</div><div class="big">'+ok+' / '+Q.length+'</div><div class="sub">正答率 '+rate+'%　／　回答 '+ans+'問中 '+ok+'問正解（回答の正確さ '+acc+'%）<br>使った時間：'+mmss(Math.min(used,EX.sec))+'（制限 '+mmss(EX.sec)+'）'+(auto?'　時間切れで終了しました':'')+'<br>'+msg+'</div></div>';
-  h+='<div class="m-tools"><button id="t1" class="on" onclick="showRv(false)">まちがい・未回答だけ</button><button id="t2" onclick="showRv(true)">すべて表示</button><a href="SPI_mogi_index.html">一覧へ</a><a href="javascript:location.reload()">もう一度（同じセット）</a></div><div id="rv"></div>';
+  h+='<div class="m-tools"><button id="t1" class="on" onclick="showRv(false)">まちがい・未回答だけ</button><button id="t2" onclick="showRv(true)">すべて表示</button><a href="SPI_mogi_index.html">一覧へ</a><button onclick="addWrong()">📝 まちがい・未回答を復習リストに入れる</button><a href="SPI_review.html">復習ページへ</a><a href="javascript:location.reload()">もう一度（同じセット）</a></div><div id="addmsg" style="font-size:13px;color:#6b21a8;margin-bottom:6px"></div><div id="rv"></div>';
   $('scr-exam').style.display='none';$('scr-res').style.display='block';$('scr-res').innerHTML=h;window.scrollTo(0,0);showRv(false);
 }
+function addWrong(){var n=0;Q.forEach(function(q,i){if(sel[i]===q.a)return;rvAdd('mogi:'+EX.id+'_'+EX.set+':'+i,{u:'mogi:'+EX.id,ut:'模擬試験 '+EX.title,why:'mogi',q:q.q,ch:q.ch,a:q.a,steps:q.steps,hints:[],key:q.key});n++;});$('addmsg').textContent=n+'問を復習リストに入れました。';}
 function showRv(all){
   showAll=all;$('t1').classList.toggle('on',!all);$('t2').classList.toggle('on',all);
   var h='',cnt=0;
