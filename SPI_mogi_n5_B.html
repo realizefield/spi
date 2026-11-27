@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GAMBA｜模擬試験 SPI-N 検査Ⅴ 漢字の正誤（縮小版）（B）</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.8;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+/* ===== 事務処理検査用の追加 ===== */
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.mini-choices .mch:last-child:nth-child(odd){grid-column:1/-1;}
+.cmp{background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;padding:.8rem 1rem;margin:.4rem 0 1rem;display:flex;flex-direction:column;gap:6px;overflow-x:auto;}
+.cmp.sm{margin:.3rem 0 .6rem;background:#fff;}
+.cmp-row{display:flex;align-items:center;gap:12px;}
+.cmp-l{font-size:11px;font-weight:700;color:var(--text3);width:1.8em;flex-shrink:0;}
+.cmp-s{font-family:'DM Mono','Noto Sans JP',monospace;font-size:24px;white-space:nowrap;}
+.cmp.sm .cmp-s{font-size:20px;}
+.cmp-s i{font-style:normal;display:inline-block;min-width:1.5em;text-align:center;border-radius:5px;}
+.cmp-s i.d{background:#fde8eb;color:var(--pink);font-weight:700;}
+.rep-table{max-width:420px;margin:.4rem auto .6rem;}
+.rep-table th{font-size:15px;width:20%;}
+.rep-table td{font-size:17px;font-weight:700;}
+.eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:26px;font-weight:700;text-align:center;letter-spacing:.08em;margin:.4rem 0 1.1rem;color:#1a3a7a;}
+.eq .q{color:var(--pink);}
+.eq-sm{font-family:'DM Mono','Noto Sans JP',monospace;font-size:18px;font-weight:700;color:#1a3a7a;}
+.mini-eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:17px;font-weight:700;color:#1a3a7a;background:#fff;border:1px solid var(--bd);border-radius:8px;padding:2px 10px;display:inline-block;margin:2px 0;}
+.flow{display:flex;flex-direction:column;align-items:stretch;gap:0;margin:.8rem 0;}
+.flow .fs{background:var(--bl);border:1.5px solid #a8c0e8;border-radius:9px;padding:.6rem .9rem;font-size:13px;line-height:1.8;color:#1a3a7a;}
+.flow .fa{text-align:center;color:var(--blue);font-size:14px;line-height:1.3;}
+@media(max-width:480px){.cmp-s{font-size:20px}.eq{font-size:21px}}
+/* ===== 目次ページ ===== */
+.page-title-block{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1.6rem;display:flex;align-items:center;gap:14px;}
+.ptb-icon{width:48px;height:48px;border-radius:10px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.ptb-label{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:3px;}
+.ptb-title{font-size:17px;font-weight:700;color:var(--text);}
+.ptb-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.6;}
+.overall-prog{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.9rem 1.3rem;margin-bottom:1.4rem;}
+.op-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
+.op-label{font-size:12px;font-weight:700;color:var(--text2);}
+.op-count{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.op-bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.op-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:4px;transition:width .6s ease;width:0%;}
+.unit-list{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.6rem;}
+.unit-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;transition:all .18s;position:relative;}
+.unit-card:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(32,85,176,.10);transform:translateY(-1px);}
+.unit-card.done{border-color:var(--teal);}
+.uc-main{display:flex;align-items:center;gap:14px;padding:1rem 1.2rem .85rem;}
+.uc-num{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace;}
+.uc-num.c1{background:#fde8eb;color:var(--pink);}.uc-num.c2{background:var(--bl);color:var(--blue);}.uc-num.c3{background:var(--tl);color:var(--teal);}.uc-num.c4{background:var(--al);color:var(--amber);}.uc-num.c5{background:#f8f0ff;color:#6b21a8;}.uc-num.c6{background:#f0f8ef;color:#166534;}
+.uc-body{flex:1;min-width:0;}
+.uc-category{font-size:10px;color:var(--text3);letter-spacing:.07em;margin-bottom:2px;}
+.uc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.uc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.uc-tag{font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;letter-spacing:.04em;white-space:nowrap;}
+.tag-pink{background:var(--pl);color:var(--pink);}.tag-blue{background:var(--bl);color:var(--blue);}.tag-teal{background:var(--tl);color:var(--teal);}.tag-amber{background:var(--al);color:var(--amber);}
+.uc-meta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.uc-status{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;}
+.status-new{background:var(--pl);color:var(--pink);}
+.status-done{background:var(--tl);color:var(--teal);}
+.uc-arrow{font-size:16px;color:var(--bd2);transition:color .15s;}
+.unit-card:hover .uc-arrow{color:var(--blue);}
+.unit-card.done::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--teal);border-radius:var(--r) 0 0 var(--r);}
+.uc-diff{display:flex;gap:2px;align-items:center;}
+.diff-dot{width:8px;height:8px;border-radius:50%;}
+.diff-dot.on-1{background:var(--pink);}.diff-dot.on-2{background:var(--amber);}.diff-dot.on-3{background:#6b21a8;}.diff-dot.off{background:var(--bd);}
+.section-head{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.1em;margin:1.4rem 0 .6rem;display:flex;align-items:center;gap:8px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--bd);}
+.tips-card{background:var(--tl);border:1.5px solid #8ecfc3;border-radius:var(--r);padding:1.1rem 1.3rem;margin-bottom:1.4rem;}
+.tips-title{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.08em;margin-bottom:.7rem;}
+.tips-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.tips-list li{font-size:13px;color:#0a6b54;line-height:1.7;display:flex;gap:8px;}
+.tips-list li::before{content:'✓';font-weight:700;flex-shrink:0;}
+.exam-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem;}
+.exam-badge{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:.55rem .9rem;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.exam-badge .eb-icon{font-size:1rem;}
+.exam-badge strong{color:var(--text);font-weight:700;}
+.index-footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--text3);line-height:1.8;border-top:1px solid var(--bd);margin-top:2rem;}
+.abc-panel{display:flex;align-items:center;gap:7px;padding:.65rem 1.2rem;border-top:1px solid var(--bd);background:var(--sf2);border-radius:0 0 calc(var(--r) - 2px) calc(var(--r) - 2px);flex-wrap:wrap;}
+.abc-panel-lbl{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.06em;white-space:nowrap;margin-right:2px;}
+.abc-btn-idx{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;white-space:nowrap;background:var(--sf);}
+.abc-btn-idx.btn-a{border-color:var(--teal);color:var(--teal);}.abc-btn-idx.btn-a.on{background:var(--teal);color:#fff;}
+.abc-btn-idx.btn-b{border-color:var(--blue);color:var(--blue);}.abc-btn-idx.btn-b.on{background:var(--blue);color:#fff;}
+.abc-btn-idx.btn-c{border-color:var(--pink);color:var(--pink);}.abc-btn-idx.btn-c.on{background:var(--pink);color:#fff;}
+.abc-clear{margin-left:auto;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;padding:2px 4px;text-decoration:underline;}
+.abc-clear:hover{color:var(--pink);}
+/* ===== 追加: 分数・ヒント3段・図 ===== */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.2;margin:0 3px;font-size:.92em}
+.fr b{font-weight:500;padding:0 4px}.fr b:first-child{border-bottom:1.5px solid currentColor}
+.hint-row{display:flex;gap:6px;margin-bottom:.7rem;flex-wrap:wrap}
+.hint-btn{background:#fff;border:1.5px dashed var(--blue);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--blue);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.hint-btn:hover:not(:disabled){background:var(--bl)}
+.hint-btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--bd2);color:var(--text3)}
+.hint-btn.used{background:var(--bl);border-style:solid;opacity:1}
+.hint-box{margin-bottom:.5rem}
+.hint-box b{display:inline-block;background:var(--blue);color:#fff;border-radius:4px;padding:0 7px;font-size:11px;margin-right:6px}
+.fig{margin:.6rem auto 1rem;max-width:330px}.fig svg{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--bd);border-radius:10px}
+.figs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.figs .fig{flex:1;min-width:130px;margin:.3rem 0}
+.fig-cap{text-align:center;font-size:11px;color:var(--text2);margin-top:3px}
+.fare{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:12px}
+.fare th,.fare td{border:1.5px solid #bcb8ae;padding:4px 3px;text-align:center;line-height:1.5;background:#fff}
+.fare th{background:var(--sf2);font-weight:700}
+.fare td.dg{background:var(--sf2);font-weight:700}
+.fare td.em{border:none;background:none}
+.fare small{display:block;color:var(--blue)}
+.dtable{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:13px}
+.dtable th,.dtable td{border:1.5px solid #bcb8ae;padding:6px 4px;text-align:center;background:#fff}
+.dtable th{background:var(--sf2)}
+.dtable td.bl{background:#f3f1ea;color:var(--text3)}
+.score-box{background:var(--al);border:2px solid var(--amber);border-radius:12px;padding:12px 16px;text-align:center;font-weight:700;color:var(--amber);margin-top:.8rem}
+.bar{display:flex;border:1.5px solid #1a1814;border-radius:6px;overflow:hidden;margin:.35rem 0 .15rem;font-size:12px;line-height:1.5}
+.bar span{padding:7px 2px;text-align:center;border-right:1.5px solid #1a1814;background:#fff;min-width:0;overflow:hidden}
+.bar span:last-child{border-right:none}
+.bar .c1{background:#fde8eb}.bar .c2{background:#eaf0fb}.bar .c3{background:#e6f5f1}.bar .c4{background:#fdf2dd}
+.bar-l{font-size:11px;color:var(--text2);margin:.5rem 0 0}
+.uc-main{text-decoration:none;color:inherit}
+.uc-main:hover .uc-title{color:var(--blue)}
+.cat-note{font-size:12px;color:var(--text2);margin:-.2rem 0 .7rem;line-height:1.7}
+/* ---- 推論 ---- */
+.cand{border-collapse:collapse;margin:8px 0;font-size:14px}
+.cand th,.cand td{border:1px solid #cfcabd;padding:5px 9px;text-align:center;min-width:34px}
+.cand th{background:#f1eee6}
+.cand td.y{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.one{background:#0d9478;color:#fff;font-weight:700}
+.cand td.n{color:#c9c4b6}
+.cand td.q{color:#a8a393}
+.cand td.w{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.l{background:#fdeaee;color:#d93652;font-weight:700}
+.cand td.x{background:#f1eee6}
+.jd{margin:6px 0;padding:8px 12px;border-radius:8px;background:#faf8f2;border:1px solid #e4dfd2;font-size:14.5px;line-height:1.8}
+.jd.S{border-left:5px solid #0d9478}.jd.F{border-left:5px solid #d93652}.jd.U{border-left:5px solid #a86000}
+.tg{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:700;color:#fff;margin-right:6px}
+.tg.S{background:#0d9478}.tg.F{background:#d93652}.tg.U{background:#a86000}
+.cond-list{margin:6px 0 6px 0;padding:8px 12px 8px 30px;background:#fffdf8;border:1px dashed #d9c58c;border-radius:8px;line-height:1.9;font-size:14.5px}
+svg.fig{max-width:100%;height:auto}
+/* ---- 模擬試験 ---- */
+.mbar{position:sticky;top:0;z-index:50;background:#2a2820;color:#fff;display:flex;align-items:center;gap:14px;padding:8px 14px;font-size:14px}
+.mbar .tm{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;min-width:76px}
+.mbar .tm.warn{color:#ff8a9c}
+.mbar .pg{flex:1;text-align:center;opacity:.85}
+.mbar button{background:#d93652;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.mq{display:flex;gap:10px;margin:10px 0;padding:12px;background:#fff;border:1.5px solid #e4dfd2;border-radius:12px;scroll-margin-top:60px}
+.mq.done{background:#f6fbf9;border-color:#a8d9cb}
+.mq-n{flex:0 0 34px;height:34px;border-radius:50%;background:#2a2820;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.mq-b{flex:1;min-width:0}
+.mq-ch{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.mq-btn{border:1.5px solid #cfcabd;background:#fff;border-radius:10px;padding:8px 14px;font-size:16px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.mq-btn .cnum{font-weight:700;color:#58544c}
+.mq-btn.sel{background:#2055b0;color:#fff;border-color:#2055b0}
+.mq-btn.sel .cnum{color:#fff}
+.mq-btn.ok{background:#e8f6f1;border-color:#0d9478;color:#0d6b55}
+.mq-btn.ng{background:#fdeaee;border-color:#d93652;color:#a8132c}
+.m-sum{text-align:center;padding:18px;background:#fffdf8;border:2px solid #e0c888;border-radius:14px;margin:12px 0}
+.m-sum .big{font-size:42px;font-weight:700;color:#0d9478}
+.m-sum .sub{font-size:14px;color:#58544c;line-height:1.8}
+.m-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.m-tools button,.m-tools a{border:1.5px solid #bcb8ae;background:#fff;border-radius:10px;padding:8px 14px;font-size:14px;cursor:pointer;text-decoration:none;color:#2a2820;font-family:inherit}
+.m-tools .on{background:#2a2820;color:#fff}
+.start-btn{display:block;width:100%;max-width:360px;margin:16px auto;padding:14px;border:0;border-radius:12px;background:#0d9478;color:#fff;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+details.rv{margin-top:8px;background:#faf8f2;border-radius:8px;padding:6px 10px}
+details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
+.rv .exp-box{display:block !important}
+.m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:8px 0 16px}
+.m-set{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.m-set a{display:inline-block;padding:6px 14px;border:1.5px solid #bcb8ae;border-radius:8px;text-decoration:none;color:#2a2820;font-weight:700;background:#fff}
+.m-set a.best{border-color:#0d9478;background:#e8f6f1}
+.m-set small{display:block;font-weight:400;font-size:11px;color:#58544c}
+</style></head><body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 模擬試験</span></header>
+<main>
+<div id="scr-start">
+<div class="page-title-block"><div class="ptb-icon">模</div><div><div class="ptb-label">模擬試験　セットB</div><div class="ptb-title">SPI-N 検査Ⅴ 漢字の正誤（縮小版）</div><div class="ptb-desc">読み方・書き方が正しいかを判断する</div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">！</div>はじめる前に</div>
+<ul class="tips-list"><li>問題数：<b>50問</b>　制限時間：<b>3分</b>（本番は150問8分。ここでは50問3分の縮小版です）</li>
+<li>読み方の問題は（ ）内の読みが、書き取りの問題は（ ）内の漢字が正しいかを選びます。</li>
+<li>答えは<b>最後まで表示されません</b>。時間が終わるか「採点する」を押すと、結果と解説が出ます。</li>
+<li>わからない問題は<b>とばして</b>先へ進みましょう。あとで戻って答えを変えられます。</li>
+<li>「スタート」を押した瞬間から時間が進みます。</li></ul>
+<div id="best" style="text-align:center;color:#58544c;font-size:14px"></div>
+<button class="start-btn" onclick="startExam()">スタート</button>
+<div class="m-tools" style="justify-content:center"><a href="SPI_mogi_index.html">模擬試験の一覧へ戻る</a></div></div>
+</div>
+<div id="scr-exam" style="display:none">
+<div class="mbar"><span class="tm" id="tm">--:--</span><span class="pg" id="pg">0 / 50 回答</span><button onclick="finish(false)">採点する</button></div>
+<div class="tips-card" style="margin-top:10px"><div class="tips-title">SPI-N 検査Ⅴ 漢字の正誤（縮小版）</div><div style="font-size:14px;line-height:1.7">読み方の問題は（ ）内の読みが、書き取りの問題は（ ）内の漢字が正しいかを選びます。</div></div>
+<div id="qs"></div>
+<button class="start-btn" style="background:#d93652" onclick="finish(false)">採点する</button>
+</div>
+<div id="scr-res" style="display:none"></div>
+</main>
+<div class="index-footer">GAMBA ／ 江原予備校</div>
+<script>
+var Q=[{"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>セイレンケッパク</u>（清廉結白）な人柄</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「セイレンケッパク」は <b>清廉潔白</b> と書きます。"], ["判定", "（ ）内は「清廉結白」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">周知（シュウシ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「周知」の正しい読みは<b>シュウチ</b>です。"], ["判定", "（ ）内は「シュウシ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ユウジュウフダン</u>（憂柔不断）な態度</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ユウジュウフダン」は <b>優柔不断</b> と書きます。"], ["判定", "（ ）内は「憂柔不断」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゼッタイゼツメイ</u>（絶対絶命）のピンチだ</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゼッタイゼツメイ」は <b>絶体絶命</b> と書きます。"], ["判定", "（ ）内は「絶対絶命」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>リンキオウヘン</u>（臨機応編）に対応する</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「リンキオウヘン」は <b>臨機応変</b> と書きます。"], ["判定", "（ ）内は「臨機応編」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">未曽有（ミゾウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「未曽有」の正しい読みは<b>ミゾウ</b>です。"], ["判定", "（ ）内は「ミゾウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">堪能（タンノウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「堪能」の正しい読みは<b>タンノウ</b>です。"], ["判定", "（ ）内は「タンノウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>タイダ</u>（怠惰）な生活</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「タイダ」は <b>怠惰</b> と書きます。"], ["判定", "（ ）内は「怠惰」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">出納（スイトウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「出納」の正しい読みは<b>スイトウ</b>です。"], ["判定", "（ ）内は「スイトウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゼッタイゼツメイ</u>（絶対絶命）のピンチだ</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゼッタイゼツメイ」は <b>絶体絶命</b> と書きます。"], ["判定", "（ ）内は「絶対絶命」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>シュウチテッテイ</u>（周知徹底）を図る</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「シュウチテッテイ」は <b>周知徹底</b> と書きます。"], ["判定", "（ ）内は「周知徹底」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ムガムチュウ</u>（無我無中）で走る</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ムガムチュウ」は <b>無我夢中</b> と書きます。"], ["判定", "（ ）内は「無我無中」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>カンゼンムケツ</u>（完全無決）の人物</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「カンゼンムケツ」は <b>完全無欠</b> と書きます。"], ["判定", "（ ）内は「完全無決」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>リンキオウヘン</u>（臨機応編）に対応する</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「リンキオウヘン」は <b>臨機応変</b> と書きます。"], ["判定", "（ ）内は「臨機応編」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">建立（ケンリツ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「建立」の正しい読みは<b>コンリュウ</b>です。"], ["判定", "（ ）内は「ケンリツ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ギシンアンキ</u>（疑心暗鬼）になる</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ギシンアンキ」は <b>疑心暗鬼</b> と書きます。"], ["判定", "（ ）内は「疑心暗鬼」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>セキニンテンカ</u>（責任転化）をする</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「セキニンテンカ」は <b>責任転嫁</b> と書きます。"], ["判定", "（ ）内は「責任転化」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>リンキオウヘン</u>（臨機応編）に対応する</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「リンキオウヘン」は <b>臨機応変</b> と書きます。"], ["判定", "（ ）内は「臨機応編」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>シンキイッテン</u>（心気一転）して出直す</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「シンキイッテン」は <b>心機一転</b> と書きます。"], ["判定", "（ ）内は「心気一転」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>イクドウオン</u>（異口同音）に賛成する</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「イクドウオン」は <b>異口同音</b> と書きます。"], ["判定", "（ ）内は「異口同音」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゼッタイゼツメイ</u>（絶対絶命）のピンチだ</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゼッタイゼツメイ」は <b>絶体絶命</b> と書きます。"], ["判定", "（ ）内は「絶対絶命」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">殺到（サットウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「殺到」の正しい読みは<b>サットウ</b>です。"], ["判定", "（ ）内は「サットウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>カンゼンムケツ</u>（完全無決）の人物</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「カンゼンムケツ」は <b>完全無欠</b> と書きます。"], ["判定", "（ ）内は「完全無決」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">情報を<u>シュシャセンタク</u>（取捨選沢）する</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「シュシャセンタク」は <b>取捨選択</b> と書きます。"], ["判定", "（ ）内は「取捨選沢」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">疎外（ショガイ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「疎外」の正しい読みは<b>ソガイ</b>です。"], ["判定", "（ ）内は「ショガイ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">疎外（ソガイ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「疎外」の正しい読みは<b>ソガイ</b>です。"], ["判定", "（ ）内は「ソガイ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">注意を<u>カンキ</u>（換起）する</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「カンキ」は <b>喚起</b> と書きます。"], ["判定", "（ ）内は「換起」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゴリムチュウ</u>（五里夢中）の状態</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゴリムチュウ」は <b>五里霧中</b> と書きます。"], ["判定", "（ ）内は「五里夢中」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">慰謝料（イジョリョウ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「慰謝料」の正しい読みは<b>イシャリョウ</b>です。"], ["判定", "（ ）内は「イジョリョウ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">出納（スイトウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「出納」の正しい読みは<b>スイトウ</b>です。"], ["判定", "（ ）内は「スイトウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>イクドウオン</u>（異口同音）に賛成する</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「イクドウオン」は <b>異口同音</b> と書きます。"], ["判定", "（ ）内は「異口同音」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">貪欲（ドンヨク）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「貪欲」の正しい読みは<b>ドンヨク</b>です。"], ["判定", "（ ）内は「ドンヨク」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">疎外（ショガイ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「疎外」の正しい読みは<b>ソガイ</b>です。"], ["判定", "（ ）内は「ショガイ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\">人権を<u>ヨウゴ</u>（擁護）する</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ヨウゴ」は <b>擁護</b> と書きます。"], ["判定", "（ ）内は「擁護」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">潜在（ゼンザイ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「潜在」の正しい読みは<b>センザイ</b>です。"], ["判定", "（ ）内は「ゼンザイ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゼッタイゼツメイ</u>（絶対絶命）のピンチだ</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゼッタイゼツメイ」は <b>絶体絶命</b> と書きます。"], ["判定", "（ ）内は「絶対絶命」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>セイレンケッパク</u>（清廉結白）な人柄</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「セイレンケッパク」は <b>清廉潔白</b> と書きます。"], ["判定", "（ ）内は「清廉結白」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">殺到（サットウ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「殺到」の正しい読みは<b>サットウ</b>です。"], ["判定", "（ ）内は「サットウ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">周知（シュウチ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「周知」の正しい読みは<b>シュウチ</b>です。"], ["判定", "（ ）内は「シュウチ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゴンゴドウダン</u>（言語道断）の行いだ</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「ゴンゴドウダン」は <b>言語道断</b> と書きます。"], ["判定", "（ ）内は「言語道断」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ソッセンスイハン</u>（卒先垂範）して行う</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ソッセンスイハン」は <b>率先垂範</b> と書きます。"], ["判定", "（ ）内は「卒先垂範」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">貢献（クウケン）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「貢献」の正しい読みは<b>コウケン</b>です。"], ["判定", "（ ）内は「クウケン」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">潜在（ゼンザイ）</div>", "ch": ["正", "誤"], "a": 1, "steps": [["読み方を確認", "「潜在」の正しい読みは<b>センザイ</b>です。"], ["判定", "（ ）内は「ゼンザイ」なので、<b>誤</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>シュウチテッテイ</u>（周知徹底）を図る</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「シュウチテッテイ」は <b>周知徹底</b> と書きます。"], ["判定", "（ ）内は「周知徹底」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ゴンゴドウダン</u>（言語同断）の行いだ</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ゴンゴドウダン」は <b>言語道断</b> と書きます。"], ["判定", "（ ）内は「言語同断」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">境内（ケイダイ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「境内」の正しい読みは<b>ケイダイ</b>です。"], ["判定", "（ ）内は「ケイダイ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">詳細（ショウサイ）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「詳細」の正しい読みは<b>ショウサイ</b>です。"], ["判定", "（ ）内は「ショウサイ」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>ギシンアンキ</u>（疑心案鬼）になる</div>", "ch": ["正", "誤"], "a": 1, "steps": [["漢字を確認", "「ギシンアンキ」は <b>疑心暗鬼</b> と書きます。"], ["判定", "（ ）内は「疑心案鬼」なので、<b>誤</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}, {"q": "<div class=\"eq\" style=\"font-size:22px;text-align:center;margin:8px 0\">貪欲（ドンヨク）</div>", "ch": ["正", "誤"], "a": 0, "steps": [["読み方を確認", "「貪欲」の正しい読みは<b>ドンヨク</b>です。"], ["判定", "（ ）内は「ドンヨク」なので、<b>正</b>です。"]], "key": "読みは「正しい読み」を覚えているかどうか。"}, {"q": "<div class=\"eq\" style=\"font-size:20px;text-align:center;margin:8px 0\"><u>シンキイッテン</u>（心機一転）して出直す</div>", "ch": ["正", "誤"], "a": 0, "steps": [["漢字を確認", "「シンキイッテン」は <b>心機一転</b> と書きます。"], ["判定", "（ ）内は「心機一転」なので、<b>正</b>です。"]], "key": "まぎらわしい字（似た字・同音の字）に注意。"}],EX={"id": "n5", "set": "B", "title": "SPI-N 検査Ⅴ 漢字の正誤（縮小版）", "n": 50, "sec": 180};
+var sel=[],left=EX.sec,timer=null,used=0,fin=false,showAll=false;
+function $(i){return document.getElementById(i);}
+function g(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function s_(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+var LSK='spi_mogi_'+EX.id+'_'+EX.set;
+function mmss(t){var m=Math.floor(t/60),s=t%60;return (m<10?'0':'')+m+':'+(s<10?'0':'')+s;}
+(function(){var b=g(LSK);if(b){try{var o=JSON.parse(b);$('best').textContent='前回までのベスト：'+o.ok+' / '+EX.n+'問正解（'+o.date+'）';}catch(e){}}})();
+function cards(){
+  var h='';
+  Q.forEach(function(q,i){
+    h+='<div class="mq" id="mq'+i+'"><div class="mq-n">'+(i+1)+'</div><div class="mq-b"><div class="q-text">'+q.q+'</div><div class="mq-ch">';
+    q.ch.forEach(function(c,j){h+='<button class="mq-btn" id="b'+i+'_'+j+'" onclick="pick('+i+','+j+')"><span class="cnum">'+'ABCDEFG'.charAt(j)+'</span>'+c+'</button>';});
+    h+='</div></div></div>';
+  });
+  $('qs').innerHTML=h;
+}
+function startExam(){
+  cards();$('scr-start').style.display='none';$('scr-exam').style.display='block';window.scrollTo(0,0);
+  $('tm').textContent=mmss(left);
+  timer=setInterval(function(){left--;used++;$('tm').textContent=mmss(Math.max(left,0));if(left<=30)$('tm').classList.add('warn');if(left<=0){finish(true);}},1000);
+}
+function pick(i,j){
+  if(fin)return;
+  if(sel[i]!==undefined)$('b'+i+'_'+sel[i]).classList.remove('sel');
+  sel[i]=j;$('b'+i+'_'+j).classList.add('sel');$('mq'+i).classList.add('done');
+  var n=0;for(var k=0;k<Q.length;k++)if(sel[k]!==undefined)n++;
+  $('pg').textContent=n+' / '+Q.length+' 回答';
+  var nx=$('mq'+(i+1));if(nx&&nx.scrollIntoView){nx.scrollIntoView({behavior:'smooth',block:'start'});}
+}
+function finish(auto){
+  if(fin)return;
+  if(!auto){var n=0;for(var k=0;k<Q.length;k++)if(sel[k]!==undefined)n++;if(n<Q.length&&!confirm('まだ '+(Q.length-n)+'問 未回答です。採点しますか？'))return;}
+  fin=true;clearInterval(timer);
+  var ok=0,ans=0;Q.forEach(function(q,i){if(sel[i]!==undefined){ans++;if(sel[i]===q.a)ok++;}});
+  var rate=Math.round(ok/Q.length*100),acc=ans?Math.round(ok/ans*100):0;
+  var d=new Date(),ds=(d.getMonth()+1)+'/'+d.getDate();
+  var b=g(LSK),best=0;try{if(b)best=JSON.parse(b).ok;}catch(e){}
+  if(ok>best)s_(LSK,JSON.stringify({ok:ok,date:ds}));
+  var msg=rate>=90?'すばらしい！この調子です。':rate>=70?'よくできています。まちがえた問題を見直しましょう。':rate>=50?'あと一歩。解説を読んで、もう一度挑戦しましょう。':'まずは解説コースでやり方を確認してから、再挑戦しましょう。';
+  var h='<div class="m-sum"><div>'+EX.title+'（セット'+EX.set+'）</div><div class="big">'+ok+' / '+Q.length+'</div><div class="sub">正答率 '+rate+'%　／　回答 '+ans+'問中 '+ok+'問正解（回答の正確さ '+acc+'%）<br>使った時間：'+mmss(Math.min(used,EX.sec))+'（制限 '+mmss(EX.sec)+'）'+(auto?'　時間切れで終了しました':'')+'<br>'+msg+'</div></div>';
+  h+='<div class="m-tools"><button id="t1" class="on" onclick="showRv(false)">まちがい・未回答だけ</button><button id="t2" onclick="showRv(true)">すべて表示</button><a href="SPI_mogi_index.html">一覧へ</a><a href="javascript:location.reload()">もう一度（同じセット）</a></div><div id="rv"></div>';
+  $('scr-exam').style.display='none';$('scr-res').style.display='block';$('scr-res').innerHTML=h;window.scrollTo(0,0);showRv(false);
+}
+function showRv(all){
+  showAll=all;$('t1').classList.toggle('on',!all);$('t2').classList.toggle('on',all);
+  var h='',cnt=0;
+  Q.forEach(function(q,i){
+    var st=sel[i]===undefined?'u':(sel[i]===q.a?'o':'x');
+    if(!all&&st==='o')return;cnt++;
+    h+='<div class="mq"><div class="mq-n" style="background:'+(st==='o'?'#0d9478':'#d93652')+'">'+(i+1)+'</div><div class="mq-b"><div class="q-text">'+q.q+'</div><div class="mq-ch">';
+    q.ch.forEach(function(c,j){var cl=j===q.a?' ok':(j===sel[i]?' ng':'');h+='<span class="mq-btn'+cl+'"><span class="cnum">'+'ABCDEFG'.charAt(j)+'</span>'+c+'</span>';});
+    h+='</div><div style="margin-top:6px;font-size:14px">'+(st==='o'?'⭕ 正解':st==='u'?'⚪ 未回答　正解は '+'ABCDEFG'.charAt(q.a):'❌ あなたの答え '+'ABCDEFG'.charAt(sel[i])+'　正解は '+'ABCDEFG'.charAt(q.a))+'</div>';
+    h+='<details class="rv"><summary>解説を見る</summary>';
+    q.steps.forEach(function(s,k){h+='<div class="exp-box'+['',' blue',' amber'][k%3]+'"><h4>STEP '+(k+1)+'　'+s[0]+'</h4><p>'+s[1]+'</p></div>';});
+    h+='<div class="point-box"><strong>🔑 解法のカギ</strong>'+q.key+'</div></details></div></div>';
+  });
+  if(!cnt)h='<div class="teal-box" style="text-align:center"><strong>🎉 全問正解です！</strong></div>';
+  $('rv').innerHTML=h;
+}
+</script></body></html>
