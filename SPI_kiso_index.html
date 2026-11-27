@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GAMBA｜SPI 計算の基礎</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.1rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-title-block{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1.6rem;display:flex;align-items:center;gap:14px;}
+.ptb-icon{width:48px;height:48px;border-radius:10px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.ptb-label{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:3px;}
+.ptb-title{font-size:17px;font-weight:700;color:var(--text);}
+.ptb-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.6;}
+.overall-prog{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.9rem 1.3rem;margin-bottom:1.4rem;}
+.op-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
+.op-label{font-size:12px;font-weight:700;color:var(--text2);}
+.op-count{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.op-bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.op-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:4px;transition:width .6s ease;width:0%;}
+.unit-list{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.6rem;}
+.unit-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:stretch;padding:0;transition:all .18s;position:relative;overflow:visible;}
+.unit-card:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(32,85,176,.10);transform:translateY(-1px);}
+.unit-card.done{border-color:var(--teal);}
+.uc-main{display:flex;align-items:center;gap:14px;padding:1rem 1.2rem .85rem;}
+.uc-num{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace;}
+.uc-num.c1{background:#fde8eb;color:var(--pink);}
+.uc-num.c2{background:var(--bl);color:var(--blue);}
+.uc-num.c3{background:var(--tl);color:var(--teal);}
+.uc-num.c4{background:var(--al);color:var(--amber);}
+.uc-num.c5{background:#f8f0ff;color:#6b21a8;}
+.uc-num.c6{background:#f0f8ef;color:#166534;}
+.uc-body{flex:1;min-width:0;}
+.uc-category{font-size:10px;color:var(--text3);letter-spacing:.07em;margin-bottom:2px;}
+.uc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.uc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.uc-tag{font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;letter-spacing:.04em;white-space:nowrap;}
+.tag-pink{background:var(--pl);color:var(--pink);}
+.tag-blue{background:var(--bl);color:var(--blue);}
+.tag-teal{background:var(--tl);color:var(--teal);}
+.tag-amber{background:var(--al);color:var(--amber);}
+.uc-meta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.uc-status{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;}
+.status-new{background:var(--pl);color:var(--pink);}
+.status-done{background:var(--tl);color:var(--teal);}
+.uc-score{font-size:10px;color:var(--text2);font-family:'DM Mono',monospace;}
+.uc-arrow{font-size:16px;color:var(--bd2);transition:color .15s;}
+.unit-card:hover .uc-arrow{color:var(--blue);}
+.unit-card.done::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--teal);border-radius:var(--r) 0 0 var(--r);}
+.uc-diff{display:flex;gap:2px;align-items:center;}
+.diff-dot{width:8px;height:8px;border-radius:50%;}
+.diff-dot.on-1{background:var(--pink);}
+.diff-dot.on-2{background:var(--amber);}
+.diff-dot.on-3{background:#6b21a8;}
+.diff-dot.off{background:var(--bd);}
+.section-head{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.1em;margin:1.4rem 0 .6rem;display:flex;align-items:center;gap:8px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--bd);}
+.tips-card{background:var(--tl);border:1.5px solid #8ecfc3;border-radius:var(--r);padding:1.1rem 1.3rem;margin-bottom:1.4rem;}
+.tips-title{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.08em;margin-bottom:.7rem;}
+.tips-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.tips-list li{font-size:13px;color:#0a6b54;line-height:1.7;display:flex;gap:8px;}
+.tips-list li::before{content:'✓';font-weight:700;flex-shrink:0;}
+.exam-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem;}
+.exam-badge{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:.55rem .9rem;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.exam-badge .eb-icon{font-size:1rem;}
+.exam-badge strong{color:var(--text);font-weight:700;}
+.index-footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--text3);line-height:1.8;border-top:1px solid var(--bd);margin-top:2rem;}
+.abc-panel{display:flex;align-items:center;gap:7px;padding:.65rem 1.2rem;border-top:1px solid var(--bd);background:var(--sf2);border-radius:0 0 calc(var(--r) - 2px) calc(var(--r) - 2px);flex-wrap:wrap;}
+.abc-panel-lbl{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.06em;white-space:nowrap;margin-right:2px;}
+.abc-btn-idx{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;white-space:nowrap;background:var(--sf);}
+.abc-btn-idx.btn-a{border-color:var(--teal);color:var(--teal);}
+.abc-btn-idx.btn-a.on{background:var(--teal);color:#fff;}
+.abc-btn-idx.btn-b{border-color:var(--blue);color:var(--blue);}
+.abc-btn-idx.btn-b.on{background:var(--blue);color:#fff;}
+.abc-btn-idx.btn-c{border-color:var(--pink);color:var(--pink);}
+.abc-btn-idx.btn-c.on{background:var(--pink);color:#fff;}
+.abc-clear{margin-left:auto;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;padding:2px 4px;text-decoration:underline;}
+.abc-clear:hover{color:var(--pink);}
+@media (max-width:480px){.uc-main{gap:10px;padding:.9rem .9rem .8rem;}.abc-panel{padding:.6rem .9rem;}}
+
+
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 0}
+.lg{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;border:1.5px solid}
+.kpanel{background:#fff;border:2px solid var(--bd);border-radius:var(--r);padding:1rem 1.1rem;margin-bottom:1rem;transition:background .4s,border-color .4s}
+.kp-head{display:flex;align-items:center;gap:10px;margin-bottom:.7rem}
+.kp-ic{font-size:1.5rem}
+.kp-title{font-size:16px;font-weight:700}
+.kp-desc{font-size:12px;color:var(--text2);line-height:1.5}
+.kp-stat{margin-left:auto;font-size:12px;font-weight:700;color:var(--text2);white-space:nowrap;font-family:'DM Mono',monospace}
+.chips{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:7px}
+.chip{display:flex;flex-direction:column;gap:2px;text-decoration:none;color:var(--text);background:#fff;border:1.5px solid var(--bd);border-radius:10px;padding:7px 9px;font-size:12px;line-height:1.4;position:relative;transition:background .4s,border-color .4s}
+.chip .cc{font-family:'DM Mono',monospace;font-size:10px;color:var(--text3)}
+.chip .cn{font-weight:700}
+.chip .ck{font-size:10px;font-weight:700;color:var(--text2);min-height:12px}
+.chip:hover{border-color:var(--blue)}
+</style></head><body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">|</span><span class="logo-sub">SPI ／ 計算の基礎</span></header>
+<main>
+<div class="page-title-block"><div class="ptb-icon">基</div><div><div class="ptb-label">SPI対策の前に</div><div class="ptb-title">計算の基礎（分数 → 連立方程式）</div><div class="ptb-desc">計算をわすれてしまった方は、ここから。単元をひとつずつ学習して、確認テストに合格しましょう。</div></div></div>
+<div class="tips-card"><div class="tips-title">💡 色のしくみ</div><ul class="tips-list"><li><span>確認テストに合格した単元は、回数に合わせて色がかわります。<b>1回目＝赤、2回目＝橙、3回目＝黄、4回目＝緑、5回目＝青、6回目＝藍、7回目＝紫</b>（うすい色）。</span></li><li><span>上の大きなパネルは、中の単元を<b>すべて</b>合格した回数で色がかわります。</span></li><li><span>学習の記録は、いま使っているこの端末のブラウザに保存されます。</span></li></ul><div class="legend" id="legend"></div></div>
+<div class="overall-prog"><div class="op-head"><span class="op-label">全体の進み具合</span><span class="op-count" id="prog-count">0 / 42 単元合格</span></div><div class="op-bar"><div class="op-fill" id="prog-fill"></div></div></div>
+<section class="kpanel" id="p-bunsu" data-codes="MA01,MA02,MA03,MA04,MA05,MA06,MA07,MA08,MA09,MA10,MA11,MA12,MA13"><div class="kp-head"><span class="kp-ic">🍰</span><div><div class="kp-title">分数</div><div class="kp-desc">分数のたし算・ひき算・かけ算・わり算</div></div><div class="kp-stat" id="s-bunsu">合格 0 / 13</div></div><div class="chips"><a class="chip" data-code="MA01" href="https://realizefield.github.io/j-math/MA01/intro.html" target="_blank"><span class="cc">MA01</span><span class="cn">分数の性質・通分</span><span class="ck" id="k-MA01"></span></a><a class="chip" data-code="MA02" href="https://realizefield.github.io/j-math/MA02/intro.html" target="_blank"><span class="cc">MA02</span><span class="cn">約分</span><span class="ck" id="k-MA02"></span></a><a class="chip" data-code="MA03" href="https://realizefield.github.io/j-math/MA03/intro.html" target="_blank"><span class="cc">MA03</span><span class="cn">分数をたす・ひく</span><span class="ck" id="k-MA03"></span></a><a class="chip" data-code="MA04" href="https://realizefield.github.io/j-math/MA04/intro.html" target="_blank"><span class="cc">MA04</span><span class="cn">通分する計算</span><span class="ck" id="k-MA04"></span></a><a class="chip" data-code="MA05" href="https://realizefield.github.io/j-math/MA05/intro.html" target="_blank"><span class="cc">MA05</span><span class="cn">1と分数の計算</span><span class="ck" id="k-MA05"></span></a><a class="chip" data-code="MA06" href="https://realizefield.github.io/j-math/MA06/intro.html" target="_blank"><span class="cc">MA06</span><span class="cn">整数と分数の計算</span><span class="ck" id="k-MA06"></span></a><a class="chip" data-code="MA07" href="https://realizefield.github.io/j-math/MA07/intro.html" target="_blank"><span class="cc">MA07</span><span class="cn">帯分数と仮分数</span><span class="ck" id="k-MA07"></span></a><a class="chip" data-code="MA08" href="https://realizefield.github.io/j-math/MA08/intro.html" target="_blank"><span class="cc">MA08</span><span class="cn">帯分数の計算</span><span class="ck" id="k-MA08"></span></a><a class="chip" data-code="MA09" href="https://realizefield.github.io/j-math/MA09/intro.html" target="_blank"><span class="cc">MA09</span><span class="cn">整数 × 分数</span><span class="ck" id="k-MA09"></span></a><a class="chip" data-code="MA10" href="https://realizefield.github.io/j-math/MA10/intro.html" target="_blank"><span class="cc">MA10</span><span class="cn">分数 × 分数</span><span class="ck" id="k-MA10"></span></a><a class="chip" data-code="MA11" href="https://realizefield.github.io/j-math/MA11/intro.html" target="_blank"><span class="cc">MA11</span><span class="cn">整数 ÷ 分数</span><span class="ck" id="k-MA11"></span></a><a class="chip" data-code="MA12" href="https://realizefield.github.io/j-math/MA12/intro.html" target="_blank"><span class="cc">MA12</span><span class="cn">分数 ÷ 分数</span><span class="ck" id="k-MA12"></span></a><a class="chip" data-code="MA13" href="https://realizefield.github.io/j-math/MA13/intro.html" target="_blank"><span class="cc">MA13</span><span class="cn">混合計算</span><span class="ck" id="k-MA13"></span></a></div></section>
+<section class="kpanel" id="p-shosu" data-codes="MA14,MA15,MA16"><div class="kp-head"><span class="kp-ic">🔢</span><div><div class="kp-title">小数</div><div class="kp-desc">小数のたし算・ひき算・かけ算・わり算</div></div><div class="kp-stat" id="s-shosu">合格 0 / 3</div></div><div class="chips"><a class="chip" data-code="MA14" href="https://realizefield.github.io/j-math/MA14/intro.html" target="_blank"><span class="cc">MA14</span><span class="cn">小数のたし算・ひき算</span><span class="ck" id="k-MA14"></span></a><a class="chip" data-code="MA15" href="https://realizefield.github.io/j-math/MA15/intro.html" target="_blank"><span class="cc">MA15</span><span class="cn">小数のかけ算</span><span class="ck" id="k-MA15"></span></a><a class="chip" data-code="MA16" href="https://realizefield.github.io/j-math/MA16/intro.html" target="_blank"><span class="cc">MA16</span><span class="cn">小数のわり算</span><span class="ck" id="k-MA16"></span></a></div></section>
+<section class="kpanel" id="p-seifu" data-codes="MB01,MB02,MB03,MB04,MB05,MB06,MB07"><div class="kp-head"><span class="kp-ic">➕➖</span><div><div class="kp-title">正負の数</div><div class="kp-desc">マイナスの計算。かっこをはずす・符号のルール</div></div><div class="kp-stat" id="s-seifu">合格 0 / 7</div></div><div class="chips"><a class="chip" data-code="MB01" href="https://realizefield.github.io/j-math/MB01/intro.html" target="_blank"><span class="cc">MB01</span><span class="cn">正負の数の計算①</span><span class="ck" id="k-MB01"></span></a><a class="chip" data-code="MB02" href="https://realizefield.github.io/j-math/MB02/intro.html" target="_blank"><span class="cc">MB02</span><span class="cn">正負の数の計算②</span><span class="ck" id="k-MB02"></span></a><a class="chip" data-code="MB03" href="https://realizefield.github.io/j-math/MB03/intro.html" target="_blank"><span class="cc">MB03</span><span class="cn">正負の数の計算③</span><span class="ck" id="k-MB03"></span></a><a class="chip" data-code="MB04" href="https://realizefield.github.io/j-math/MB04/intro.html" target="_blank"><span class="cc">MB04</span><span class="cn">正負の数の計算④</span><span class="ck" id="k-MB04"></span></a><a class="chip" data-code="MB05" href="https://realizefield.github.io/j-math/MB05/intro.html" target="_blank"><span class="cc">MB05</span><span class="cn">分数の正負の計算</span><span class="ck" id="k-MB05"></span></a><a class="chip" data-code="MB06" href="https://realizefield.github.io/j-math/MB06/intro.html" target="_blank"><span class="cc">MB06</span><span class="cn">混合計算</span><span class="ck" id="k-MB06"></span></a><a class="chip" data-code="MB07" href="https://realizefield.github.io/j-math/MB07/intro.html" target="_blank"><span class="cc">MB07</span><span class="cn">かけ算・わり算</span><span class="ck" id="k-MB07"></span></a></div></section>
+<section class="kpanel" id="p-moji" data-codes="MC01,MC02,MC03,MC04,MC05,MC06"><div class="kp-head"><span class="kp-ic">🔡</span><div><div class="kp-title">文字式</div><div class="kp-desc">同類項・かっこをはずす・文字式の計算</div></div><div class="kp-stat" id="s-moji">合格 0 / 6</div></div><div class="chips"><a class="chip" data-code="MC01" href="https://realizefield.github.io/j-math/MC01/intro.html" target="_blank"><span class="cc">MC01</span><span class="cn">文字式の表し方</span><span class="ck" id="k-MC01"></span></a><a class="chip" data-code="MC02" href="https://realizefield.github.io/j-math/MC02/intro.html" target="_blank"><span class="cc">MC02</span><span class="cn">同類項の計算</span><span class="ck" id="k-MC02"></span></a><a class="chip" data-code="MC03" href="https://realizefield.github.io/j-math/MC03/intro.html" target="_blank"><span class="cc">MC03</span><span class="cn">文字式の乗除・分配法則</span><span class="ck" id="k-MC03"></span></a><a class="chip" data-code="MC04" href="https://realizefield.github.io/j-math/MC04/intro.html" target="_blank"><span class="cc">MC04</span><span class="cn">カッコをはずす計算</span><span class="ck" id="k-MC04"></span></a><a class="chip" data-code="MC05" href="https://realizefield.github.io/j-math/MC05/intro.html" target="_blank"><span class="cc">MC05</span><span class="cn">単項式の乗除</span><span class="ck" id="k-MC05"></span></a><a class="chip" data-code="MC06" href="https://realizefield.github.io/j-math/MC06/intro.html" target="_blank"><span class="cc">MC06</span><span class="cn">文字式の通分・加減</span><span class="ck" id="k-MC06"></span></a></div></section>
+<section class="kpanel" id="p-ichiji" data-codes="MD01,MD02,MD03,MD04,MD05,MD06,MD07,MD08"><div class="kp-head"><span class="kp-ic">⚖️</span><div><div class="kp-title">一次方程式</div><div class="kp-desc">移項・かっこ・分数や小数をふくむ方程式</div></div><div class="kp-stat" id="s-ichiji">合格 0 / 8</div></div><div class="chips"><a class="chip" data-code="MD01" href="https://realizefield.github.io/j-math/md01/intro.html" target="_blank"><span class="cc">MD01</span><span class="cn">χ＋a＝○，χ－a＝△</span><span class="ck" id="k-MD01"></span></a><a class="chip" data-code="MD02" href="https://realizefield.github.io/j-math/md02/intro.html" target="_blank"><span class="cc">MD02</span><span class="cn">aχ＝○　係数でわる</span><span class="ck" id="k-MD02"></span></a><a class="chip" data-code="MD03" href="https://realizefield.github.io/j-math/md03/intro.html" target="_blank"><span class="cc">MD03</span><span class="cn">aχ＋b＝○</span><span class="ck" id="k-MD03"></span></a><a class="chip" data-code="MD04" href="https://realizefield.github.io/j-math/md04/intro.html" target="_blank"><span class="cc">MD04</span><span class="cn">aχ＋b＝cχ＋d</span><span class="ck" id="k-MD04"></span></a><a class="chip" data-code="MD05" href="https://realizefield.github.io/j-math/md05/intro.html" target="_blank"><span class="cc">MD05</span><span class="cn">かっこをはずす方程式</span><span class="ck" id="k-MD05"></span></a><a class="chip" data-code="MD06" href="https://realizefield.github.io/j-math/md06/intro.html" target="_blank"><span class="cc">MD06</span><span class="cn">分数を含む方程式</span><span class="ck" id="k-MD06"></span></a><a class="chip" data-code="MD07" href="https://realizefield.github.io/j-math/md07/intro.html" target="_blank"><span class="cc">MD07</span><span class="cn">小数を含む方程式</span><span class="ck" id="k-MD07"></span></a><a class="chip" data-code="MD08" href="https://realizefield.github.io/j-math/md08/intro.html" target="_blank"><span class="cc">MD08</span><span class="cn">比例式</span><span class="ck" id="k-MD08"></span></a></div></section>
+<section class="kpanel" id="p-renritsu" data-codes="MF01,MF02,MF03,MF04,MF05"><div class="kp-head"><span class="kp-ic">🔗</span><div><div class="kp-title">連立方程式</div><div class="kp-desc">加減法・代入法・分数や小数の連立方程式</div></div><div class="kp-stat" id="s-renritsu">合格 0 / 5</div></div><div class="chips"><a class="chip" data-code="MF01" href="https://realizefield.github.io/j-math/mf01/intro.html" target="_blank"><span class="cc">MF01</span><span class="cn">連立方程式・加減法①</span><span class="ck" id="k-MF01"></span></a><a class="chip" data-code="MF02" href="https://realizefield.github.io/j-math/mf02/intro.html" target="_blank"><span class="cc">MF02</span><span class="cn">加減法②</span><span class="ck" id="k-MF02"></span></a><a class="chip" data-code="MF03" href="https://realizefield.github.io/j-math/mf03/intro.html" target="_blank"><span class="cc">MF03</span><span class="cn">加減法③</span><span class="ck" id="k-MF03"></span></a><a class="chip" data-code="MF04" href="https://realizefield.github.io/j-math/mf04/intro.html" target="_blank"><span class="cc">MF04</span><span class="cn">分数・小数の連立方程式</span><span class="ck" id="k-MF04"></span></a><a class="chip" data-code="MF05" href="https://realizefield.github.io/j-math/mf05/intro.html" target="_blank"><span class="cc">MF05</span><span class="cn">代入法</span><span class="ck" id="k-MF05"></span></a></div></section>
+<div class="tips-card"><div class="tips-title">学習の入口</div><ul class="tips-list"><li><a href="https://realizefield.github.io/j-math/gamba_chugaku.html" target="_blank">中学数学 GAMBA 単元一覧（もっと先まで学べます）</a></li><li><a href="koumuin-spi.html">SPI コース一覧へ戻る</a></li></ul></div>
+<div class="index-footer">GAMBA ／ 江原予備校<br>SPI 計算の基礎</div>
+</main>
+<script>
+var CLR=[null,['#fde0e0','#e57373','赤'],['#fdebd2','#f0a050','橙'],['#fdf6c8','#e0c030','黄'],['#dcf3da','#6cbf6a','緑'],['#d6ecfb','#5ab4dc','青'],['#dadff5','#6d7bd0','藍'],['#ecdcf6','#a070c8','紫']];
+function cnt(c){try{var p=localStorage.getItem('gamba_prog_'+c);if(p!=='pass')return 0;var n=+localStorage.getItem('gamba_cnt_'+c)||0;return Math.max(n,1);}catch(e){return 0;}}
+function lv(n){return Math.min(n,7);}
+function paint(el,n){var c=CLR[lv(n)];if(c){el.style.background=c[0];el.style.borderColor=c[1];}else{el.style.background='';el.style.borderColor='';}}
+var lg=document.getElementById('legend');
+for(var i=1;i<=7;i++){var s=document.createElement('span');s.className='lg';s.textContent=i+'回目 '+CLR[i][2];s.style.background=CLR[i][0];s.style.borderColor=CLR[i][1];lg.appendChild(s);}
+var done=0,total=0;
+document.querySelectorAll('.kpanel').forEach(function(p){
+  var codes=p.getAttribute('data-codes').split(','),min=99,d=0;
+  codes.forEach(function(c){var n=cnt(c);total++;if(n>0){d++;done++;}min=Math.min(min,n);
+    var chip=p.querySelector('[data-code="'+c+'"]');paint(chip,n);document.getElementById('k-'+c).textContent=n>0?('合格 '+n+'回'):'';});
+  paint(p,min===99?0:min);
+  document.getElementById('s-'+p.id.slice(2)).textContent='合格 '+d+' / '+codes.length;
+});
+document.getElementById('prog-count').textContent=done+' / '+total+' 単元合格';
+document.getElementById('prog-fill').style.width=(done/total*100)+'%';
+</script></body></html>
