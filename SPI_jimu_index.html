@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GAMBA｜SPI 事務処理・文章題・確率・表とグラフ 単元一覧</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.8;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+/* ===== 事務処理検査用の追加 ===== */
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.mini-choices .mch:last-child:nth-child(odd){grid-column:1/-1;}
+.cmp{background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;padding:.8rem 1rem;margin:.4rem 0 1rem;display:flex;flex-direction:column;gap:6px;overflow-x:auto;}
+.cmp.sm{margin:.3rem 0 .6rem;background:#fff;}
+.cmp-row{display:flex;align-items:center;gap:12px;}
+.cmp-l{font-size:11px;font-weight:700;color:var(--text3);width:1.8em;flex-shrink:0;}
+.cmp-s{font-family:'DM Mono','Noto Sans JP',monospace;font-size:24px;white-space:nowrap;}
+.cmp.sm .cmp-s{font-size:20px;}
+.cmp-s i{font-style:normal;display:inline-block;min-width:1.5em;text-align:center;border-radius:5px;}
+.cmp-s i.d{background:#fde8eb;color:var(--pink);font-weight:700;}
+.rep-table{max-width:420px;margin:.4rem auto .6rem;}
+.rep-table th{font-size:15px;width:20%;}
+.rep-table td{font-size:17px;font-weight:700;}
+.eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:26px;font-weight:700;text-align:center;letter-spacing:.08em;margin:.4rem 0 1.1rem;color:#1a3a7a;}
+.eq .q{color:var(--pink);}
+.eq-sm{font-family:'DM Mono','Noto Sans JP',monospace;font-size:18px;font-weight:700;color:#1a3a7a;}
+.mini-eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:17px;font-weight:700;color:#1a3a7a;background:#fff;border:1px solid var(--bd);border-radius:8px;padding:2px 10px;display:inline-block;margin:2px 0;}
+.flow{display:flex;flex-direction:column;align-items:stretch;gap:0;margin:.8rem 0;}
+.flow .fs{background:var(--bl);border:1.5px solid #a8c0e8;border-radius:9px;padding:.6rem .9rem;font-size:13px;line-height:1.8;color:#1a3a7a;}
+.flow .fa{text-align:center;color:var(--blue);font-size:14px;line-height:1.3;}
+@media(max-width:480px){.cmp-s{font-size:20px}.eq{font-size:21px}}
+/* ===== 目次ページ ===== */
+.page-title-block{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1.6rem;display:flex;align-items:center;gap:14px;}
+.ptb-icon{width:48px;height:48px;border-radius:10px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.ptb-label{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:3px;}
+.ptb-title{font-size:17px;font-weight:700;color:var(--text);}
+.ptb-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.6;}
+.overall-prog{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.9rem 1.3rem;margin-bottom:1.4rem;}
+.op-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
+.op-label{font-size:12px;font-weight:700;color:var(--text2);}
+.op-count{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.op-bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.op-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:4px;transition:width .6s ease;width:0%;}
+.unit-list{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.6rem;}
+.unit-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;transition:all .18s;position:relative;}
+.unit-card:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(32,85,176,.10);transform:translateY(-1px);}
+.unit-card.done{border-color:var(--teal);}
+.uc-main{display:flex;align-items:center;gap:14px;padding:1rem 1.2rem .85rem;}
+.uc-num{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace;}
+.uc-num.c1{background:#fde8eb;color:var(--pink);}.uc-num.c2{background:var(--bl);color:var(--blue);}.uc-num.c3{background:var(--tl);color:var(--teal);}.uc-num.c4{background:var(--al);color:var(--amber);}.uc-num.c5{background:#f8f0ff;color:#6b21a8;}.uc-num.c6{background:#f0f8ef;color:#166534;}
+.uc-body{flex:1;min-width:0;}
+.uc-category{font-size:10px;color:var(--text3);letter-spacing:.07em;margin-bottom:2px;}
+.uc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.uc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.uc-tag{font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;letter-spacing:.04em;white-space:nowrap;}
+.tag-pink{background:var(--pl);color:var(--pink);}.tag-blue{background:var(--bl);color:var(--blue);}.tag-teal{background:var(--tl);color:var(--teal);}.tag-amber{background:var(--al);color:var(--amber);}
+.uc-meta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.uc-status{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;}
+.status-new{background:var(--pl);color:var(--pink);}
+.status-done{background:var(--tl);color:var(--teal);}
+.uc-arrow{font-size:16px;color:var(--bd2);transition:color .15s;}
+.unit-card:hover .uc-arrow{color:var(--blue);}
+.unit-card.done::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--teal);border-radius:var(--r) 0 0 var(--r);}
+.uc-diff{display:flex;gap:2px;align-items:center;}
+.diff-dot{width:8px;height:8px;border-radius:50%;}
+.diff-dot.on-1{background:var(--pink);}.diff-dot.on-2{background:var(--amber);}.diff-dot.on-3{background:#6b21a8;}.diff-dot.off{background:var(--bd);}
+.section-head{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.1em;margin:1.4rem 0 .6rem;display:flex;align-items:center;gap:8px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--bd);}
+.tips-card{background:var(--tl);border:1.5px solid #8ecfc3;border-radius:var(--r);padding:1.1rem 1.3rem;margin-bottom:1.4rem;}
+.tips-title{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.08em;margin-bottom:.7rem;}
+.tips-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.tips-list li{font-size:13px;color:#0a6b54;line-height:1.7;display:flex;gap:8px;}
+.tips-list li::before{content:'✓';font-weight:700;flex-shrink:0;}
+.exam-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem;}
+.exam-badge{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:.55rem .9rem;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.exam-badge .eb-icon{font-size:1rem;}
+.exam-badge strong{color:var(--text);font-weight:700;}
+.index-footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--text3);line-height:1.8;border-top:1px solid var(--bd);margin-top:2rem;}
+.abc-panel{display:flex;align-items:center;gap:7px;padding:.65rem 1.2rem;border-top:1px solid var(--bd);background:var(--sf2);border-radius:0 0 calc(var(--r) - 2px) calc(var(--r) - 2px);flex-wrap:wrap;}
+.abc-panel-lbl{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.06em;white-space:nowrap;margin-right:2px;}
+.abc-btn-idx{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;white-space:nowrap;background:var(--sf);}
+.abc-btn-idx.btn-a{border-color:var(--teal);color:var(--teal);}.abc-btn-idx.btn-a.on{background:var(--teal);color:#fff;}
+.abc-btn-idx.btn-b{border-color:var(--blue);color:var(--blue);}.abc-btn-idx.btn-b.on{background:var(--blue);color:#fff;}
+.abc-btn-idx.btn-c{border-color:var(--pink);color:var(--pink);}.abc-btn-idx.btn-c.on{background:var(--pink);color:#fff;}
+.abc-clear{margin-left:auto;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;padding:2px 4px;text-decoration:underline;}
+.abc-clear:hover{color:var(--pink);}
+/* ===== 追加: 分数・ヒント3段・図 ===== */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.2;margin:0 3px;font-size:.92em}
+.fr b{font-weight:500;padding:0 4px}.fr b:first-child{border-bottom:1.5px solid currentColor}
+.hint-row{display:flex;gap:6px;margin-bottom:.7rem;flex-wrap:wrap}
+.hint-btn{background:#fff;border:1.5px dashed var(--blue);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--blue);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.hint-btn:hover:not(:disabled){background:var(--bl)}
+.hint-btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--bd2);color:var(--text3)}
+.hint-btn.used{background:var(--bl);border-style:solid;opacity:1}
+.hint-box{margin-bottom:.5rem}
+.hint-box b{display:inline-block;background:var(--blue);color:#fff;border-radius:4px;padding:0 7px;font-size:11px;margin-right:6px}
+.fig{margin:.6rem auto 1rem;max-width:330px}.fig svg{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--bd);border-radius:10px}
+.figs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.figs .fig{flex:1;min-width:130px;margin:.3rem 0}
+.fig-cap{text-align:center;font-size:11px;color:var(--text2);margin-top:3px}
+.fare{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:12px}
+.fare th,.fare td{border:1.5px solid #bcb8ae;padding:4px 3px;text-align:center;line-height:1.5;background:#fff}
+.fare th{background:var(--sf2);font-weight:700}
+.fare td.dg{background:var(--sf2);font-weight:700}
+.fare td.em{border:none;background:none}
+.fare small{display:block;color:var(--blue)}
+.dtable{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:13px}
+.dtable th,.dtable td{border:1.5px solid #bcb8ae;padding:6px 4px;text-align:center;background:#fff}
+.dtable th{background:var(--sf2)}
+.dtable td.bl{background:#f3f1ea;color:var(--text3)}
+.score-box{background:var(--al);border:2px solid var(--amber);border-radius:12px;padding:12px 16px;text-align:center;font-weight:700;color:var(--amber);margin-top:.8rem}
+.bar{display:flex;border:1.5px solid #1a1814;border-radius:6px;overflow:hidden;margin:.35rem 0 .15rem;font-size:12px;line-height:1.5}
+.bar span{padding:7px 2px;text-align:center;border-right:1.5px solid #1a1814;background:#fff;min-width:0;overflow:hidden}
+.bar span:last-child{border-right:none}
+.bar .c1{background:#fde8eb}.bar .c2{background:#eaf0fb}.bar .c3{background:#e6f5f1}.bar .c4{background:#fdf2dd}
+.bar-l{font-size:11px;color:var(--text2);margin:.5rem 0 0}
+.uc-main{text-decoration:none;color:inherit}
+.uc-main:hover .uc-title{color:var(--blue)}
+.cat-note{font-size:12px;color:var(--text2);margin:-.2rem 0 .7rem;line-height:1.7}
+</style></head><body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 事務処理・文章題・確率・表とグラフ</span></header>
+<main>
+<div class="page-title-block"><div class="ptb-icon">SPI</div><div><div class="ptb-label">SPI-N ／ SPI-H 対策コース</div><div class="ptb-title">事務処理検査・文章題・確率・表とグラフ</div>
+<div class="ptb-desc">各単元は「解説 → 演習5問 → 確認6問」。困ったら「ヒント1→2→3」で少しずつ考え方を見られます。</div></div></div>
+<div class="exam-badges">
+<div class="exam-badge"><span class="eb-icon">📚</span><span><strong>全11単元</strong></span></div>
+<div class="exam-badge"><span class="eb-icon">✏️</span><span>演習・確認 <strong>121問</strong>＋例題・ミニテスト</span></div>
+<div class="exam-badge"><span class="eb-icon">💡</span><span>ヒント<strong>3段階</strong></span></div>
+</div>
+<div class="overall-prog"><div class="op-head"><span class="op-label">学習の進み具合</span><span class="op-count" id="prog-count">0 / 11 単元</span></div><div class="op-bar"><div class="op-fill" id="prog-fill"></div></div></div>
+<div class="tips-card"><div class="tips-title">このコースの進め方</div><ul class="tips-list">
+<li>解説を読んで、例題の「解き方を見る」を押し、ミニテストを解きます。</li>
+<li>演習・確認問題は、まず自分で考えます。困ったら「ヒント1」から順番に。</li>
+<li>解いたあとは、理解度（A・B・C）を押して、復習の目安にしましょう。</li>
+<li>「照合」と「置換」は時間との勝負。タイマーの目標時間を意識して練習します。</li>
+</ul></div>
+<div class="unit-list">
+<div class="section-head">事務処理検査 ／ 照合</div><div class="cat-note">100問5分。左右の文字列を見比べて「同じ／異なる」を答えます。</div>
+<div class="unit-card" id="card-ch01"><a class="uc-main" href="SPI_jimu_ch01.html"><div class="uc-num c1">01</div><div class="uc-body"><div class="uc-category">事務処理検査 ／ 照合</div><div class="uc-title">照合① 数字・アルファベット</div><div class="uc-tags"><span class="uc-tag tag-pink">置き換わり</span><span class="uc-tag tag-blue">入れ替わり</span><span class="uc-tag tag-teal">似た字</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-1"></span><span class="diff-dot off"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch01">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch01" onclick="setIdx('ch01','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch01" onclick="setIdx('ch01','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch01" onclick="setIdx('ch01','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch01')">リセット</button></div></div>
+<div class="unit-card" id="card-ch02"><a class="uc-main" href="SPI_jimu_ch02.html"><div class="uc-num c2">02</div><div class="uc-body"><div class="uc-category">事務処理検査 ／ 照合</div><div class="uc-title">照合② ひらがな・カタカナ・漢字・記号</div><div class="uc-tags"><span class="uc-tag tag-pink">カタカナ</span><span class="uc-tag tag-blue">漢字</span><span class="uc-tag tag-teal">記号の向き</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-2"></span><span class="diff-dot on-2"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch02">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch02" onclick="setIdx('ch02','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch02" onclick="setIdx('ch02','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch02" onclick="setIdx('ch02','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch02')">リセット</button></div></div>
+<div class="section-head">事務処理検査 ／ 置換</div><div class="cat-note">50問5分。A〜Eを数字に置き換えて「？」にあてはまる文字を求めます。</div>
+<div class="unit-card" id="card-ch03"><a class="uc-main" href="SPI_jimu_ch03.html"><div class="uc-num c3">03</div><div class="uc-body"><div class="uc-category">事務処理検査 ／ 置換</div><div class="uc-title">置換① 置き換えて計算</div><div class="uc-tags"><span class="uc-tag tag-pink">表の読み方</span><span class="uc-tag tag-blue">3ステップ</span><span class="uc-tag tag-teal">？の位置</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-1"></span><span class="diff-dot off"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch03">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch03" onclick="setIdx('ch03','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch03" onclick="setIdx('ch03','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch03" onclick="setIdx('ch03','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch03')">リセット</button></div></div>
+<div class="unit-card" id="card-ch04"><a class="uc-main" href="SPI_jimu_ch04.html"><div class="uc-num c4">04</div><div class="uc-body"><div class="uc-category">事務処理検査 ／ 置換</div><div class="uc-title">置換② 消去テクニックで速く解く</div><div class="uc-tags"><span class="uc-tag tag-pink">同じ文字を消す</span><span class="uc-tag tag-blue">5以下の近道</span><span class="uc-tag tag-teal">スピード</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-2"></span><span class="diff-dot on-2"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch04">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch04" onclick="setIdx('ch04','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch04" onclick="setIdx('ch04','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch04" onclick="setIdx('ch04','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch04')">リセット</button></div></div>
+<div class="section-head">文章題Ⅱ ／ 図で解く</div><div class="cat-note">割合・年齢算・集合の文章題を、線分図やベン図を使って解きます。</div>
+<div class="unit-card" id="card-ch05"><a class="uc-main" href="SPI_jimu_ch05.html"><div class="uc-num c5">05</div><div class="uc-body"><div class="uc-category">文章題Ⅱ ／ 図で解く</div><div class="uc-title">文章題Ⅱ① 割合（線分図で解く）</div><div class="uc-tags"><span class="uc-tag tag-pink">線分図</span><span class="uc-tag tag-blue">残りの○分の△</span><span class="uc-tag tag-teal">100とおく</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-2"></span><span class="diff-dot on-2"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch05">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch05" onclick="setIdx('ch05','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch05" onclick="setIdx('ch05','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch05" onclick="setIdx('ch05','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch05')">リセット</button></div></div>
+<div class="unit-card" id="card-ch06"><a class="uc-main" href="SPI_jimu_ch06.html"><div class="uc-num c6">06</div><div class="uc-body"><div class="uc-category">文章題Ⅱ ／ 図で解く</div><div class="uc-title">文章題Ⅱ② 年齢算</div><div class="uc-tags"><span class="uc-tag tag-pink">x年後・x年前</span><span class="uc-tag tag-blue">子が2人</span><span class="uc-tag tag-amber">連立</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-3"></span><span class="diff-dot on-3"></span><span class="diff-dot on-3"></span></div><span class="uc-status status-new" id="st-ch06">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch06" onclick="setIdx('ch06','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch06" onclick="setIdx('ch06','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch06" onclick="setIdx('ch06','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch06')">リセット</button></div></div>
+<div class="unit-card" id="card-ch07"><a class="uc-main" href="SPI_jimu_ch07.html"><div class="uc-num c1">07</div><div class="uc-body"><div class="uc-category">文章題Ⅱ ／ 図で解く</div><div class="uc-title">文章題Ⅱ③ 集合（ベン図）</div><div class="uc-tags"><span class="uc-tag tag-pink">ベン図</span><span class="uc-tag tag-blue">重なり</span><span class="uc-tag tag-teal">アンケート表</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-2"></span><span class="diff-dot on-2"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch07">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch07" onclick="setIdx('ch07','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch07" onclick="setIdx('ch07','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch07" onclick="setIdx('ch07','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch07')">リセット</button></div></div>
+<div class="section-head">順列・組合せ・確率</div><div class="cat-note">場合の数と確率。並べる・選ぶ・「少なくとも1回」の考え方。</div>
+<div class="unit-card" id="card-ch08"><a class="uc-main" href="SPI_jimu_ch08.html"><div class="uc-num c2">08</div><div class="uc-body"><div class="uc-category">順列・組合せ・確率</div><div class="uc-title">順列・組合せ</div><div class="uc-tags"><span class="uc-tag tag-pink">順列 nPr</span><span class="uc-tag tag-blue">組合せ nCr</span><span class="uc-tag tag-amber">条件つき</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-2"></span><span class="diff-dot on-2"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch08">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch08" onclick="setIdx('ch08','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch08" onclick="setIdx('ch08','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch08" onclick="setIdx('ch08','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch08')">リセット</button></div></div>
+<div class="unit-card" id="card-ch09"><a class="uc-main" href="SPI_jimu_ch09.html"><div class="uc-num c3">09</div><div class="uc-body"><div class="uc-category">順列・組合せ・確率</div><div class="uc-title">確率</div><div class="uc-tags"><span class="uc-tag tag-pink">かつ・または</span><span class="uc-tag tag-blue">戻さない取り出し</span><span class="uc-tag tag-amber">余事象</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-3"></span><span class="diff-dot on-3"></span><span class="diff-dot on-3"></span></div><span class="uc-status status-new" id="st-ch09">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch09" onclick="setIdx('ch09','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch09" onclick="setIdx('ch09','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch09" onclick="setIdx('ch09','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch09')">リセット</button></div></div>
+<div class="section-head">表とグラフ</div><div class="cat-note">運賃表や割合の表の読み取り、グラフの領域の問題。</div>
+<div class="unit-card" id="card-ch10"><a class="uc-main" href="SPI_jimu_ch10.html"><div class="uc-num c4">10</div><div class="uc-body"><div class="uc-category">表とグラフ</div><div class="uc-title">表とグラフ① 表の読み取り</div><div class="uc-tags"><span class="uc-tag tag-pink">運賃表</span><span class="uc-tag tag-blue">割合の表</span><span class="uc-tag tag-teal">空欄を埋める</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-2"></span><span class="diff-dot on-2"></span><span class="diff-dot off"></span></div><span class="uc-status status-new" id="st-ch10">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch10" onclick="setIdx('ch10','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch10" onclick="setIdx('ch10','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch10" onclick="setIdx('ch10','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch10')">リセット</button></div></div>
+<div class="unit-card" id="card-ch11"><a class="uc-main" href="SPI_jimu_ch11.html"><div class="uc-num c5">11</div><div class="uc-body"><div class="uc-category">表とグラフ</div><div class="uc-title">表とグラフ② グラフ（不等式と領域）</div><div class="uc-tags"><span class="uc-tag tag-pink">境界線</span><span class="uc-tag tag-blue">上側・下側</span><span class="uc-tag tag-amber">共通部分</span></div></div><div class="uc-meta"><div class="uc-diff"><span class="diff-dot on-3"></span><span class="diff-dot on-3"></span><span class="diff-dot on-3"></span></div><span class="uc-status status-new" id="st-ch11">スタート</span><span class="uc-arrow">›</span></div></a><div class="abc-panel"><span class="abc-panel-lbl">理解度</span><button class="abc-btn-idx btn-a" id="ba-ch11" onclick="setIdx('ch11','A')">A わかった</button><button class="abc-btn-idx btn-b" id="bb-ch11" onclick="setIdx('ch11','B')">B 復習必要</button><button class="abc-btn-idx btn-c" id="bc-ch11" onclick="setIdx('ch11','C')">C 繰り返し必要</button><button class="abc-clear" onclick="clearIdx('ch11')">リセット</button></div></div>
+</div>
+</main>
+<div class="index-footer">GAMBA ／ 江原予備校</div>
+<script>
+var UNITS=["ch01", "ch02", "ch03", "ch04", "ch05", "ch06", "ch07", "ch08", "ch09", "ch10", "ch11"],LS='spi_jimu_';
+function g(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function s(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function d(k){try{localStorage.removeItem(k);}catch(e){}}
+function setIdx(id,m){if(g(LS+id+'_mark')===m)d(LS+id+'_mark');else s(LS+id+'_mark',m);renderCard(id);updateOverall();}
+function clearIdx(id){d(LS+id+'_mark');d(LS+id);renderCard(id);updateOverall();}
+function renderCard(id){
+  var mk=g(LS+id+'_mark'),dn=g(LS+id),st=document.getElementById('st-'+id),cd=document.getElementById('card-'+id);
+  ['A','B','C'].forEach(function(x){document.getElementById('b'+x.toLowerCase()+'-'+id).classList.toggle('on',mk===x);});
+  var t='スタート',c='status-new';
+  if(mk==='A'){t='✅ A わかった';c='status-done';}else if(mk==='B'){t='📖 B 復習必要';c='status-new';}else if(mk==='C'){t='❓ C 繰り返し必要';c='status-new';}else if(dn){t='学習済';c='status-done';}
+  st.textContent=t;st.className='uc-status '+c;
+  cd.classList.toggle('done',mk==='A'||(!mk&&!!dn));
+}
+function updateOverall(){
+  var n=0;UNITS.forEach(function(id){var mk=g(LS+id+'_mark');if(mk==='A'||(!mk&&g(LS+id)))n++;});
+  document.getElementById('prog-count').textContent=n+' / '+UNITS.length+' 単元';
+  document.getElementById('prog-fill').style.width=(n/UNITS.length*100)+'%';
+}
+UNITS.forEach(renderCard);updateOverall();
+</script></body></html>

@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GAMBA｜SPI 置換② 消去テクニック</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.8;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+/* ===== 事務処理検査用の追加 ===== */
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.mini-choices .mch:last-child:nth-child(odd){grid-column:1/-1;}
+.cmp{background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;padding:.8rem 1rem;margin:.4rem 0 1rem;display:flex;flex-direction:column;gap:6px;overflow-x:auto;}
+.cmp.sm{margin:.3rem 0 .6rem;background:#fff;}
+.cmp-row{display:flex;align-items:center;gap:12px;}
+.cmp-l{font-size:11px;font-weight:700;color:var(--text3);width:1.8em;flex-shrink:0;}
+.cmp-s{font-family:'DM Mono','Noto Sans JP',monospace;font-size:24px;white-space:nowrap;}
+.cmp.sm .cmp-s{font-size:20px;}
+.cmp-s i{font-style:normal;display:inline-block;min-width:1.5em;text-align:center;border-radius:5px;}
+.cmp-s i.d{background:#fde8eb;color:var(--pink);font-weight:700;}
+.rep-table{max-width:420px;margin:.4rem auto .6rem;}
+.rep-table th{font-size:15px;width:20%;}
+.rep-table td{font-size:17px;font-weight:700;}
+.eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:26px;font-weight:700;text-align:center;letter-spacing:.08em;margin:.4rem 0 1.1rem;color:#1a3a7a;}
+.eq .q{color:var(--pink);}
+.eq-sm{font-family:'DM Mono','Noto Sans JP',monospace;font-size:18px;font-weight:700;color:#1a3a7a;}
+.mini-eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:17px;font-weight:700;color:#1a3a7a;background:#fff;border:1px solid var(--bd);border-radius:8px;padding:2px 10px;display:inline-block;margin:2px 0;}
+.flow{display:flex;flex-direction:column;align-items:stretch;gap:0;margin:.8rem 0;}
+.flow .fs{background:var(--bl);border:1.5px solid #a8c0e8;border-radius:9px;padding:.6rem .9rem;font-size:13px;line-height:1.8;color:#1a3a7a;}
+.flow .fa{text-align:center;color:var(--blue);font-size:14px;line-height:1.3;}
+@media(max-width:480px){.cmp-s{font-size:20px}.eq{font-size:21px}}
+/* ===== 目次ページ ===== */
+.page-title-block{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1.6rem;display:flex;align-items:center;gap:14px;}
+.ptb-icon{width:48px;height:48px;border-radius:10px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.ptb-label{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:3px;}
+.ptb-title{font-size:17px;font-weight:700;color:var(--text);}
+.ptb-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.6;}
+.overall-prog{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.9rem 1.3rem;margin-bottom:1.4rem;}
+.op-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
+.op-label{font-size:12px;font-weight:700;color:var(--text2);}
+.op-count{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.op-bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.op-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:4px;transition:width .6s ease;width:0%;}
+.unit-list{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.6rem;}
+.unit-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;transition:all .18s;position:relative;}
+.unit-card:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(32,85,176,.10);transform:translateY(-1px);}
+.unit-card.done{border-color:var(--teal);}
+.uc-main{display:flex;align-items:center;gap:14px;padding:1rem 1.2rem .85rem;}
+.uc-num{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace;}
+.uc-num.c1{background:#fde8eb;color:var(--pink);}.uc-num.c2{background:var(--bl);color:var(--blue);}.uc-num.c3{background:var(--tl);color:var(--teal);}.uc-num.c4{background:var(--al);color:var(--amber);}.uc-num.c5{background:#f8f0ff;color:#6b21a8;}.uc-num.c6{background:#f0f8ef;color:#166534;}
+.uc-body{flex:1;min-width:0;}
+.uc-category{font-size:10px;color:var(--text3);letter-spacing:.07em;margin-bottom:2px;}
+.uc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.uc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.uc-tag{font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;letter-spacing:.04em;white-space:nowrap;}
+.tag-pink{background:var(--pl);color:var(--pink);}.tag-blue{background:var(--bl);color:var(--blue);}.tag-teal{background:var(--tl);color:var(--teal);}.tag-amber{background:var(--al);color:var(--amber);}
+.uc-meta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.uc-status{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;}
+.status-new{background:var(--pl);color:var(--pink);}
+.status-done{background:var(--tl);color:var(--teal);}
+.uc-arrow{font-size:16px;color:var(--bd2);transition:color .15s;}
+.unit-card:hover .uc-arrow{color:var(--blue);}
+.unit-card.done::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--teal);border-radius:var(--r) 0 0 var(--r);}
+.uc-diff{display:flex;gap:2px;align-items:center;}
+.diff-dot{width:8px;height:8px;border-radius:50%;}
+.diff-dot.on-1{background:var(--pink);}.diff-dot.on-2{background:var(--amber);}.diff-dot.on-3{background:#6b21a8;}.diff-dot.off{background:var(--bd);}
+.section-head{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.1em;margin:1.4rem 0 .6rem;display:flex;align-items:center;gap:8px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--bd);}
+.tips-card{background:var(--tl);border:1.5px solid #8ecfc3;border-radius:var(--r);padding:1.1rem 1.3rem;margin-bottom:1.4rem;}
+.tips-title{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.08em;margin-bottom:.7rem;}
+.tips-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.tips-list li{font-size:13px;color:#0a6b54;line-height:1.7;display:flex;gap:8px;}
+.tips-list li::before{content:'✓';font-weight:700;flex-shrink:0;}
+.exam-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem;}
+.exam-badge{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:.55rem .9rem;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.exam-badge .eb-icon{font-size:1rem;}
+.exam-badge strong{color:var(--text);font-weight:700;}
+.index-footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--text3);line-height:1.8;border-top:1px solid var(--bd);margin-top:2rem;}
+.abc-panel{display:flex;align-items:center;gap:7px;padding:.65rem 1.2rem;border-top:1px solid var(--bd);background:var(--sf2);border-radius:0 0 calc(var(--r) - 2px) calc(var(--r) - 2px);flex-wrap:wrap;}
+.abc-panel-lbl{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.06em;white-space:nowrap;margin-right:2px;}
+.abc-btn-idx{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;white-space:nowrap;background:var(--sf);}
+.abc-btn-idx.btn-a{border-color:var(--teal);color:var(--teal);}.abc-btn-idx.btn-a.on{background:var(--teal);color:#fff;}
+.abc-btn-idx.btn-b{border-color:var(--blue);color:var(--blue);}.abc-btn-idx.btn-b.on{background:var(--blue);color:#fff;}
+.abc-btn-idx.btn-c{border-color:var(--pink);color:var(--pink);}.abc-btn-idx.btn-c.on{background:var(--pink);color:#fff;}
+.abc-clear{margin-left:auto;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;padding:2px 4px;text-decoration:underline;}
+.abc-clear:hover{color:var(--pink);}
+/* ===== 追加: 分数・ヒント3段・図 ===== */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.2;margin:0 3px;font-size:.92em}
+.fr b{font-weight:500;padding:0 4px}.fr b:first-child{border-bottom:1.5px solid currentColor}
+.hint-row{display:flex;gap:6px;margin-bottom:.7rem;flex-wrap:wrap}
+.hint-btn{background:#fff;border:1.5px dashed var(--blue);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--blue);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.hint-btn:hover:not(:disabled){background:var(--bl)}
+.hint-btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--bd2);color:var(--text3)}
+.hint-btn.used{background:var(--bl);border-style:solid;opacity:1}
+.hint-box{margin-bottom:.5rem}
+.hint-box b{display:inline-block;background:var(--blue);color:#fff;border-radius:4px;padding:0 7px;font-size:11px;margin-right:6px}
+.fig{margin:.6rem auto 1rem;max-width:330px}.fig svg{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--bd);border-radius:10px}
+.figs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.figs .fig{flex:1;min-width:130px;margin:.3rem 0}
+.fig-cap{text-align:center;font-size:11px;color:var(--text2);margin-top:3px}
+.fare{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:12px}
+.fare th,.fare td{border:1.5px solid #bcb8ae;padding:4px 3px;text-align:center;line-height:1.5;background:#fff}
+.fare th{background:var(--sf2);font-weight:700}
+.fare td.dg{background:var(--sf2);font-weight:700}
+.fare td.em{border:none;background:none}
+.fare small{display:block;color:var(--blue)}
+.dtable{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:13px}
+.dtable th,.dtable td{border:1.5px solid #bcb8ae;padding:6px 4px;text-align:center;background:#fff}
+.dtable th{background:var(--sf2)}
+.dtable td.bl{background:#f3f1ea;color:var(--text3)}
+.score-box{background:var(--al);border:2px solid var(--amber);border-radius:12px;padding:12px 16px;text-align:center;font-weight:700;color:var(--amber);margin-top:.8rem}
+.bar{display:flex;border:1.5px solid #1a1814;border-radius:6px;overflow:hidden;margin:.35rem 0 .15rem;font-size:12px;line-height:1.5}
+.bar span{padding:7px 2px;text-align:center;border-right:1.5px solid #1a1814;background:#fff;min-width:0;overflow:hidden}
+.bar span:last-child{border-right:none}
+.bar .c1{background:#fde8eb}.bar .c2{background:#eaf0fb}.bar .c3{background:#e6f5f1}.bar .c4{background:#fdf2dd}
+.bar-l{font-size:11px;color:var(--text2);margin:.5rem 0 0}
+.uc-main{text-decoration:none;color:inherit}
+.uc-main:hover .uc-title{color:var(--blue)}
+.cat-note{font-size:12px;color:var(--text2);margin:-.2rem 0 .7rem;line-height:1.7}
+</style></head><body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ 置換② 消去テクニック</span></header>
+<nav class="tab-nav">
+<button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+<button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>演習<span class="tab-done" id="tabdone-pr">✓</span></button>
+<button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>確認<span class="tab-done" id="tabdone-cf">✓</span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">置換② 消去テクニックで速く解く</div><div class="page-hdr-desc">同じ文字を消す・5以下の近道で、1問6秒に近づける方法を練習します。</div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">1</div>両辺の同じ文字は最初に消す</div>
+<p class="body-text">両辺に<b>同じ文字</b>があるときは、同じ数を両方に加えているだけなので、<b>最初に消して</b>かまいません（計算もいりません）。</p><div class="eq">A ＋ <s style="color:#98948c">B</s> ＋ <span class="q">?</span> ＝ D ＋ <s style="color:#98948c">B</s></div><div class="eq" style="margin-top:-.4rem">↓</div><div class="eq" style="margin-top:-.4rem">A ＋ <span class="q">?</span> ＝ D</div><div class="point-box"><strong>🔑 ポイント②</strong>式を短くしてから数字を書き込むと、計算が少なくなりミスも減ります。</div><div class="card" style="background:#fffdf8;border-color:#e0c888"><div class="clabel ex">例題</div><div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>1</td><td>3</td><td>4</td><td>5</td><td>2</td></tr></table><div class="eq">A + <span class="q">?</span> + C ＝ A + D</div></div><div class="exp-box" id="ex1-s0" style="display:none"><h4>STEP 1　同じ文字を消す</h4><p>両辺に A があります。先に消すと<div class="mini-eq">？ ＋ C ＝ D</div></p></div><div class="exp-box blue" id="ex1-s1" style="display:none"><h4>STEP 2　？の数字を求める</h4><p>C＝4、D＝5 なので、？ ＝ 5 − 4 ＝ <b>1</b></p></div><div class="exp-box amber" id="ex1-s2" style="display:none"><h4>STEP 3　文字に戻す</h4><p>数字1の文字は <span class="hl-t">A</span>。答えは A です。</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',3)">解き方を見る (1/3)</button><div id="ex1-fin" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>数字を書き込む → ？＝反対側の合計−？側の他の合計 → 数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">例題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">B<span>もう一度読む</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">C<span>わからない</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト</div><div class="mini-q">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>5</td><td>3</td><td>2</td><td>1</td><td>4</td></tr></table><div class="eq">A + C + D + B ＝ B + C + A + <span class="q">?</span></div></div><div class="mini-choices" id="mc-m1_1"><button class="mch" onclick="miniAns('m1_1',0,3)"><span class="mcnum">ア</span>A</button><button class="mch" onclick="miniAns('m1_1',1,3)"><span class="mcnum">イ</span>B</button><button class="mch" onclick="miniAns('m1_1',2,3)"><span class="mcnum">ウ</span>C</button><button class="mch" onclick="miniAns('m1_1',3,3)"><span class="mcnum">エ</span>D</button><button class="mch" onclick="miniAns('m1_1',4,3)"><span class="mcnum">オ</span>E</button></div><div class="mini-fb" id="mfb-m1_1"></div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">2</div>5以下になったら、反対側の文字を消す近道</div>
+<p class="body-text">？がある側の「？以外」を数字にして足します。<b>合計が5以下</b>で、反対側にその数の文字があるときは、その文字を消すだけで答えが出ます。</p><div class="eq">A ＋ B ＋ <span class="q">?</span> ＝ C ＋ D</div><p class="body-text">たとえば A＝1、B＝2 なら A＋B＝3。C＝3 なので<b>Cを消す</b>と、残る<b>D</b>が答えです。</p><div class="teal-box"><strong>💡 なぜ消せる？</strong>A＋B＝C になっているので、両辺からその分を引くと「？＝D」と残るからです。</div><div class="card" style="background:#fffdf8;border-color:#e0c888"><div class="clabel ex">例題</div><div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>3</td><td>2</td><td>1</td><td>5</td><td>4</td></tr></table><div class="eq">A + <span class="q">?</span> + B ＝ C + D</div></div><div class="exp-box" id="ex2-s0" style="display:none"><h4>STEP 1　数字を書き込む</h4><p>A＝3、B＝2、C＝1、D＝5<div class="mini-eq">3 ＋ ？ ＋ 2 ＝ 1 ＋ 5</div></p></div><div class="exp-box blue" id="ex2-s1" style="display:none"><h4>STEP 2　近道を使う</h4><p>？側の？以外の合計は 3 ＋ 2 ＝ <b>5</b>（5以下）。反対側に5の文字（D）があるので、<b>Dを消す</b>と残るのはCだけ。</p></div><div class="exp-box amber" id="ex2-s2" style="display:none"><h4>STEP 3　答え</h4><p>？ ＝ <span class="hl-t">C</span>（念のため 1＋5−5＝1、1はC）</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',3)">解き方を見る (1/3)</button><div id="ex2-fin" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>数字を書き込む → ？＝反対側の合計−？側の他の合計 → 数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">例題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">B<span>もう一度読む</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">C<span>わからない</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト</div><div class="mini-q">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>3</td><td>2</td><td>5</td><td>4</td><td>1</td></tr></table><div class="eq">E + <span class="q">?</span> + A ＝ D + B</div></div><div class="mini-choices" id="mc-m2_1"><button class="mch" onclick="miniAns('m2_1',0,1)"><span class="mcnum">ア</span>A</button><button class="mch" onclick="miniAns('m2_1',1,1)"><span class="mcnum">イ</span>B</button><button class="mch" onclick="miniAns('m2_1',2,1)"><span class="mcnum">ウ</span>C</button><button class="mch" onclick="miniAns('m2_1',3,1)"><span class="mcnum">エ</span>D</button><button class="mch" onclick="miniAns('m2_1',4,1)"><span class="mcnum">オ</span>E</button></div><div class="mini-fb" id="mfb-m2_1"></div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">3</div>消せないときは、そのまま計算</div>
+<p class="body-text">近道が使えないとき（合計が6以上、または反対側にその数の文字がない）は、<b>基本の3ステップ</b>で解きます。</p><div class="flow"><div class="fs">数字を書き込む</div><div class="fa">▼</div><div class="fs">？＝反対側の合計 − ？側の他の合計</div><div class="fa">▼</div><div class="fs">数字を文字に戻す</div></div><div class="pink-box"><strong>⚠️ 注意</strong>近道は<b>使えるときだけ</b>。無理に使おうとして迷うくらいなら、普通に計算したほうが速いです。</div><div class="mini-card"><div class="mini-section-label">ミニテスト</div><div class="mini-q">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>2</td><td>3</td><td>4</td><td>5</td><td>1</td></tr></table><div class="eq">D ＝ B + <span class="q">?</span></div></div><div class="mini-choices" id="mc-m3_1"><button class="mch" onclick="miniAns('m3_1',0,0)"><span class="mcnum">ア</span>A</button><button class="mch" onclick="miniAns('m3_1',1,0)"><span class="mcnum">イ</span>B</button><button class="mch" onclick="miniAns('m3_1',2,0)"><span class="mcnum">ウ</span>C</button><button class="mch" onclick="miniAns('m3_1',3,0)"><span class="mcnum">エ</span>D</button><button class="mch" onclick="miniAns('m3_1',4,0)"><span class="mcnum">オ</span>E</button></div><div class="mini-fb" id="mfb-m3_1"></div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">4</div>総合：消す → 近道 → 計算の順で</div>
+<table class="kansan-table"><tr><th>順番</th><th>やること</th></tr><tr><td>①</td><td>両辺の同じ文字を消す</td></tr><tr><td>②</td><td>？側の他の和が5以下か見る（近道）</td></tr><tr><td>③</td><td>使えなければ、数字を書いて計算</td></tr><tr><td>④</td><td>数字を文字に戻し、1〜5の範囲か確認</td></tr></table><p class="body-text">この順番をそのまま身につければ、1問6秒でも落ち着いて解けます。</p><div class="mini-card"><div class="mini-section-label">ミニテスト</div><div class="mini-q">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>3</td><td>4</td><td>5</td><td>2</td><td>1</td></tr></table><div class="eq"><span class="q">?</span> + B + E + A ＝ A + D + C + E</div></div><div class="mini-choices" id="mc-m4_1"><button class="mch" onclick="miniAns('m4_1',0,0)"><span class="mcnum">ア</span>A</button><button class="mch" onclick="miniAns('m4_1',1,0)"><span class="mcnum">イ</span>B</button><button class="mch" onclick="miniAns('m4_1',2,0)"><span class="mcnum">ウ</span>C</button><button class="mch" onclick="miniAns('m4_1',3,0)"><span class="mcnum">エ</span>D</button><button class="mch" onclick="miniAns('m4_1',4,0)"><span class="mcnum">オ</span>E</button></div><div class="mini-fb" id="mfb-m4_1"></div></div></div>
+<button class="next-page-btn pr" onclick="switchTab('pr')">演習問題へ進む →</button>
+</div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">演習問題（全5問）</div><div class="page-hdr-desc">困ったら「ヒント1→2→3」の順に押すと、少しずつ考え方が見えてきます。</div></div></div>
+<div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pbpr" style="width:0%"></div></div><div class="pb-txt" id="pbpr-t">0 / 5</div></div>
+<div class="prob-n"><div class="n n-pr">1</div><span>演習問題 1 / 5</span></div>
+<div class="card" id="card-q1"><div class="clabel pr">演習問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>3</td><td>4</td><td>5</td><td>1</td><td>2</td></tr></table><div class="eq">D + E + D + <span class="q">?</span> ＝ E + B + A</div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q1-1" onclick="hint('q1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q1-2" disabled onclick="hint('q1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q1-3" disabled onclick="hint('q1',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-q1-1"><b>ヒント1</b>両辺に同じ文字（「E」）があります。先にそれを消して式を短くしましょう。</div>
+<div class="hint-box" id="hint-q1-2"><b>ヒント2</b>消したあとの式で、？がある側の「？以外」の数の合計と、反対側の合計を出します。</div>
+<div class="hint-box" id="hint-q1-3"><b>ヒント3</b>？以外の合計は <b>2</b>、反対側の合計は <b>7</b>。<b>？＝7 − 2</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q1" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q1">30</div></div><div class="timer-msg" id="tmsg-q1"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,2)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('q1',1,2)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('q1',2,2)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('q1',3,2)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('q1',4,2)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q1')">もう一度</button></div>
+<div id="q1-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>両辺に同じ文字があれば、まず消す。残りで「？＝反対側の合計−？側の他の合計」を計算し、数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q1"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q1-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝3　B＝4　D＝1　E＝2<div class="mini-eq">1 + <s style="color:#98948c">2</s> + 1 + <span class="hl-x">?</span> ＝ <s style="color:#98948c">2</s> + 4 + 3</div></p></div>
+<div class="exp-box blue" id="q1-s1" style="display:none"><h4>STEP 2　両辺の同じ文字を消す</h4><p>両辺に同じ文字「E」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 1 + 1 + ？ ／ 反対側 ＝ 7</p></div>
+<div class="exp-box amber" id="q1-s2" style="display:none"><h4>STEP 3　？の数字を求める</h4><p>？側の？以外の合計は <b>2</b>、反対側の合計は <b>7</b>。<br>？ ＝ 7 − 2 ＝ <span class="hl-x">5</span></p></div>
+<div class="exp-box" id="q1-s3" style="display:none"><h4>STEP 4　文字に戻す</h4><p>数字 5 にあたる文字は表で探すと <span class="hl-t">C</span>。答えは C です。</p></div>
+<button class="reveal-btn" id="rb-q1" onclick="reveal('q1',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">2</div><span>演習問題 2 / 5</span></div>
+<div class="card" id="card-q2"><div class="clabel pr">演習問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>4</td><td>1</td><td>3</td><td>2</td><td>5</td></tr></table><div class="eq">E + A + <span class="q">?</span> ＝ E + E + B</div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q2-1" onclick="hint('q2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q2-2" disabled onclick="hint('q2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q2-3" disabled onclick="hint('q2',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-q2-1"><b>ヒント1</b>両辺に同じ文字（「E」）があります。先にそれを消して式を短くしましょう。</div>
+<div class="hint-box" id="hint-q2-2"><b>ヒント2</b>消したあとの式で、？がある側の「？以外」の数の合計と、反対側の合計を出します。</div>
+<div class="hint-box" id="hint-q2-3"><b>ヒント3</b>？以外の合計は <b>4</b>、反対側の合計は <b>6</b>。<b>？＝6 − 4</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q2" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q2">30</div></div><div class="timer-msg" id="tmsg-q2"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,3)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('q2',1,3)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('q2',2,3)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('q2',3,3)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('q2',4,3)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は D です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q2')">もう一度</button></div>
+<div id="q2-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>両辺に同じ文字があれば、まず消す。残りで「？＝反対側の合計−？側の他の合計」を計算し、数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q2"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q2-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝4　B＝1　E＝5<div class="mini-eq"><s style="color:#98948c">5</s> + 4 + <span class="hl-x">?</span> ＝ <s style="color:#98948c">5</s> + 5 + 1</div></p></div>
+<div class="exp-box blue" id="q2-s1" style="display:none"><h4>STEP 2　両辺の同じ文字を消す</h4><p>両辺に同じ文字「E」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 4 + ？ ／ 反対側 ＝ 6</p></div>
+<div class="exp-box amber" id="q2-s2" style="display:none"><h4>STEP 3　？の数字を求める</h4><p>？側の？以外の合計は <b>4</b>、反対側の合計は <b>6</b>。<br>？ ＝ 6 − 4 ＝ <span class="hl-x">2</span></p></div>
+<div class="exp-box" id="q2-s3" style="display:none"><h4>STEP 4　文字に戻す</h4><p>数字 2 にあたる文字は表で探すと <span class="hl-t">D</span>。答えは D です。</p></div>
+<button class="reveal-btn" id="rb-q2" onclick="reveal('q2',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">3</div><span>演習問題 3 / 5</span></div>
+<div class="card" id="card-q3"><div class="clabel pr">演習問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>3</td><td>1</td><td>4</td><td>5</td><td>2</td></tr></table><div class="eq">A + D ＝ <span class="q">?</span> + C + B</div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q3-1" onclick="hint('q3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q3-2" disabled onclick="hint('q3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q3-3" disabled onclick="hint('q3',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-q3-1"><b>ヒント1</b>？がある側の「？以外の文字」を数字にして足してみましょう。</div>
+<div class="hint-box" id="hint-q3-2"><b>ヒント2</b>足すと<b>5</b>。5以下なので、反対側に<b>5</b>にあたる文字（D）がないか探します。</div>
+<div class="hint-box" id="hint-q3-3"><b>ヒント3</b>D（＝5）を両辺から消すと、反対側に残った1文字が？の答えです。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q3" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q3">30</div></div><div class="timer-msg" id="tmsg-q3"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,0)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('q3',1,0)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('q3',2,0)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('q3',3,0)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('q3',4,0)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は A です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q3')">もう一度</button></div>
+<div id="q3-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>？側の他の和が5以下で、反対側に同じ数の文字があれば、その文字を消して残りが答え。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q3"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q3-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝3　B＝1　C＝4　D＝5<div class="mini-eq">3 + 5 ＝ <span class="hl-x">?</span> + 4 + 1</div></p></div>
+<div class="exp-box blue" id="q3-s1" style="display:none"><h4>STEP 2　近道（消去）</h4><p>？側の？以外：4 + 1 ＝ 5。反対側に 5 にあたる D があるので、両辺から消します。残る文字は <span class="hl-t">A</span>。</p></div>
+<div class="exp-box amber" id="q3-s2" style="display:none"><h4>STEP 3　答え</h4><p>？ ＝ <span class="hl-t">A</span>（念のため：8 − 5 ＝ 3 ＝ A）</p></div>
+<button class="reveal-btn" id="rb-q3" onclick="reveal('q3',3)">次のSTEPを見る (2/3)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">4</div><span>演習問題 4 / 5</span></div>
+<div class="card" id="card-q4"><div class="clabel pr">演習問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>2</td><td>1</td><td>3</td><td>5</td><td>4</td></tr></table><div class="eq">E + D ＝ A + A + <span class="q">?</span></div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q4-1" onclick="hint('q4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q4-2" disabled onclick="hint('q4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q4-3" disabled onclick="hint('q4',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-q4-1"><b>ヒント1</b>？がある側の「？以外の文字」を数字にして足してみましょう。</div>
+<div class="hint-box" id="hint-q4-2"><b>ヒント2</b>足すと<b>4</b>。5以下なので、反対側に<b>4</b>にあたる文字（E）がないか探します。</div>
+<div class="hint-box" id="hint-q4-3"><b>ヒント3</b>E（＝4）を両辺から消すと、反対側に残った1文字が？の答えです。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q4" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q4">30</div></div><div class="timer-msg" id="tmsg-q4"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,3)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('q4',1,3)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('q4',2,3)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('q4',3,3)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('q4',4,3)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は D です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q4')">もう一度</button></div>
+<div id="q4-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>？側の他の和が5以下で、反対側に同じ数の文字があれば、その文字を消して残りが答え。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q4"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q4-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝2　D＝5　E＝4<div class="mini-eq">4 + 5 ＝ 2 + 2 + <span class="hl-x">?</span></div></p></div>
+<div class="exp-box blue" id="q4-s1" style="display:none"><h4>STEP 2　近道（消去）</h4><p>？側の？以外：2 + 2 ＝ 4。反対側に 4 にあたる E があるので、両辺から消します。残る文字は <span class="hl-t">D</span>。</p></div>
+<div class="exp-box amber" id="q4-s2" style="display:none"><h4>STEP 3　答え</h4><p>？ ＝ <span class="hl-t">D</span>（念のため：9 − 4 ＝ 5 ＝ D）</p></div>
+<button class="reveal-btn" id="rb-q4" onclick="reveal('q4',3)">次のSTEPを見る (2/3)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">5</div><span>演習問題 5 / 5</span></div>
+<div class="card" id="card-q5"><div class="clabel pr">演習問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>1</td><td>3</td><td>2</td><td>5</td><td>4</td></tr></table><div class="eq">D ＝ A + <span class="q">?</span></div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-q5-1" onclick="hint('q5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q5-2" disabled onclick="hint('q5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q5-3" disabled onclick="hint('q5',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-q5-1"><b>ヒント1</b>式の文字の上に、表の数字を書き込みましょう（？以外）。</div>
+<div class="hint-box" id="hint-q5-2"><b>ヒント2</b>？がある側の「？以外」の合計と、反対側の合計を、それぞれ出します。</div>
+<div class="hint-box" id="hint-q5-3"><b>ヒント3</b>？以外の合計は <b>1</b>、反対側の合計は <b>5</b>。<b>？＝5 − 1</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q5" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q5">30</div></div><div class="timer-msg" id="tmsg-q5"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,4)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('q5',1,4)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('q5',2,4)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('q5',3,4)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('q5',4,4)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は E です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q5')">もう一度</button></div>
+<div id="q5-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>数字を書き込む → ？＝反対側の合計−？側の他の合計 → 数字を文字に戻す。答えは必ず1〜5。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q5"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q5-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝1　D＝5<div class="mini-eq">5 ＝ 1 + <span class="hl-x">?</span></div></p></div>
+<div class="exp-box blue" id="q5-s1" style="display:none"><h4>STEP 2　？の数字を求める</h4><p>？側の？以外の合計は <b>1</b>、反対側の合計は <b>5</b>。<br>？ ＝ 5 − 1 ＝ <span class="hl-x">4</span></p></div>
+<div class="exp-box amber" id="q5-s2" style="display:none"><h4>STEP 3　文字に戻す</h4><p>数字 4 にあたる文字は表で探すと <span class="hl-t">E</span>。答えは E です。</p></div>
+<button class="reveal-btn" id="rb-q5" onclick="reveal('q5',3)">次のSTEPを見る (2/3)</button>
+</div>
+<hr class="prob-divider">
+<div id="done-pr" class="teal-box" style="display:none;text-align:center"><strong>✅ 演習問題 完了！</strong><span class="sc"></span><br>確認問題に挑戦しましょう。</div>
+<button class="next-page-btn cf" onclick="switchTab('cf')">確認問題へ進む →</button>
+</div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">確認問題（全6問）</div><div class="page-hdr-desc">ここまでの総まとめ。少しむずかしい問題も入っています。</div></div></div>
+<div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pbcf" style="width:0%"></div></div><div class="pb-txt" id="pbcf-t">0 / 6</div></div>
+<div class="prob-n"><div class="n n-cf">1</div><span>確認問題 1 / 6</span></div>
+<div class="card" id="card-qc1"><div class="clabel cf">確認問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>1</td><td>4</td><td>2</td><td>3</td><td>5</td></tr></table><div class="eq">E + C ＝ <span class="q">?</span> + A + B</div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc1-1" onclick="hint('qc1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc1-2" disabled onclick="hint('qc1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc1-3" disabled onclick="hint('qc1',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-qc1-1"><b>ヒント1</b>？がある側の「？以外の文字」を数字にして足してみましょう。</div>
+<div class="hint-box" id="hint-qc1-2"><b>ヒント2</b>足すと<b>5</b>。5以下なので、反対側に<b>5</b>にあたる文字（E）がないか探します。</div>
+<div class="hint-box" id="hint-qc1-3"><b>ヒント3</b>E（＝5）を両辺から消すと、反対側に残った1文字が？の答えです。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc1" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc1">30</div></div><div class="timer-msg" id="tmsg-qc1"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,2)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('qc1',1,2)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('qc1',2,2)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('qc1',3,2)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('qc1',4,2)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc1')">もう一度</button></div>
+<div id="qc1-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>？側の他の和が5以下で、反対側に同じ数の文字があれば、その文字を消して残りが答え。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc1"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc1-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝1　B＝4　C＝2　E＝5<div class="mini-eq">5 + 2 ＝ <span class="hl-x">?</span> + 1 + 4</div></p></div>
+<div class="exp-box blue" id="qc1-s1" style="display:none"><h4>STEP 2　近道（消去）</h4><p>？側の？以外：1 + 4 ＝ 5。反対側に 5 にあたる E があるので、両辺から消します。残る文字は <span class="hl-t">C</span>。</p></div>
+<div class="exp-box amber" id="qc1-s2" style="display:none"><h4>STEP 3　答え</h4><p>？ ＝ <span class="hl-t">C</span>（念のため：7 − 5 ＝ 2 ＝ C）</p></div>
+<button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',3)">次のSTEPを見る (2/3)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">2</div><span>確認問題 2 / 6</span></div>
+<div class="card" id="card-qc2"><div class="clabel cf">確認問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>1</td><td>3</td><td>4</td><td>5</td><td>2</td></tr></table><div class="eq">C + B + <span class="q">?</span> ＝ D + B + B + A</div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc2-1" onclick="hint('qc2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc2-2" disabled onclick="hint('qc2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc2-3" disabled onclick="hint('qc2',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-qc2-1"><b>ヒント1</b>両辺に同じ文字（「B」）があります。先にそれを消して式を短くしましょう。</div>
+<div class="hint-box" id="hint-qc2-2"><b>ヒント2</b>消したあとの式で、？がある側の「？以外」の数の合計と、反対側の合計を出します。</div>
+<div class="hint-box" id="hint-qc2-3"><b>ヒント3</b>？以外の合計は <b>4</b>、反対側の合計は <b>9</b>。<b>？＝9 − 4</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc2" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc2">30</div></div><div class="timer-msg" id="tmsg-qc2"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,3)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('qc2',1,3)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('qc2',2,3)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('qc2',3,3)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('qc2',4,3)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は D です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc2')">もう一度</button></div>
+<div id="qc2-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>両辺に同じ文字があれば、まず消す。残りで「？＝反対側の合計−？側の他の合計」を計算し、数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc2"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc2-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝1　B＝3　C＝4　D＝5<div class="mini-eq">4 + <s style="color:#98948c">3</s> + <span class="hl-x">?</span> ＝ 5 + <s style="color:#98948c">3</s> + 3 + 1</div></p></div>
+<div class="exp-box blue" id="qc2-s1" style="display:none"><h4>STEP 2　両辺の同じ文字を消す</h4><p>両辺に同じ文字「B」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 4 + ？ ／ 反対側 ＝ 9</p></div>
+<div class="exp-box amber" id="qc2-s2" style="display:none"><h4>STEP 3　？の数字を求める</h4><p>？側の？以外の合計は <b>4</b>、反対側の合計は <b>9</b>。<br>？ ＝ 9 − 4 ＝ <span class="hl-x">5</span></p></div>
+<div class="exp-box" id="qc2-s3" style="display:none"><h4>STEP 4　文字に戻す</h4><p>数字 5 にあたる文字は表で探すと <span class="hl-t">D</span>。答えは D です。</p></div>
+<button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">3</div><span>確認問題 3 / 6</span></div>
+<div class="card" id="card-qc3"><div class="clabel cf">確認問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>2</td><td>5</td><td>4</td><td>1</td><td>3</td></tr></table><div class="eq"><span class="q">?</span> + A + C + D ＝ C + D + A + B</div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc3-1" onclick="hint('qc3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc3-2" disabled onclick="hint('qc3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc3-3" disabled onclick="hint('qc3',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-qc3-1"><b>ヒント1</b>両辺に同じ文字（「D」）があります。先にそれを消して式を短くしましょう。</div>
+<div class="hint-box" id="hint-qc3-2"><b>ヒント2</b>消したあとの式で、？がある側の「？以外」の数の合計と、反対側の合計を出します。</div>
+<div class="hint-box" id="hint-qc3-3"><b>ヒント3</b>？以外の合計は <b>6</b>、反対側の合計は <b>11</b>。<b>？＝11 − 6</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc3" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc3">30</div></div><div class="timer-msg" id="tmsg-qc3"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,1)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('qc3',1,1)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('qc3',2,1)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('qc3',3,1)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('qc3',4,1)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は B です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc3')">もう一度</button></div>
+<div id="qc3-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>両辺に同じ文字があれば、まず消す。残りで「？＝反対側の合計−？側の他の合計」を計算し、数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc3"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc3-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>A＝2　B＝5　C＝4　D＝1<div class="mini-eq"><span class="hl-x">?</span> + 2 + 4 + <s style="color:#98948c">1</s> ＝ 4 + <s style="color:#98948c">1</s> + 2 + 5</div></p></div>
+<div class="exp-box blue" id="qc3-s1" style="display:none"><h4>STEP 2　両辺の同じ文字を消す</h4><p>両辺に同じ文字「D」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 2 + 4 + ？ ／ 反対側 ＝ 11</p></div>
+<div class="exp-box amber" id="qc3-s2" style="display:none"><h4>STEP 3　？の数字を求める</h4><p>？側の？以外の合計は <b>6</b>、反対側の合計は <b>11</b>。<br>？ ＝ 11 − 6 ＝ <span class="hl-x">5</span></p></div>
+<div class="exp-box" id="qc3-s3" style="display:none"><h4>STEP 4　文字に戻す</h4><p>数字 5 にあたる文字は表で探すと <span class="hl-t">B</span>。答えは B です。</p></div>
+<button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">4</div><span>確認問題 4 / 6</span></div>
+<div class="card" id="card-qc4"><div class="clabel cf">確認問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>1</td><td>3</td><td>5</td><td>4</td><td>2</td></tr></table><div class="eq"><span class="q">?</span> + D + C + B ＝ D + B + C + C</div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc4-1" onclick="hint('qc4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc4-2" disabled onclick="hint('qc4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc4-3" disabled onclick="hint('qc4',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-qc4-1"><b>ヒント1</b>両辺に同じ文字（「C」）があります。先にそれを消して式を短くしましょう。</div>
+<div class="hint-box" id="hint-qc4-2"><b>ヒント2</b>消したあとの式で、？がある側の「？以外」の数の合計と、反対側の合計を出します。</div>
+<div class="hint-box" id="hint-qc4-3"><b>ヒント3</b>？以外の合計は <b>7</b>、反対側の合計は <b>12</b>。<b>？＝12 − 7</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc4" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc4">30</div></div><div class="timer-msg" id="tmsg-qc4"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc4"><button class="ch" onclick="ans('qc4',0,2)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('qc4',1,2)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('qc4',2,2)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('qc4',3,2)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('qc4',4,2)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-qc4"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc4"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc4')">もう一度</button></div>
+<div id="qc4-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>両辺に同じ文字があれば、まず消す。残りで「？＝反対側の合計−？側の他の合計」を計算し、数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc4-mA" onclick="setMark('qc4-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc4-mB" onclick="setMark('qc4-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc4-mC" onclick="setMark('qc4-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc4"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc4"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc4-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>B＝3　C＝5　D＝4<div class="mini-eq"><span class="hl-x">?</span> + 4 + <s style="color:#98948c">5</s> + 3 ＝ 4 + 3 + <s style="color:#98948c">5</s> + 5</div></p></div>
+<div class="exp-box blue" id="qc4-s1" style="display:none"><h4>STEP 2　両辺の同じ文字を消す</h4><p>両辺に同じ文字「C」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 4 + 3 + ？ ／ 反対側 ＝ 12</p></div>
+<div class="exp-box amber" id="qc4-s2" style="display:none"><h4>STEP 3　？の数字を求める</h4><p>？側の？以外の合計は <b>7</b>、反対側の合計は <b>12</b>。<br>？ ＝ 12 − 7 ＝ <span class="hl-x">5</span></p></div>
+<div class="exp-box" id="qc4-s3" style="display:none"><h4>STEP 4　文字に戻す</h4><p>数字 5 にあたる文字は表で探すと <span class="hl-t">C</span>。答えは C です。</p></div>
+<button class="reveal-btn" id="rb-qc4" onclick="reveal('qc4',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">5</div><span>確認問題 5 / 6</span></div>
+<div class="card" id="card-qc5"><div class="clabel cf">確認問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>1</td><td>5</td><td>2</td><td>3</td><td>4</td></tr></table><div class="eq">C + D ＝ E + <span class="q">?</span></div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc5-1" onclick="hint('qc5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc5-2" disabled onclick="hint('qc5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc5-3" disabled onclick="hint('qc5',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-qc5-1"><b>ヒント1</b>式の文字の上に、表の数字を書き込みましょう（？以外）。</div>
+<div class="hint-box" id="hint-qc5-2"><b>ヒント2</b>？がある側の「？以外」の合計と、反対側の合計を、それぞれ出します。</div>
+<div class="hint-box" id="hint-qc5-3"><b>ヒント3</b>？以外の合計は <b>4</b>、反対側の合計は <b>5</b>。<b>？＝5 − 4</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc5" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc5">30</div></div><div class="timer-msg" id="tmsg-qc5"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc5"><button class="ch" onclick="ans('qc5',0,0)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('qc5',1,0)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('qc5',2,0)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('qc5',3,0)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('qc5',4,0)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-qc5"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc5"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は A です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc5')">もう一度</button></div>
+<div id="qc5-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>数字を書き込む → ？＝反対側の合計−？側の他の合計 → 数字を文字に戻す。答えは必ず1〜5。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc5-mA" onclick="setMark('qc5-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc5-mB" onclick="setMark('qc5-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc5-mC" onclick="setMark('qc5-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc5"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc5"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc5-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>C＝2　D＝3　E＝4<div class="mini-eq">2 + 3 ＝ 4 + <span class="hl-x">?</span></div></p></div>
+<div class="exp-box blue" id="qc5-s1" style="display:none"><h4>STEP 2　？の数字を求める</h4><p>？側の？以外の合計は <b>4</b>、反対側の合計は <b>5</b>。<br>？ ＝ 5 − 4 ＝ <span class="hl-x">1</span></p></div>
+<div class="exp-box amber" id="qc5-s2" style="display:none"><h4>STEP 3　文字に戻す</h4><p>数字 1 にあたる文字は表で探すと <span class="hl-t">A</span>。答えは A です。</p></div>
+<button class="reveal-btn" id="rb-qc5" onclick="reveal('qc5',3)">次のSTEPを見る (2/3)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">6</div><span>確認問題 6 / 6</span></div>
+<div class="card" id="card-qc6"><div class="clabel cf">確認問題</div>
+<div class="q-text">？にあてはまる文字を答えなさい。<table class="kansan-table rep-table"><tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr><tr><td>5</td><td>3</td><td>2</td><td>1</td><td>4</td></tr></table><div class="eq">E + D + D + C ＝ B + D + C + <span class="q">?</span></div></div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc6-1" onclick="hint('qc6',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc6-2" disabled onclick="hint('qc6',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc6-3" disabled onclick="hint('qc6',3)">💡 ヒント3</button></div>
+<div class="hint-box" id="hint-qc6-1"><b>ヒント1</b>両辺に同じ文字（「C」「D」）があります。先にそれを消して式を短くしましょう。</div>
+<div class="hint-box" id="hint-qc6-2"><b>ヒント2</b>消したあとの式で、？がある側の「？以外」の数の合計と、反対側の合計を出します。</div>
+<div class="hint-box" id="hint-qc6-3"><b>ヒント3</b>？以外の合計は <b>3</b>、反対側の合計は <b>5</b>。<b>？＝5 − 3</b> を計算して、その数字の文字を表から探します。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc6" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc6">30</div></div><div class="timer-msg" id="tmsg-qc6"><span class="goal">目標 30秒（本番は1問6秒）</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc6"><button class="ch" onclick="ans('qc6',0,2)"><span class="cnum">A</span>A</button><button class="ch" onclick="ans('qc6',1,2)"><span class="cnum">B</span>B</button><button class="ch" onclick="ans('qc6',2,2)"><span class="cnum">C</span>C</button><button class="ch" onclick="ans('qc6',3,2)"><span class="cnum">D</span>D</button><button class="ch" onclick="ans('qc6',4,2)"><span class="cnum">E</span>E</button></div>
+<div class="fb-ok" id="fb-ok-qc6"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc6"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc6')">もう一度</button></div>
+<div id="qc6-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>両辺に同じ文字があれば、まず消す。残りで「？＝反対側の合計−？側の他の合計」を計算し、数字を文字に戻す。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc6-mA" onclick="setMark('qc6-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc6-mB" onclick="setMark('qc6-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc6-mC" onclick="setMark('qc6-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc6"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc6"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc6-s0" style="display:block"><h4>STEP 1　数字を書き込む</h4><p>式の文字を表の数字に置き換えます。<br>B＝3　C＝2　D＝1　E＝4<div class="mini-eq">4 + <s style="color:#98948c">1</s> + 1 + <s style="color:#98948c">2</s> ＝ 3 + <s style="color:#98948c">1</s> + <s style="color:#98948c">2</s> + <span class="hl-x">?</span></div></p></div>
+<div class="exp-box blue" id="qc6-s1" style="display:none"><h4>STEP 2　両辺の同じ文字を消す</h4><p>両辺に同じ文字「C」「D」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 3 + ？ ／ 反対側 ＝ 5</p></div>
+<div class="exp-box amber" id="qc6-s2" style="display:none"><h4>STEP 3　？の数字を求める</h4><p>？側の？以外の合計は <b>3</b>、反対側の合計は <b>5</b>。<br>？ ＝ 5 − 3 ＝ <span class="hl-x">2</span></p></div>
+<div class="exp-box" id="qc6-s3" style="display:none"><h4>STEP 4　文字に戻す</h4><p>数字 2 にあたる文字は表で探すと <span class="hl-t">C</span>。答えは C です。</p></div>
+<button class="reveal-btn" id="rb-qc6" onclick="reveal('qc6',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div id="done-cf" class="teal-box" style="display:none;text-align:center"><strong>🏆 確認問題 完了！</strong><span class="sc"></span><br>この単元をクリアしました！</div>
+<div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a class="unav-btn unav-next" href="SPI_jimu_ch05.html">次：文章題Ⅱ① 割合 →</a><a class="unav-btn" style="border-color:#bcb8ae;color:#58544c;background:#fff" href="SPI_jimu_index.html">単元一覧へ戻る</a></div></div>
+</div>
+</main>
+<script>
+var UNIT="ch04",LS='spi_jimu_';
+var PR_IDS=["q1", "q2", "q3", "q4", "q5"],CF_IDS=["qc1", "qc2", "qc3", "qc4", "qc5", "qc6"],TM={"q1": 30, "q2": 30, "q3": 30, "q4": 30, "q5": 30, "qc1": 30, "qc2": 30, "qc3": 30, "qc4": 30, "qc5": 30, "qc6": 30},MWHY={"m1_1": "<b>数字を書き込む</b>　式の文字を表の数字に置き換えます。<br>A＝5　B＝3　C＝2　D＝1<div class=\"mini-eq\"><s style=\"color:#98948c\">5</s> + 2 + 1 + 3 ＝ 3 + 2 + <s style=\"color:#98948c\">5</s> + <span class=\"hl-x\">?</span></div><br><b>両辺の同じ文字を消す</b>　両辺に同じ文字「A」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 3 + 2 + ？ ／ 反対側 ＝ 6<br><b>？の数字を求める</b>　？側の？以外の合計は <b>5</b>、反対側の合計は <b>6</b>。<br>？ ＝ 6 − 5 ＝ <span class=\"hl-x\">1</span><br><b>文字に戻す</b>　数字 1 にあたる文字は表で探すと <span class=\"hl-t\">D</span>。答えは D です。", "m2_1": "<b>数字を書き込む</b>　式の文字を表の数字に置き換えます。<br>A＝3　B＝2　D＝4　E＝1<div class=\"mini-eq\">1 + <span class=\"hl-x\">?</span> + 3 ＝ 4 + 2</div><br><b>近道（消去）</b>　？側の？以外：1 + 3 ＝ 4。反対側に 4 にあたる D があるので、両辺から消します。残る文字は <span class=\"hl-t\">B</span>。<br><b>答え</b>　？ ＝ <span class=\"hl-t\">B</span>（念のため：6 − 4 ＝ 2 ＝ B）", "m3_1": "<b>数字を書き込む</b>　式の文字を表の数字に置き換えます。<br>B＝3　D＝5<div class=\"mini-eq\">5 ＝ 3 + <span class=\"hl-x\">?</span></div><br><b>？の数字を求める</b>　？側の？以外の合計は <b>3</b>、反対側の合計は <b>5</b>。<br>？ ＝ 5 − 3 ＝ <span class=\"hl-x\">2</span><br><b>文字に戻す</b>　数字 2 にあたる文字は表で探すと <span class=\"hl-t\">A</span>。答えは A です。", "m4_1": "<b>数字を書き込む</b>　式の文字を表の数字に置き換えます。<br>A＝3　B＝4　C＝5　D＝2　E＝1<div class=\"mini-eq\"><span class=\"hl-x\">?</span> + 4 + <s style=\"color:#98948c\">1</s> + 3 ＝ 3 + 2 + 5 + <s style=\"color:#98948c\">1</s></div><br><b>両辺の同じ文字を消す</b>　両辺に同じ文字「E」があるので消して考えます（消した数は赤抜きの灰色）。<br>残りは、？側 ＝ 4 + 3 + ？ ／ 反対側 ＝ 10<br><b>？の数字を求める</b>　？側の？以外の合計は <b>7</b>、反対側の合計は <b>10</b>。<br>？ ＝ 10 − 7 ＝ <span class=\"hl-x\">3</span><br><b>文字に戻す</b>　数字 3 にあたる文字は表で探すと <span class=\"hl-t\">A</span>。答えは A です。"};
+var answered={},stepRev={},timers={},miniAnswered={},correctN={};
+function $(i){return document.getElementById(i);}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function switchTab(n){
+  ['ex','pr','cf'].forEach(function(t){
+    $('page-'+t).classList.toggle('active',t===n);
+    var b=$('tab-'+t);b.classList.remove('active-ex','active-pr','active-cf');
+    if(t===n)b.classList.add('active-'+t);
+  });
+  window.scrollTo(0,0);
+  if(n==='pr')startNext(PR_IDS);
+  if(n==='cf')startNext(CF_IDS);
+}
+function startNext(ids){for(var i=0;i<ids.length;i++){if(!answered[ids[i]]){startTimer(ids[i]);return;}}}
+function startTimer(q){
+  if(answered[q]||timers[q]!==undefined)return;
+  var tm=TM[q]||60,left=tm,ring=$('ring-'+q),tx=$('t-'+q);
+  if(!ring)return;
+  tx.textContent=left;
+  timers[q]=setInterval(function(){
+    left--;tx.textContent=Math.max(left,0);
+    ring.style.strokeDashoffset=126*(1-Math.max(left,0)/tm);
+    if(left/tm<0.34)ring.classList.add('warn');
+    if(left<=0){clearInterval(timers[q]);var m=$('tmsg-'+q);if(m)m.innerHTML='<span style="color:#d93652">時間オーバー。でも最後まで解いてみましょう</span>';}
+  },1000);
+}
+function stopTimer(q){if(timers[q])clearInterval(timers[q]);}
+function hint(q,k){
+  $('hint-'+q+'-'+k).style.display='block';
+  $('hb-'+q+'-'+k).classList.add('used');
+  var n=$('hb-'+q+'-'+(k+1));if(n)n.disabled=false;
+}
+function miniAns(m,i,c){
+  if(miniAnswered[m])return;miniAnswered[m]=true;
+  var bs=$('mc-'+m).querySelectorAll('.mch');
+  bs.forEach(function(b){b.disabled=true;});
+  bs[c].classList.add('ok');
+  var fb=$('mfb-'+m);
+  if(i===c){fb.className='mini-fb ok';fb.innerHTML='⭕ 正解です！<br>'+MWHY[m];}
+  else{bs[i].classList.add('ng');fb.className='mini-fb ng';fb.innerHTML='❌ 正解は '+bs[c].querySelector('.mcnum').textContent+' です。<br>'+MWHY[m];}
+  fb.style.display='block';
+}
+function ans(q,i,c){
+  if(answered[q])return;
+  var cf=q.indexOf('qc')===0,ids=cf?CF_IDS:PR_IDS;
+  var bs=$('ch-'+q).querySelectorAll('.ch');
+  bs.forEach(function(b){b.disabled=true;});
+  bs[c].classList.add('ok');
+  stopTimer(q);
+  if(i===c){$('fb-ok-'+q).style.display='flex';correctN[q]=1;}
+  else{bs[i].classList.add('ng');$('fb-ng-'+q).style.display='flex';correctN[q]=0;}
+  answered[q]=true;
+  $(q+'-res').style.display='block';
+  $('cn-'+q).style.display='flex';
+  $('kai-'+q).style.display='block';
+  var n=0,ok=0;ids.forEach(function(x){if(answered[x])n++;if(correctN[x])ok++;});
+  var pb=$((cf?'pbcf':'pbpr')),pt=$((cf?'pbcf-t':'pbpr-t'));
+  pb.style.width=(n/ids.length*100)+'%';pt.textContent=n+' / '+ids.length;
+  if(n===ids.length){
+    $(cf?'done-cf':'done-pr').style.display='block';
+    $((cf?'done-cf':'done-pr')).querySelector('.sc').textContent='正解 '+ok+' / '+ids.length;
+    $('tabdone-'+(cf?'cf':'pr')).style.display='flex';
+    if(cf){$('unit-nav').style.display='flex';lsSet(LS+UNIT,'1');if(ok>=ids.length-1)launchConfetti();}
+  }else{startNext(ids);}
+  setTimeout(function(){var e=$('cn-'+q);if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'center'});},120);
+}
+function resetQ(q){
+  var bs=$('ch-'+q).querySelectorAll('.ch');
+  bs.forEach(function(b){b.disabled=false;b.classList.remove('ok','ng');});
+  ['fb-ok-','fb-ng-'].forEach(function(p){$(p+q).style.display='none';});
+  $(q+'-res').style.display='none';$('cn-'+q).style.display='none';$('kai-'+q).style.display='none';
+  answered[q]=false;correctN[q]=0;delete timers[q];
+  var cf=q.indexOf('qc')===0,ids=cf?CF_IDS:PR_IDS,n=0;
+  ids.forEach(function(x){if(answered[x])n++;});
+  $(cf?'pbcf':'pbpr').style.width=(n/ids.length*100)+'%';$(cf?'pbcf-t':'pbpr-t').textContent=n+' / '+ids.length;
+  startTimer(q);
+}
+function reveal(q,t){
+  var i=stepRev[q]||0;$(q+'-s'+i).style.display='block';i++;stepRev[q]=i;
+  var rb=$('rb-'+q);
+  if(i>=t){rb.style.display='none';var f=$(q+'-fin');if(f)f.style.display='block';}
+  else rb.textContent='次のSTEPを見る ('+(i+1)+'/'+t+')';
+}
+function setMark(p,m){['A','B','C'].forEach(function(x){var b=$(p+x);if(b)b.classList.toggle('on',x===m);});}
+function launchConfetti(){
+  var c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:999';
+  c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);
+  var g=c.getContext('2d'),cols=['#d93652','#0d9478','#2055b0','#a86000','#6b21a8'],ps=[];
+  for(var i=0;i<110;i++)ps.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,v:2+Math.random()*3,r:3+Math.random()*4,c:cols[i%5],a:Math.random()*6});
+  var f=0;(function t(){g.clearRect(0,0,c.width,c.height);ps.forEach(function(p){p.y+=p.v;p.x+=Math.sin(p.a+f/20);g.fillStyle=p.c;g.fillRect(p.x,p.y,p.r,p.r*1.6);});f++;if(f<170)requestAnimationFrame(t);else c.remove();})();
+}
+window.addEventListener('load',function(){window.scrollTo(0,0);});
+
+for(var k in TM){stepRev[k]=1;}
+</script></body></html>
