@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GAMBA｜SPI χ④ 金額がない問題</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Shippori+Mincho:wght@700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>:root{--bg:#f6f4ef;--sf:#fff;--sf2:#f0ede6;--bd:#d6d2c8;--bd2:#bcb8ae;--pink:#d93652;--teal:#0d9478;--blue:#2055b0;--amber:#a86000;--tl:#e6f5f1;--bl:#eaf0fb;--al:#fdf2dd;--pl:#fde8eb;--text:#1a1814;--text2:#58544c;--text3:#98948c;--r:12px;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;min-height:100vh;}
+.site-header{background:var(--sf);border-bottom:1px solid var(--bd);padding:.65rem 1.5rem;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:100;}
+.logo{font-family:'Shippori Mincho',serif;font-size:1.05rem;color:var(--pink);}
+.logo-sep{color:var(--bd2);}
+.logo-sub{font-size:12px;color:var(--text2);}
+.tab-nav{background:var(--sf);border-bottom:2px solid var(--bd);position:sticky;top:46px;z-index:99;display:flex;padding:0 1rem;}
+.tab-btn{padding:.7rem 1.4rem;font-size:13px;font-weight:500;color:var(--text2);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;display:flex;align-items:center;gap:7px;border-bottom:3px solid transparent;margin-bottom:-2px;transition:color .15s;white-space:nowrap;}
+.tab-btn:hover{color:var(--text);}
+.tab-btn.active-ex{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-btn.active-pr{color:var(--blue);border-bottom-color:var(--blue);}
+.tab-btn.active-cf{color:var(--amber);border-bottom-color:var(--amber);}
+.tab-pip{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;}
+.pip-ex{background:#fde8eb;color:var(--pink);}
+.pip-pr{background:var(--bl);color:var(--blue);}
+.pip-cf{background:var(--al);color:var(--amber);}
+.tab-done{width:16px;height:16px;border-radius:50%;background:var(--teal);color:#fff;font-size:9px;display:none;align-items:center;justify-content:center;}
+.page{display:none;animation:fadeTab .2s ease;}
+.page.active{display:block;}
+@keyframes fadeTab{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+main{max-width:720px;margin:0 auto;padding:1.5rem 1rem 6rem;}
+.page-hdr{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.4rem;margin-bottom:1.4rem;display:flex;align-items:center;gap:12px;}
+.page-hdr-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:.95rem;font-weight:700;flex-shrink:0;}
+.icon-ex{background:var(--pink);color:#fff;}.icon-pr{background:var(--blue);color:#fff;}.icon-cf{background:var(--amber);color:#fff;}
+.page-hdr-body{flex:1;}
+.page-hdr-title{font-size:15px;font-weight:700;margin-bottom:2px;}
+.page-hdr-desc{font-size:12px;color:var(--text2);}
+.prog-wrap{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem 1.2rem;margin-bottom:1.2rem;display:flex;align-items:center;gap:12px;}
+.pb-w{flex:1;height:6px;background:var(--bd);border-radius:3px;overflow:hidden;}
+.pb{height:100%;border-radius:3px;transition:width .4s;}
+.pb-pr{background:var(--blue);}.pb-cf{background:var(--amber);}
+.pb-txt{font-size:12px;color:var(--text2);white-space:nowrap;}
+.next-page-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:12px;background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s;margin-top:.5rem;text-decoration:none;}
+.next-page-btn.pr{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.next-page-btn.cf{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.4rem 1.5rem;margin-bottom:1rem;}
+.clabel{font-size:11px;font-weight:700;letter-spacing:.1em;margin-bottom:.85rem;display:flex;align-items:center;gap:6px;}
+.clabel::before{content:'';width:3px;height:14px;border-radius:2px;display:inline-block;}
+.clabel.ex{color:var(--pink);}.clabel.ex::before{background:var(--pink);}
+.clabel.pr{color:var(--blue);}.clabel.pr::before{background:var(--blue);}
+.clabel.cf{color:var(--amber);}.clabel.cf::before{background:var(--amber);}
+.clabel.kai{color:var(--teal);}.clabel.kai::before{background:var(--teal);}
+.q-text{font-size:15px;line-height:2;color:var(--text);margin-bottom:1rem;}
+.body-text{font-size:14px;line-height:2.1;color:var(--text);margin-bottom:.9rem;}
+.point-box{background:var(--al);border:1px solid #e0c888;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:13px;color:var(--amber);line-height:1.9;}
+.point-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;}
+.teal-box{background:var(--tl);border:1px solid #8ecfc3;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#0a6b54;line-height:2;}
+.teal-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--teal);}
+.pink-box{background:var(--pl);border:1px solid #f0b8c0;border-radius:9px;padding:.9rem 1.2rem;margin-bottom:.9rem;font-size:14px;color:#8b1a2c;line-height:2;}
+.pink-box strong{display:block;font-size:10px;letter-spacing:.08em;margin-bottom:4px;color:var(--pink);}
+.kansan-table{width:100%;border-collapse:collapse;margin:.9rem 0;font-size:14px;}
+.kansan-table th{background:var(--pl);color:var(--pink);font-weight:700;padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;font-size:12px;}
+.kansan-table td{padding:9px 12px;border:1.5px solid #f0b8c0;text-align:center;background:#fff;font-size:14px;line-height:1.6;}
+.kansan-table .hi{background:#fff8e1;font-weight:700;color:var(--amber);}
+.kansan-table .hig{background:var(--tl);font-weight:700;color:var(--teal);}
+.formula-box{background:var(--bl);border:2px solid var(--blue);border-radius:10px;padding:1rem 1.2rem;margin:1rem 0;}
+.formula-box .f-title{font-size:11px;font-weight:700;color:var(--blue);letter-spacing:.08em;margin-bottom:.6rem;}
+.formula-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:.35rem 0;font-size:14px;}
+.f-key{display:inline-block;background:var(--blue);color:#fff;border-radius:5px;padding:3px 9px;font-size:12px;font-weight:700;white-space:nowrap;flex-shrink:0;}
+.f-eq{font-size:15px;font-weight:700;color:#1a3a7a;}
+.sec-head{display:flex;align-items:center;gap:10px;background:var(--pink);color:#fff;border-radius:9px 9px 0 0;padding:.7rem 1.1rem;margin:-1.4rem -1.5rem 1.2rem;font-size:14px;font-weight:700;}
+.sec-num{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.3);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.exp-box{background:var(--sf2);border-radius:9px;padding:.9rem 1.15rem;margin-bottom:.75rem;border-left:3px solid var(--teal);animation:fadeIn .25s ease;}
+.exp-box h4{font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em;margin-bottom:.4rem;}
+.exp-box p{font-size:14px;line-height:2;color:var(--text);white-space:pre-wrap;}
+.exp-box.blue{border-color:var(--blue);}.exp-box.blue h4{color:var(--blue);}
+.exp-box.amber{border-color:var(--amber);}.exp-box.amber h4{color:var(--amber);}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.reveal-btn{background:var(--teal);color:#fff;border:none;border-radius:8px;padding:9px 20px;font-size:13px;font-weight:500;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-top:.2rem;transition:background .15s;}
+.reveal-btn:hover{background:#0b7560;}
+.kai-card{display:none;border-top:3px solid var(--teal);animation:slideDown .3s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.connector{display:none;flex-direction:column;align-items:center;margin:-.5rem 0;position:relative;z-index:2;}
+.connector-line{width:2px;height:20px;background:var(--teal);}
+.connector-arrow{width:0;height:0;border-left:7px solid transparent;border-right:7px solid transparent;border-top:8px solid var(--teal);}
+.choices{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1rem;}
+.ch{background:var(--sf2);border:1.5px solid var(--bd);border-radius:9px;padding:10px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.ch:hover:not(:disabled){border-color:var(--blue);background:var(--bl);}
+.ch:disabled{cursor:default;}
+.ch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.ch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.cnum{width:24px;height:24px;border-radius:50%;background:var(--bd);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+.ch.ok .cnum{background:var(--teal);color:#fff;}
+.ch.ng .cnum{background:var(--pink);color:#fff;}
+.mini-choices{display:grid;grid-template-columns:repeat(2,1fr);gap:6px;margin-bottom:.8rem;}
+.mch{background:#faf8ff;border:1.5px solid #c8b8e8;border-radius:9px;padding:9px 8px;font-size:14px;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s;font-family:'Noto Sans JP',sans-serif;width:100%;}
+.mch:hover:not(:disabled){border-color:#7b3f9e;background:#f0e8fa;}
+.mch:disabled{cursor:default;}
+.mch.ok{border-color:var(--teal);background:var(--tl);color:var(--teal);}
+.mch.ng{border-color:var(--pink);background:var(--pl);color:var(--pink);}
+.mcnum{width:22px;height:22px;border-radius:50%;background:#c8b8e8;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:#5a2d91;}
+.mch.ok .mcnum{background:var(--teal);color:#fff;}
+.mch.ng .mcnum{background:var(--pink);color:#fff;}
+.timer-wrap{display:flex;align-items:center;gap:10px;margin-bottom:1rem;}
+.timer-ring{position:relative;width:48px;height:48px;flex-shrink:0;}
+.timer-ring svg{width:48px;height:48px;transform:rotate(-90deg);}
+circle{fill:none;stroke-width:3;stroke-linecap:round;}
+.tbg{stroke:var(--bd2);}
+.tfg{stroke:var(--teal);transition:stroke-dashoffset .9s linear;stroke-dasharray:126;stroke-dashoffset:0;}
+.tfg.warn{stroke:var(--amber);}
+.tcenter{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--text2);font-family:'DM Mono',monospace;}
+.timer-msg{font-size:13px;color:var(--text2);line-height:1.5;}
+.timer-msg .goal{color:var(--teal);font-weight:500;}
+.hint-toggle{background:none;border:1px dashed var(--bd);border-radius:8px;padding:6px 12px;font-size:12px;color:var(--text2);cursor:pointer;margin-bottom:.75rem;font-family:'Noto Sans JP',sans-serif;transition:all .15s;}
+.hint-toggle:hover{border-color:var(--blue);color:var(--blue);}
+.hint-box{background:var(--bl);border:1px solid #a8c0e8;border-radius:9px;padding:.75rem 1rem;margin-bottom:.85rem;font-size:13px;color:var(--blue);line-height:1.9;display:none;}
+.abc-wrap{margin-top:1.2rem;padding-top:1.2rem;border-top:1px solid var(--bd);}
+.abc-lbl{font-size:12px;color:var(--text2);margin-bottom:.7rem;}
+.abc-row{display:flex;gap:7px;}
+.abc-btn{flex:1;padding:9px 5px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;border:2px solid;transition:all .15s;font-family:'Noto Sans JP',sans-serif;text-align:center;line-height:1.3;}
+.abc-btn span{display:block;font-size:10px;font-weight:400;margin-top:2px;opacity:.85;}
+.abc-A{border-color:var(--teal);color:var(--teal);background:var(--tl);}
+.abc-A:hover,.abc-A.on{background:var(--teal);color:#fff;}
+.abc-B{border-color:var(--blue);color:var(--blue);background:var(--bl);}
+.abc-B:hover,.abc-B.on{background:var(--blue);color:#fff;}
+.abc-C{border-color:var(--amber);color:var(--amber);background:var(--al);}
+.abc-C:hover,.abc-C.on{background:var(--amber);color:#fff;}
+.prob-n{display:inline-flex;align-items:center;gap:8px;margin-bottom:.9rem;}
+.prob-n .n{width:28px;height:28px;border-radius:6px;font-size:.85rem;font-weight:700;display:flex;align-items:center;justify-content:center;}
+.n-pr{background:var(--blue);color:#fff;}
+.n-cf{background:var(--amber);color:#fff;}
+.prob-n span{font-size:12px;color:var(--text3);}
+.prob-divider{border:none;border-top:1px dashed var(--bd);margin:1.8rem 0 1.5rem;}
+.hl-x{color:var(--pink);font-weight:700;}
+.hl-t{color:var(--teal);font-weight:700;}
+.fb-ok{display:none;align-items:center;gap:12px;background:#e6faf3;border:2px solid #0d9478;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.fb-ng{display:none;align-items:center;gap:12px;background:#fde8eb;border:2px solid #d93652;border-radius:12px;padding:12px 16px;margin:8px 0 4px;animation:fbPop .3s ease;}
+.mini-fb{display:none;border-radius:9px;padding:10px 14px;margin:.5rem 0;font-size:13px;line-height:1.9;animation:fbPop .25s ease;}
+.mini-fb.ok{background:#e6faf3;border:1.5px solid var(--teal);color:#0a6b54;}
+.mini-fb.ng{background:var(--pl);border:1.5px solid var(--pink);color:#8b1a2c;}
+@keyframes fbPop{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.reset-btn{background:none;border:1.5px solid #d93652;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:#d93652;cursor:pointer;font-family:'Noto Sans JP',sans-serif;margin-left:auto;flex-shrink:0;transition:all .15s;white-space:nowrap;}
+.reset-btn:hover{background:#d93652;color:#fff;}
+.fb-icon{font-size:1.7rem;flex-shrink:0;}
+.fb-text{font-size:13px;font-weight:700;line-height:1.5;}
+.fb-ok .fb-text{color:#0d9478;}
+.fb-ng .fb-text{color:#d93652;}
+.fb-sub{font-size:11px;font-weight:400;display:block;margin-top:1px;opacity:.8;}
+.unit-nav{display:none;flex-direction:column;gap:10px;margin:1.8rem 0 0;padding-top:1.4rem;border-top:2px dashed #d6d2c8;}
+.unit-nav-row{display:flex;gap:8px;flex-wrap:wrap;}
+.unav-btn{flex:1;min-width:120px;display:flex;align-items:center;justify-content:center;gap:6px;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;border:2px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;text-align:center;}
+.unav-next{background:#2055b0;border-color:#2055b0;color:#fff;}
+.unav-next:hover{background:#153a80;}
+.mini-card{background:#faf8ff;border:2px solid #c8b8e8;border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1rem;}
+.mini-q{font-size:14px;line-height:2;color:var(--text);margin-bottom:.8rem;}
+.mini-q strong{color:var(--pink);}
+.mini-section-label{font-size:11px;font-weight:700;color:#7b3f9e;letter-spacing:.08em;margin-bottom:.7rem;display:flex;align-items:center;gap:6px;}
+.mini-section-label::before{content:'';width:3px;height:13px;border-radius:2px;background:#7b3f9e;display:inline-block;}
+/* ===== 事務処理検査用の追加 ===== */
+.choices .ch:last-child:nth-child(odd){grid-column:1/-1;}
+.mini-choices .mch:last-child:nth-child(odd){grid-column:1/-1;}
+.cmp{background:var(--sf2);border:1.5px solid var(--bd);border-radius:10px;padding:.8rem 1rem;margin:.4rem 0 1rem;display:flex;flex-direction:column;gap:6px;overflow-x:auto;}
+.cmp.sm{margin:.3rem 0 .6rem;background:#fff;}
+.cmp-row{display:flex;align-items:center;gap:12px;}
+.cmp-l{font-size:11px;font-weight:700;color:var(--text3);width:1.8em;flex-shrink:0;}
+.cmp-s{font-family:'DM Mono','Noto Sans JP',monospace;font-size:24px;white-space:nowrap;}
+.cmp.sm .cmp-s{font-size:20px;}
+.cmp-s i{font-style:normal;display:inline-block;min-width:1.5em;text-align:center;border-radius:5px;}
+.cmp-s i.d{background:#fde8eb;color:var(--pink);font-weight:700;}
+.rep-table{max-width:420px;margin:.4rem auto .6rem;}
+.rep-table th{font-size:15px;width:20%;}
+.rep-table td{font-size:17px;font-weight:700;}
+.eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:26px;font-weight:700;text-align:center;letter-spacing:.08em;margin:.4rem 0 1.1rem;color:#1a3a7a;}
+.eq .q{color:var(--pink);}
+.eq-sm{font-family:'DM Mono','Noto Sans JP',monospace;font-size:18px;font-weight:700;color:#1a3a7a;}
+.mini-eq{font-family:'DM Mono','Noto Sans JP',monospace;font-size:17px;font-weight:700;color:#1a3a7a;background:#fff;border:1px solid var(--bd);border-radius:8px;padding:2px 10px;display:inline-block;margin:2px 0;}
+.flow{display:flex;flex-direction:column;align-items:stretch;gap:0;margin:.8rem 0;}
+.flow .fs{background:var(--bl);border:1.5px solid #a8c0e8;border-radius:9px;padding:.6rem .9rem;font-size:13px;line-height:1.8;color:#1a3a7a;}
+.flow .fa{text-align:center;color:var(--blue);font-size:14px;line-height:1.3;}
+@media(max-width:480px){.cmp-s{font-size:20px}.eq{font-size:21px}}
+/* ===== 目次ページ ===== */
+.page-title-block{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:1.2rem 1.4rem;margin-bottom:1.6rem;display:flex;align-items:center;gap:14px;}
+.ptb-icon{width:48px;height:48px;border-radius:10px;background:var(--pink);color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.1rem;font-weight:700;flex-shrink:0;}
+.ptb-label{font-size:11px;color:var(--text3);letter-spacing:.08em;margin-bottom:3px;}
+.ptb-title{font-size:17px;font-weight:700;color:var(--text);}
+.ptb-desc{font-size:12px;color:var(--text2);margin-top:3px;line-height:1.6;}
+.overall-prog{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.9rem 1.3rem;margin-bottom:1.4rem;}
+.op-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem;}
+.op-label{font-size:12px;font-weight:700;color:var(--text2);}
+.op-count{font-size:12px;color:var(--text3);font-family:'DM Mono',monospace;}
+.op-bar{height:8px;background:var(--bd);border-radius:4px;overflow:hidden;}
+.op-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--blue));border-radius:4px;transition:width .6s ease;width:0%;}
+.unit-list{display:flex;flex-direction:column;gap:.75rem;margin-bottom:1.6rem;}
+.unit-card{background:var(--sf);border:1.5px solid var(--bd);border-radius:var(--r);text-decoration:none;color:var(--text);display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;transition:all .18s;position:relative;}
+.unit-card:hover{border-color:var(--blue);box-shadow:0 2px 12px rgba(32,85,176,.10);transform:translateY(-1px);}
+.unit-card.done{border-color:var(--teal);}
+.uc-main{display:flex;align-items:center;gap:14px;padding:1rem 1.2rem .85rem;}
+.uc-num{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace;}
+.uc-num.c1{background:#fde8eb;color:var(--pink);}.uc-num.c2{background:var(--bl);color:var(--blue);}.uc-num.c3{background:var(--tl);color:var(--teal);}.uc-num.c4{background:var(--al);color:var(--amber);}.uc-num.c5{background:#f8f0ff;color:#6b21a8;}.uc-num.c6{background:#f0f8ef;color:#166534;}
+.uc-body{flex:1;min-width:0;}
+.uc-category{font-size:10px;color:var(--text3);letter-spacing:.07em;margin-bottom:2px;}
+.uc-title{font-size:14px;font-weight:700;color:var(--text);margin-bottom:3px;line-height:1.4;}
+.uc-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;}
+.uc-tag{font-size:10px;font-weight:700;border-radius:20px;padding:2px 8px;letter-spacing:.04em;white-space:nowrap;}
+.tag-pink{background:var(--pl);color:var(--pink);}.tag-blue{background:var(--bl);color:var(--blue);}.tag-teal{background:var(--tl);color:var(--teal);}.tag-amber{background:var(--al);color:var(--amber);}
+.uc-meta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px;}
+.uc-status{font-size:11px;font-weight:700;border-radius:20px;padding:3px 10px;white-space:nowrap;}
+.status-new{background:var(--pl);color:var(--pink);}
+.status-done{background:var(--tl);color:var(--teal);}
+.uc-arrow{font-size:16px;color:var(--bd2);transition:color .15s;}
+.unit-card:hover .uc-arrow{color:var(--blue);}
+.unit-card.done::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:var(--teal);border-radius:var(--r) 0 0 var(--r);}
+.uc-diff{display:flex;gap:2px;align-items:center;}
+.diff-dot{width:8px;height:8px;border-radius:50%;}
+.diff-dot.on-1{background:var(--pink);}.diff-dot.on-2{background:var(--amber);}.diff-dot.on-3{background:#6b21a8;}.diff-dot.off{background:var(--bd);}
+.section-head{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.1em;margin:1.4rem 0 .6rem;display:flex;align-items:center;gap:8px;}
+.section-head::after{content:'';flex:1;height:1px;background:var(--bd);}
+.tips-card{background:var(--tl);border:1.5px solid #8ecfc3;border-radius:var(--r);padding:1.1rem 1.3rem;margin-bottom:1.4rem;}
+.tips-title{font-size:11px;font-weight:700;color:var(--teal);letter-spacing:.08em;margin-bottom:.7rem;}
+.tips-list{list-style:none;display:flex;flex-direction:column;gap:.5rem;}
+.tips-list li{font-size:13px;color:#0a6b54;line-height:1.7;display:flex;gap:8px;}
+.tips-list li::before{content:'✓';font-weight:700;flex-shrink:0;}
+.exam-badges{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1.4rem;}
+.exam-badge{background:var(--sf);border:1px solid var(--bd);border-radius:8px;padding:.55rem .9rem;font-size:12px;color:var(--text2);display:flex;align-items:center;gap:6px;}
+.exam-badge .eb-icon{font-size:1rem;}
+.exam-badge strong{color:var(--text);font-weight:700;}
+.index-footer{text-align:center;padding:1.5rem 1rem;font-size:12px;color:var(--text3);line-height:1.8;border-top:1px solid var(--bd);margin-top:2rem;}
+.abc-panel{display:flex;align-items:center;gap:7px;padding:.65rem 1.2rem;border-top:1px solid var(--bd);background:var(--sf2);border-radius:0 0 calc(var(--r) - 2px) calc(var(--r) - 2px);flex-wrap:wrap;}
+.abc-panel-lbl{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.06em;white-space:nowrap;margin-right:2px;}
+.abc-btn-idx{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid;font-family:'Noto Sans JP',sans-serif;transition:all .15s;white-space:nowrap;background:var(--sf);}
+.abc-btn-idx.btn-a{border-color:var(--teal);color:var(--teal);}.abc-btn-idx.btn-a.on{background:var(--teal);color:#fff;}
+.abc-btn-idx.btn-b{border-color:var(--blue);color:var(--blue);}.abc-btn-idx.btn-b.on{background:var(--blue);color:#fff;}
+.abc-btn-idx.btn-c{border-color:var(--pink);color:var(--pink);}.abc-btn-idx.btn-c.on{background:var(--pink);color:#fff;}
+.abc-clear{margin-left:auto;font-size:10px;color:var(--text3);background:none;border:none;cursor:pointer;font-family:'Noto Sans JP',sans-serif;padding:2px 4px;text-decoration:underline;}
+.abc-clear:hover{color:var(--pink);}
+/* ===== 追加: 分数・ヒント3段・図 ===== */
+.fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.2;margin:0 3px;font-size:.92em}
+.fr b{font-weight:500;padding:0 4px}.fr b:first-child{border-bottom:1.5px solid currentColor}
+.hint-row{display:flex;gap:6px;margin-bottom:.7rem;flex-wrap:wrap}
+.hint-btn{background:#fff;border:1.5px dashed var(--blue);border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;color:var(--blue);cursor:pointer;font-family:'Noto Sans JP',sans-serif;transition:all .15s}
+.hint-btn:hover:not(:disabled){background:var(--bl)}
+.hint-btn:disabled{opacity:.4;cursor:not-allowed;border-color:var(--bd2);color:var(--text3)}
+.hint-btn.used{background:var(--bl);border-style:solid;opacity:1}
+.hint-box{margin-bottom:.5rem}
+.hint-box b{display:inline-block;background:var(--blue);color:#fff;border-radius:4px;padding:0 7px;font-size:11px;margin-right:6px}
+.fig{margin:.6rem auto 1rem;max-width:330px}.fig svg{width:100%;height:auto;display:block;background:#fff;border:1px solid var(--bd);border-radius:10px}
+.figs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.figs .fig{flex:1;min-width:130px;margin:.3rem 0}
+.fig-cap{text-align:center;font-size:11px;color:var(--text2);margin-top:3px}
+.fare{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:12px}
+.fare th,.fare td{border:1.5px solid #bcb8ae;padding:4px 3px;text-align:center;line-height:1.5;background:#fff}
+.fare th{background:var(--sf2);font-weight:700}
+.fare td.dg{background:var(--sf2);font-weight:700}
+.fare td.em{border:none;background:none}
+.fare small{display:block;color:var(--blue)}
+.dtable{width:100%;border-collapse:collapse;margin:.6rem 0 1rem;font-size:13px}
+.dtable th,.dtable td{border:1.5px solid #bcb8ae;padding:6px 4px;text-align:center;background:#fff}
+.dtable th{background:var(--sf2)}
+.dtable td.bl{background:#f3f1ea;color:var(--text3)}
+.score-box{background:var(--al);border:2px solid var(--amber);border-radius:12px;padding:12px 16px;text-align:center;font-weight:700;color:var(--amber);margin-top:.8rem}
+.bar{display:flex;border:1.5px solid #1a1814;border-radius:6px;overflow:hidden;margin:.35rem 0 .15rem;font-size:12px;line-height:1.5}
+.bar span{padding:7px 2px;text-align:center;border-right:1.5px solid #1a1814;background:#fff;min-width:0;overflow:hidden}
+.bar span:last-child{border-right:none}
+.bar .c1{background:#fde8eb}.bar .c2{background:#eaf0fb}.bar .c3{background:#e6f5f1}.bar .c4{background:#fdf2dd}
+.bar-l{font-size:11px;color:var(--text2);margin:.5rem 0 0}
+.uc-main{text-decoration:none;color:inherit}
+.uc-main:hover .uc-title{color:var(--blue)}
+.cat-note{font-size:12px;color:var(--text2);margin:-.2rem 0 .7rem;line-height:1.7}
+/* ---- 推論 ---- */
+.cand{border-collapse:collapse;margin:8px 0;font-size:14px}
+.cand th,.cand td{border:1px solid #cfcabd;padding:5px 9px;text-align:center;min-width:34px}
+.cand th{background:#f1eee6}
+.cand td.y{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.one{background:#0d9478;color:#fff;font-weight:700}
+.cand td.n{color:#c9c4b6}
+.cand td.q{color:#a8a393}
+.cand td.w{background:#e8f6f1;color:#0d9478;font-weight:700}
+.cand td.l{background:#fdeaee;color:#d93652;font-weight:700}
+.cand td.x{background:#f1eee6}
+.jd{margin:6px 0;padding:8px 12px;border-radius:8px;background:#faf8f2;border:1px solid #e4dfd2;font-size:14.5px;line-height:1.8}
+.jd.S{border-left:5px solid #0d9478}.jd.F{border-left:5px solid #d93652}.jd.U{border-left:5px solid #a86000}
+.tg{display:inline-block;padding:1px 8px;border-radius:10px;font-size:12px;font-weight:700;color:#fff;margin-right:6px}
+.tg.S{background:#0d9478}.tg.F{background:#d93652}.tg.U{background:#a86000}
+.cond-list{margin:6px 0 6px 0;padding:8px 12px 8px 30px;background:#fffdf8;border:1px dashed #d9c58c;border-radius:8px;line-height:1.9;font-size:14.5px}
+svg.fig{max-width:100%;height:auto}
+/* ---- 模擬試験 ---- */
+.mbar{position:sticky;top:0;z-index:50;background:#2a2820;color:#fff;display:flex;align-items:center;gap:14px;padding:8px 14px;font-size:14px}
+.mbar .tm{font-family:'DM Mono',monospace;font-size:22px;font-weight:500;min-width:76px}
+.mbar .tm.warn{color:#ff8a9c}
+.mbar .pg{flex:1;text-align:center;opacity:.85}
+.mbar button{background:#d93652;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.mq{display:flex;gap:10px;margin:10px 0;padding:12px;background:#fff;border:1.5px solid #e4dfd2;border-radius:12px;scroll-margin-top:60px}
+.mq.done{background:#f6fbf9;border-color:#a8d9cb}
+.mq-n{flex:0 0 34px;height:34px;border-radius:50%;background:#2a2820;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px}
+.mq-b{flex:1;min-width:0}
+.mq-ch{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.mq-btn{border:1.5px solid #cfcabd;background:#fff;border-radius:10px;padding:8px 14px;font-size:16px;cursor:pointer;font-family:inherit;display:inline-flex;align-items:center;gap:8px}
+.mq-btn .cnum{font-weight:700;color:#58544c}
+.mq-btn.sel{background:#2055b0;color:#fff;border-color:#2055b0}
+.mq-btn.sel .cnum{color:#fff}
+.mq-btn.ok{background:#e8f6f1;border-color:#0d9478;color:#0d6b55}
+.mq-btn.ng{background:#fdeaee;border-color:#d93652;color:#a8132c}
+.m-sum{text-align:center;padding:18px;background:#fffdf8;border:2px solid #e0c888;border-radius:14px;margin:12px 0}
+.m-sum .big{font-size:42px;font-weight:700;color:#0d9478}
+.m-sum .sub{font-size:14px;color:#58544c;line-height:1.8}
+.m-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.m-tools button,.m-tools a{border:1.5px solid #bcb8ae;background:#fff;border-radius:10px;padding:8px 14px;font-size:14px;cursor:pointer;text-decoration:none;color:#2a2820;font-family:inherit}
+.m-tools .on{background:#2a2820;color:#fff}
+.start-btn{display:block;width:100%;max-width:360px;margin:16px auto;padding:14px;border:0;border-radius:12px;background:#0d9478;color:#fff;font-size:18px;font-weight:700;cursor:pointer;font-family:inherit}
+details.rv{margin-top:8px;background:#faf8f2;border-radius:8px;padding:6px 10px}
+details.rv summary{cursor:pointer;font-weight:700;color:#2055b0}
+.rv .exp-box{display:block !important}
+.m-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin:8px 0 16px}
+.m-set{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.m-set a{display:inline-block;padding:6px 14px;border:1.5px solid #bcb8ae;border-radius:8px;text-decoration:none;color:#2a2820;font-weight:700;background:#fff}
+.m-set a.best{border-color:#0d9478;background:#e8f6f1}
+.m-set small{display:block;font-weight:400;font-size:11px;color:#58544c}
+/* ---- 復習 ---- */
+.tab-btn.active-rv{color:#6b21a8;border-bottom-color:#6b21a8;}
+.pip-rv{background:#f3e8ff;color:#6b21a8;}
+.tab-badge{min-width:16px;height:16px;border-radius:8px;background:#d93652;color:#fff;font-size:10px;display:none;align-items:center;justify-content:center;padding:0 4px}
+.later-btn{background:#fff;border:1.5px dashed #6b21a8;border-radius:8px;padding:6px 12px;font-size:12px;font-weight:700;color:#6b21a8;cursor:pointer;font-family:'Noto Sans JP',sans-serif}
+.later-btn.on{background:#f3e8ff;border-style:solid}
+.rv-gh{display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.rv-gh span{font-size:12px;color:var(--text2)}
+.m-btn{margin-left:auto;background:#6b21a8;color:#fff;border:0;border-radius:8px;padding:7px 12px;font-weight:700;cursor:pointer;font-family:inherit}
+.rv-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px dashed var(--bd);font-size:12px}
+.rv-tag{background:#f3e8ff;color:#6b21a8;border-radius:10px;padding:1px 8px;font-weight:700}
+.rv-st{color:var(--teal);font-weight:700}
+.rv-del{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;font-family:inherit;text-decoration:underline}
+.review-link{display:flex;align-items:center;gap:10px;text-decoration:none;color:#6b21a8;background:#f3e8ff;border:1.5px solid #d4b5f0;border-radius:var(--r);padding:.8rem 1.1rem;margin-bottom:1.2rem;font-weight:700;font-size:14px}
+.review-link .rc{margin-left:auto;font-family:'DM Mono',monospace}
+</style></head><body>
+<header class="site-header"><span class="logo">GAMBA</span><span class="logo-sep">／</span><span class="logo-sub">SPI ／ χ④ 金額がない問題</span></header>
+<nav class="tab-nav">
+<button class="tab-btn active-ex" id="tab-ex" onclick="switchTab('ex')"><span class="tab-pip pip-ex">解</span>解説</button>
+<button class="tab-btn" id="tab-pr" onclick="switchTab('pr')"><span class="tab-pip pip-pr">演</span>演習<span class="tab-done" id="tabdone-pr">✓</span></button>
+<button class="tab-btn" id="tab-cf" onclick="switchTab('cf')"><span class="tab-pip pip-cf">確</span>確認<span class="tab-done" id="tabdone-cf">✓</span></button>
+<button class="tab-btn" id="tab-rv" onclick="switchTab('rv')"><span class="tab-pip pip-rv">復</span>復習<span class="tab-badge" id="rvbadge"></span></button>
+</nav>
+<main>
+<div class="page active" id="page-ex"><div class="page-hdr"><div class="page-hdr-icon icon-ex">解</div><div class="page-hdr-body"><div class="page-hdr-title">χ④ 金額がない問題</div><div class="page-hdr-desc">数字が割合だけのとき、原価を χ（または100）とおくと、きれいに解けます。</div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">1</div>パターン11　定価は何％増しか（金額なし）</div>
+<p class="body-text">金額がなく、割合だけで条件が与えられる問題です。</p><div class="teal-box"><strong>💡 χで解くポイント</strong>原価を χ とおくと、定価・売値が χ の式で表せます。両辺の χ は<b>消えます</b>。</div><div class="card" style="background:#fffdf8;border-color:#e0c888"><div class="clabel ex">例題</div><div class="q-text">定価の20％引きで売っても、原価の20％の利益がある。定価は原価の何％増しか。</div><div class="exp-box" id="ex1-s0" style="display:none"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>、定価＝<b>(1＋y)χ</b>（yが求める増し率）とおきます。</p></div><div class="exp-box blue" id="ex1-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×0.8＝原価×1.2 なので、<b>(1＋y)χ×0.8＝1.2χ</b></p></div><div class="exp-box amber" id="ex1-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって <b>(1＋y)×0.8＝1.2</b>。1＋y＝1.5、<b>y＝0.5＝50％</b></p></div><div class="exp-box" id="ex1-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>原価100のとき定価150、その20％引きは120。原価の20％増しになっています。</p></div><button class="reveal-btn" id="rb-ex1" onclick="reveal('ex1',4)">解き方を見る (1/4)</button><div id="ex1-fin" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>金額がないときは、<b>原価＝χ</b> として定価・売値を χ の式で表します。両辺の χ は<b>消える</b>ので、数だけの式になります。</div><div class="abc-wrap"><div class="abc-lbl">例題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="ex1-kA" onclick="setMark('ex1-k','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="ex1-kB" onclick="setMark('ex1-k','B')">B<span>もう一度読む</span></button><button class="abc-btn abc-C" id="ex1-kC" onclick="setMark('ex1-k','C')">C<span>わからない</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト</div><div class="mini-q">定価の25％引きで売っても、原価の5％の利益がある。定価は原価の何％増しか。</div><div class="mini-choices" id="mc-m1_1"><button class="mch" onclick="miniAns('m1_1',0,1)"><span class="mcnum">ア</span>30％</button><button class="mch" onclick="miniAns('m1_1',1,1)"><span class="mcnum">イ</span>40％</button><button class="mch" onclick="miniAns('m1_1',2,1)"><span class="mcnum">ウ</span>45％</button><button class="mch" onclick="miniAns('m1_1',3,1)"><span class="mcnum">エ</span>50％</button></div><div class="mini-fb" id="mfb-m1_1"></div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">2</div>パターン12　割引率（倍で与えられる）</div>
+<p class="body-text">定価や売値が「原価の○倍」と与えられるパターンです。</p><div class="teal-box"><strong>💡 χで解くポイント</strong>原価を χ とおくと、定価＝○χ、売値＝△χ。<b>定価×(1−割引率)＝売値</b> から割引率を求めます。</div><div class="card" style="background:#fffdf8;border-color:#e0c888"><div class="clabel ex">例題</div><div class="q-text">定価は原価の1.5倍、売値は原価の1.2倍だった。定価の何％引きで売ったか。</div><div class="exp-box" id="ex2-s0" style="display:none"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>。定価＝<b>1.5χ</b>、売値＝<b>1.2χ</b>。割引率を <b>y</b> とおきます。</p></div><div class="exp-box blue" id="ex2-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×(1−y) より <b>1.5χ×(1−y)＝1.2χ</b></p></div><div class="exp-box amber" id="ex2-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって 1.5×(1−y)＝1.2。1−y＝1.2÷1.5＝0.8、<b>y＝0.2＝20％</b></p></div><div class="exp-box" id="ex2-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>定価1.5 の20％引き＝1.5×0.8＝1.2。売値と一致します。</p></div><button class="reveal-btn" id="rb-ex2" onclick="reveal('ex2',4)">解き方を見る (1/4)</button><div id="ex2-fin" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「原価の○倍」で全部を χ の式にそろえると、<b>基準がそろって</b>割合だけの式になります。割引率の基準は定価です。</div><div class="abc-wrap"><div class="abc-lbl">例題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="ex2-kA" onclick="setMark('ex2-k','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="ex2-kB" onclick="setMark('ex2-k','B')">B<span>もう一度読む</span></button><button class="abc-btn abc-C" id="ex2-kC" onclick="setMark('ex2-k','C')">C<span>わからない</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト</div><div class="mini-q">定価は原価の2倍、売値は原価の1.2倍だった。定価の何％引きで売ったか。</div><div class="mini-choices" id="mc-m2_1"><button class="mch" onclick="miniAns('m2_1',0,1)"><span class="mcnum">ア</span>35％</button><button class="mch" onclick="miniAns('m2_1',1,1)"><span class="mcnum">イ</span>40％</button><button class="mch" onclick="miniAns('m2_1',2,1)"><span class="mcnum">ウ</span>45％</button><button class="mch" onclick="miniAns('m2_1',3,1)"><span class="mcnum">エ</span>67％</button></div><div class="mini-fb" id="mfb-m2_1"></div></div></div>
+<div class="card"><div class="sec-head"><div class="sec-num">3</div>パターン13　基準をまちがえない</div>
+<p class="body-text">「○○の何％」という聞き方では、基準（分母）をまちがえないことが大切です。</p><div class="teal-box"><strong>💡 χで解くポイント</strong><b>基準×χ＝比べる量</b> の式にします。基準は「の」の前の言葉（定価の何％なら定価）です。</div><div class="card" style="background:#fffdf8;border-color:#e0c888"><div class="clabel ex">例題</div><div class="q-text">定価1,000円、原価800円の品物を定価で売った。利益は、定価の何％か。</div><div class="exp-box" id="ex3-s0" style="display:none"><h4>STEP 1　χ（エックス）を決める</h4><p>求めるのは利益率なので、<b>χ＝利益率（定価基準）</b>とおきます。</p></div><div class="exp-box blue" id="ex3-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>利益＝1000−800＝200。<b>定価×χ＝利益</b>、つまり <b>1000×χ＝200</b></p></div><div class="exp-box amber" id="ex3-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>χ＝200÷1000＝0.2＝<b>20％</b></p></div><div class="exp-box" id="ex3-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>定価1,000円の20％＝200円。利益と一致します。</p></div><button class="reveal-btn" id="rb-ex3" onclick="reveal('ex3',4)">解き方を見る (1/4)</button><div id="ex3-fin" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「○○の何％」の<b>○○が基準（分母）</b>。<b>基準×χ＝比べる量</b> の式にすれば、基準をまちがえません。</div><div class="abc-wrap"><div class="abc-lbl">例題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="ex3-kA" onclick="setMark('ex3-k','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="ex3-kB" onclick="setMark('ex3-k','B')">B<span>もう一度読む</span></button><button class="abc-btn abc-C" id="ex3-kC" onclick="setMark('ex3-k','C')">C<span>わからない</span></button></div></div></div></div><div class="mini-card"><div class="mini-section-label">ミニテスト</div><div class="mini-q">定価1,000円、原価800円の品物を定価で売った。利益は、原価の何％か。</div><div class="mini-choices" id="mc-m3_1"><button class="mch" onclick="miniAns('m3_1',0,1)"><span class="mcnum">ア</span>20％</button><button class="mch" onclick="miniAns('m3_1',1,1)"><span class="mcnum">イ</span>25％</button><button class="mch" onclick="miniAns('m3_1',2,1)"><span class="mcnum">ウ</span>30％</button><button class="mch" onclick="miniAns('m3_1',3,1)"><span class="mcnum">エ</span>75％</button></div><div class="mini-fb" id="mfb-m3_1"></div></div></div>
+<button class="next-page-btn pr" onclick="switchTab('pr')">演習問題へ進む →</button>
+</div>
+<div class="page" id="page-pr"><div class="page-hdr"><div class="page-hdr-icon icon-pr">演</div><div class="page-hdr-body"><div class="page-hdr-title">演習問題（全5問）</div><div class="page-hdr-desc">困ったら「ヒント1→2→3」の順に押すと、少しずつ考え方が見えてきます。</div></div></div>
+<div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" id="pbpr" style="width:0%"></div></div><div class="pb-txt" id="pbpr-t">0 / 5</div></div>
+<div class="prob-n"><div class="n n-pr">1</div><span>演習問題 1 / 5</span></div>
+<div class="card" id="card-q1"><div class="clabel pr">演習問題</div>
+<div class="q-text">定価の25％引きで売っても、原価の35％の利益がある。定価は原価の何％増しか。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-q1-1" onclick="hint('q1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q1-2" disabled onclick="hint('q1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q1-3" disabled onclick="hint('q1',3)">💡 ヒント3</button><button class="later-btn" id="lb-q1" onclick="later('q1')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-q1-1"><b>ヒント1</b>原価を χ とおきます。定価は「原価の（1＋y）倍」と表します。</div>
+<div class="hint-box" id="hint-q1-2"><b>ヒント2</b>定価＝(1＋y)χ、売値＝定価×0.75。売値は原価の（1＋0.35）倍です。</div>
+<div class="hint-box" id="hint-q1-3"><b>ヒント3</b>式は <b>(1＋y)χ×0.75＝1.35χ</b>。両辺の χ が消えます。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q1" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q1">90</div></div><div class="timer-msg" id="tmsg-q1"><span class="goal">目標 90秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q1"><button class="ch" onclick="ans('q1',0,2)"><span class="cnum">A</span>60％</button><button class="ch" onclick="ans('q1',1,2)"><span class="cnum">B</span>70％</button><button class="ch" onclick="ans('q1',2,2)"><span class="cnum">C</span>80％</button><button class="ch" onclick="ans('q1',3,2)"><span class="cnum">D</span>90％</button></div>
+<div class="fb-ok" id="fb-ok-q1"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q1"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q1')">もう一度</button></div>
+<div id="q1-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>金額がないときは、<b>原価＝χ</b> として定価・売値を χ の式で表します。両辺の χ は<b>消える</b>ので、数だけの式になります。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q1-mA" onclick="setMark('q1-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q1-mB" onclick="setMark('q1-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q1-mC" onclick="setMark('q1-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q1"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q1"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q1-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>、定価＝<b>(1＋y)χ</b>（yが求める増し率）とおきます。</p></div>
+<div class="exp-box blue" id="q1-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×0.75＝原価×1.35 なので、<b>(1＋y)χ×0.75＝1.35χ</b></p></div>
+<div class="exp-box amber" id="q1-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって <b>(1＋y)×0.75＝1.35</b>。1＋y＝1.8、<b>y＝0.8＝80％</b></p></div>
+<div class="exp-box" id="q1-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>原価100のとき定価180、その25％引きは135。原価の35％増しになっています。</p></div>
+<button class="reveal-btn" id="rb-q1" onclick="reveal('q1',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">2</div><span>演習問題 2 / 5</span></div>
+<div class="card" id="card-q2"><div class="clabel pr">演習問題</div>
+<div class="q-text">定価は原価の1.4倍、売値は原価の1.33倍だった。定価の何％引きで売ったか。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-q2-1" onclick="hint('q2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q2-2" disabled onclick="hint('q2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q2-3" disabled onclick="hint('q2',3)">💡 ヒント3</button><button class="later-btn" id="lb-q2" onclick="later('q2')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-q2-1"><b>ヒント1</b>原価を χ とおくと、定価は 1.4χ、売値は 1.33χ です。求めるもの＝<b>割引率</b>を y とおきます。</div>
+<div class="hint-box" id="hint-q2-2"><b>ヒント2</b>売値＝定価×(1−y) の式に、χ を使った値を入れます。</div>
+<div class="hint-box" id="hint-q2-3"><b>ヒント3</b>式は <b>1.4χ×(1−y)＝1.33χ</b>。両辺の χ が消えます。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q2" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q2">75</div></div><div class="timer-msg" id="tmsg-q2"><span class="goal">目標 75秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q2"><button class="ch" onclick="ans('q2',0,0)"><span class="cnum">A</span>5％</button><button class="ch" onclick="ans('q2',1,0)"><span class="cnum">B</span>6％</button><button class="ch" onclick="ans('q2',2,0)"><span class="cnum">C</span>7％</button><button class="ch" onclick="ans('q2',3,0)"><span class="cnum">D</span>10％</button></div>
+<div class="fb-ok" id="fb-ok-q2"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q2"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は A です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q2')">もう一度</button></div>
+<div id="q2-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「原価の○倍」で全部を χ の式にそろえると、<b>基準がそろって</b>割合だけの式になります。割引率の基準は定価です。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q2-mA" onclick="setMark('q2-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q2-mB" onclick="setMark('q2-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q2-mC" onclick="setMark('q2-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q2"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q2"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q2-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>。定価＝<b>1.4χ</b>、売値＝<b>1.33χ</b>。割引率を <b>y</b> とおきます。</p></div>
+<div class="exp-box blue" id="q2-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×(1−y) より <b>1.4χ×(1−y)＝1.33χ</b></p></div>
+<div class="exp-box amber" id="q2-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって 1.4×(1−y)＝1.33。1−y＝1.33÷1.4＝0.95、<b>y＝0.05＝5％</b></p></div>
+<div class="exp-box" id="q2-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>定価1.4 の5％引き＝1.4×0.95＝1.33。売値と一致します。</p></div>
+<button class="reveal-btn" id="rb-q2" onclick="reveal('q2',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">3</div><span>演習問題 3 / 5</span></div>
+<div class="card" id="card-q3"><div class="clabel pr">演習問題</div>
+<div class="q-text">定価2,500円、原価2,000円の品物を定価で売った。利益は、定価の何％か。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-q3-1" onclick="hint('q3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q3-2" disabled onclick="hint('q3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q3-3" disabled onclick="hint('q3',3)">💡 ヒント3</button><button class="later-btn" id="lb-q3" onclick="later('q3')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-q3-1"><b>ヒント1</b>求めるもの＝<b>利益率</b>を χ とおきます。利益は 定価−原価＝500円 です。</div>
+<div class="hint-box" id="hint-q3-2"><b>ヒント2</b>「定価の何％」なので、基準（分母）は<b>定価</b>です。定価×χ＝利益 の式です。</div>
+<div class="hint-box" id="hint-q3-3"><b>ヒント3</b>式は <b>2500×χ＝500</b>。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q3" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q3">60</div></div><div class="timer-msg" id="tmsg-q3"><span class="goal">目標 60秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q3"><button class="ch" onclick="ans('q3',0,1)"><span class="cnum">A</span>15％</button><button class="ch" onclick="ans('q3',1,1)"><span class="cnum">B</span>20％</button><button class="ch" onclick="ans('q3',2,1)"><span class="cnum">C</span>25％</button><button class="ch" onclick="ans('q3',3,1)"><span class="cnum">D</span>80％</button></div>
+<div class="fb-ok" id="fb-ok-q3"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q3"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は B です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q3')">もう一度</button></div>
+<div id="q3-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「○○の何％」の<b>○○が基準（分母）</b>。<b>基準×χ＝比べる量</b> の式にすれば、基準をまちがえません。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q3-mA" onclick="setMark('q3-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q3-mB" onclick="setMark('q3-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q3-mC" onclick="setMark('q3-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q3"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q3"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q3-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>求めるのは利益率なので、<b>χ＝利益率（定価基準）</b>とおきます。</p></div>
+<div class="exp-box blue" id="q3-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>利益＝2500−2000＝500。<b>定価×χ＝利益</b>、つまり <b>2500×χ＝500</b></p></div>
+<div class="exp-box amber" id="q3-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>χ＝500÷2500＝0.2＝<b>20％</b></p></div>
+<div class="exp-box" id="q3-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>定価2,500円の20％＝500円。利益と一致します。</p></div>
+<button class="reveal-btn" id="rb-q3" onclick="reveal('q3',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">4</div><span>演習問題 4 / 5</span></div>
+<div class="card" id="card-q4"><div class="clabel pr">演習問題</div>
+<div class="q-text">定価の20％引きで売っても、原価の40％の利益がある。定価は原価の何％増しか。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-q4-1" onclick="hint('q4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q4-2" disabled onclick="hint('q4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q4-3" disabled onclick="hint('q4',3)">💡 ヒント3</button><button class="later-btn" id="lb-q4" onclick="later('q4')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-q4-1"><b>ヒント1</b>原価を χ とおきます。定価は「原価の（1＋y）倍」と表します。</div>
+<div class="hint-box" id="hint-q4-2"><b>ヒント2</b>定価＝(1＋y)χ、売値＝定価×0.8。売値は原価の（1＋0.4）倍です。</div>
+<div class="hint-box" id="hint-q4-3"><b>ヒント3</b>式は <b>(1＋y)χ×0.8＝1.4χ</b>。両辺の χ が消えます。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q4" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q4">90</div></div><div class="timer-msg" id="tmsg-q4"><span class="goal">目標 90秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q4"><button class="ch" onclick="ans('q4',0,2)"><span class="cnum">A</span>60％</button><button class="ch" onclick="ans('q4',1,2)"><span class="cnum">B</span>65％</button><button class="ch" onclick="ans('q4',2,2)"><span class="cnum">C</span>75％</button><button class="ch" onclick="ans('q4',3,2)"><span class="cnum">D</span>85％</button></div>
+<div class="fb-ok" id="fb-ok-q4"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q4"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q4')">もう一度</button></div>
+<div id="q4-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>金額がないときは、<b>原価＝χ</b> として定価・売値を χ の式で表します。両辺の χ は<b>消える</b>ので、数だけの式になります。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q4-mA" onclick="setMark('q4-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q4-mB" onclick="setMark('q4-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q4-mC" onclick="setMark('q4-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q4"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q4"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q4-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>、定価＝<b>(1＋y)χ</b>（yが求める増し率）とおきます。</p></div>
+<div class="exp-box blue" id="q4-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×0.8＝原価×1.4 なので、<b>(1＋y)χ×0.8＝1.4χ</b></p></div>
+<div class="exp-box amber" id="q4-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって <b>(1＋y)×0.8＝1.4</b>。1＋y＝1.75、<b>y＝0.75＝75％</b></p></div>
+<div class="exp-box" id="q4-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>原価100のとき定価175、その20％引きは140。原価の40％増しになっています。</p></div>
+<button class="reveal-btn" id="rb-q4" onclick="reveal('q4',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-pr">5</div><span>演習問題 5 / 5</span></div>
+<div class="card" id="card-q5"><div class="clabel pr">演習問題</div>
+<div class="q-text">定価は原価の2倍、売値は原価の1.9倍だった。定価の何％引きで売ったか。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-q5-1" onclick="hint('q5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-q5-2" disabled onclick="hint('q5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-q5-3" disabled onclick="hint('q5',3)">💡 ヒント3</button><button class="later-btn" id="lb-q5" onclick="later('q5')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-q5-1"><b>ヒント1</b>原価を χ とおくと、定価は 2χ、売値は 1.9χ です。求めるもの＝<b>割引率</b>を y とおきます。</div>
+<div class="hint-box" id="hint-q5-2"><b>ヒント2</b>売値＝定価×(1−y) の式に、χ を使った値を入れます。</div>
+<div class="hint-box" id="hint-q5-3"><b>ヒント3</b>式は <b>2χ×(1−y)＝1.9χ</b>。両辺の χ が消えます。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-q5" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-q5">75</div></div><div class="timer-msg" id="tmsg-q5"><span class="goal">目標 75秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-q5"><button class="ch" onclick="ans('q5',0,1)"><span class="cnum">A</span>4％</button><button class="ch" onclick="ans('q5',1,1)"><span class="cnum">B</span>5％</button><button class="ch" onclick="ans('q5',2,1)"><span class="cnum">C</span>6％</button><button class="ch" onclick="ans('q5',3,1)"><span class="cnum">D</span>10％</button></div>
+<div class="fb-ok" id="fb-ok-q5"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-q5"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は B です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('q5')">もう一度</button></div>
+<div id="q5-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「原価の○倍」で全部を χ の式にそろえると、<b>基準がそろって</b>割合だけの式になります。割引率の基準は定価です。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="q5-mA" onclick="setMark('q5-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="q5-mB" onclick="setMark('q5-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="q5-mC" onclick="setMark('q5-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-q5"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-q5"><div class="clabel kai">解説</div>
+<div class="exp-box" id="q5-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>。定価＝<b>2χ</b>、売値＝<b>1.9χ</b>。割引率を <b>y</b> とおきます。</p></div>
+<div class="exp-box blue" id="q5-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×(1−y) より <b>2χ×(1−y)＝1.9χ</b></p></div>
+<div class="exp-box amber" id="q5-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって 2×(1−y)＝1.9。1−y＝1.9÷2＝0.95、<b>y＝0.05＝5％</b></p></div>
+<div class="exp-box" id="q5-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>定価2 の5％引き＝2×0.95＝1.9。売値と一致します。</p></div>
+<button class="reveal-btn" id="rb-q5" onclick="reveal('q5',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div id="done-pr" class="teal-box" style="display:none;text-align:center"><strong>✅ 演習問題 完了！</strong><span class="sc"></span><br>確認問題に挑戦しましょう。</div>
+<button class="next-page-btn cf" onclick="switchTab('cf')">確認問題へ進む →</button>
+</div>
+<div class="page" id="page-cf"><div class="page-hdr"><div class="page-hdr-icon icon-cf">確</div><div class="page-hdr-body"><div class="page-hdr-title">確認問題（全6問）</div><div class="page-hdr-desc">ここまでの総まとめ。少しむずかしい問題も入っています。</div></div></div>
+<div class="prog-wrap"><div class="pb-w"><div class="pb pb-cf" id="pbcf" style="width:0%"></div></div><div class="pb-txt" id="pbcf-t">0 / 6</div></div>
+<div class="prob-n"><div class="n n-cf">1</div><span>確認問題 1 / 6</span></div>
+<div class="card" id="card-qc1"><div class="clabel cf">確認問題</div>
+<div class="q-text">定価の25％引きで売っても、原価の5％の利益がある。定価は原価の何％増しか。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc1-1" onclick="hint('qc1',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc1-2" disabled onclick="hint('qc1',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc1-3" disabled onclick="hint('qc1',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc1" onclick="later('qc1')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-qc1-1"><b>ヒント1</b>原価を χ とおきます。定価は「原価の（1＋y）倍」と表します。</div>
+<div class="hint-box" id="hint-qc1-2"><b>ヒント2</b>定価＝(1＋y)χ、売値＝定価×0.75。売値は原価の（1＋0.05）倍です。</div>
+<div class="hint-box" id="hint-qc1-3"><b>ヒント3</b>式は <b>(1＋y)χ×0.75＝1.05χ</b>。両辺の χ が消えます。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc1" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc1">90</div></div><div class="timer-msg" id="tmsg-qc1"><span class="goal">目標 90秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc1"><button class="ch" onclick="ans('qc1',0,1)"><span class="cnum">A</span>30％</button><button class="ch" onclick="ans('qc1',1,1)"><span class="cnum">B</span>40％</button><button class="ch" onclick="ans('qc1',2,1)"><span class="cnum">C</span>45％</button><button class="ch" onclick="ans('qc1',3,1)"><span class="cnum">D</span>50％</button></div>
+<div class="fb-ok" id="fb-ok-qc1"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc1"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は B です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc1')">もう一度</button></div>
+<div id="qc1-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>金額がないときは、<b>原価＝χ</b> として定価・売値を χ の式で表します。両辺の χ は<b>消える</b>ので、数だけの式になります。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc1-mA" onclick="setMark('qc1-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc1-mB" onclick="setMark('qc1-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc1-mC" onclick="setMark('qc1-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc1"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc1"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc1-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>、定価＝<b>(1＋y)χ</b>（yが求める増し率）とおきます。</p></div>
+<div class="exp-box blue" id="qc1-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×0.75＝原価×1.05 なので、<b>(1＋y)χ×0.75＝1.05χ</b></p></div>
+<div class="exp-box amber" id="qc1-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって <b>(1＋y)×0.75＝1.05</b>。1＋y＝1.4、<b>y＝0.4＝40％</b></p></div>
+<div class="exp-box" id="qc1-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>原価100のとき定価140、その25％引きは105。原価の5％増しになっています。</p></div>
+<button class="reveal-btn" id="rb-qc1" onclick="reveal('qc1',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">2</div><span>確認問題 2 / 6</span></div>
+<div class="card" id="card-qc2"><div class="clabel cf">確認問題</div>
+<div class="q-text">定価は原価の2倍、売値は原価の1.6倍だった。定価の何％引きで売ったか。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc2-1" onclick="hint('qc2',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc2-2" disabled onclick="hint('qc2',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc2-3" disabled onclick="hint('qc2',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc2" onclick="later('qc2')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-qc2-1"><b>ヒント1</b>原価を χ とおくと、定価は 2χ、売値は 1.6χ です。求めるもの＝<b>割引率</b>を y とおきます。</div>
+<div class="hint-box" id="hint-qc2-2"><b>ヒント2</b>売値＝定価×(1−y) の式に、χ を使った値を入れます。</div>
+<div class="hint-box" id="hint-qc2-3"><b>ヒント3</b>式は <b>2χ×(1−y)＝1.6χ</b>。両辺の χ が消えます。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc2" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc2">75</div></div><div class="timer-msg" id="tmsg-qc2"><span class="goal">目標 75秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc2"><button class="ch" onclick="ans('qc2',0,1)"><span class="cnum">A</span>15％</button><button class="ch" onclick="ans('qc2',1,1)"><span class="cnum">B</span>20％</button><button class="ch" onclick="ans('qc2',2,1)"><span class="cnum">C</span>25％</button><button class="ch" onclick="ans('qc2',3,1)"><span class="cnum">D</span>40％</button></div>
+<div class="fb-ok" id="fb-ok-qc2"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc2"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は B です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc2')">もう一度</button></div>
+<div id="qc2-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「原価の○倍」で全部を χ の式にそろえると、<b>基準がそろって</b>割合だけの式になります。割引率の基準は定価です。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc2-mA" onclick="setMark('qc2-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc2-mB" onclick="setMark('qc2-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc2-mC" onclick="setMark('qc2-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc2"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc2"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc2-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>。定価＝<b>2χ</b>、売値＝<b>1.6χ</b>。割引率を <b>y</b> とおきます。</p></div>
+<div class="exp-box blue" id="qc2-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×(1−y) より <b>2χ×(1−y)＝1.6χ</b></p></div>
+<div class="exp-box amber" id="qc2-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって 2×(1−y)＝1.6。1−y＝1.6÷2＝0.8、<b>y＝0.2＝20％</b></p></div>
+<div class="exp-box" id="qc2-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>定価2 の20％引き＝2×0.8＝1.6。売値と一致します。</p></div>
+<button class="reveal-btn" id="rb-qc2" onclick="reveal('qc2',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">3</div><span>確認問題 3 / 6</span></div>
+<div class="card" id="card-qc3"><div class="clabel cf">確認問題</div>
+<div class="q-text">定価2,500円、原価2,000円の品物を定価で売った。利益は、原価の何％か。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc3-1" onclick="hint('qc3',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc3-2" disabled onclick="hint('qc3',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc3-3" disabled onclick="hint('qc3',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc3" onclick="later('qc3')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-qc3-1"><b>ヒント1</b>求めるもの＝<b>利益率</b>を χ とおきます。利益は 定価−原価＝500円 です。</div>
+<div class="hint-box" id="hint-qc3-2"><b>ヒント2</b>「原価の何％」なので、基準（分母）は<b>原価</b>です。原価×χ＝利益 の式です。</div>
+<div class="hint-box" id="hint-qc3-3"><b>ヒント3</b>式は <b>2000×χ＝500</b>。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc3" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc3">60</div></div><div class="timer-msg" id="tmsg-qc3"><span class="goal">目標 60秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc3"><button class="ch" onclick="ans('qc3',0,1)"><span class="cnum">A</span>20％</button><button class="ch" onclick="ans('qc3',1,1)"><span class="cnum">B</span>25％</button><button class="ch" onclick="ans('qc3',2,1)"><span class="cnum">C</span>30％</button><button class="ch" onclick="ans('qc3',3,1)"><span class="cnum">D</span>75％</button></div>
+<div class="fb-ok" id="fb-ok-qc3"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc3"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は B です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc3')">もう一度</button></div>
+<div id="qc3-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「○○の何％」の<b>○○が基準（分母）</b>。<b>基準×χ＝比べる量</b> の式にすれば、基準をまちがえません。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc3-mA" onclick="setMark('qc3-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc3-mB" onclick="setMark('qc3-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc3-mC" onclick="setMark('qc3-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc3"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc3"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc3-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>求めるのは利益率なので、<b>χ＝利益率（原価基準）</b>とおきます。</p></div>
+<div class="exp-box blue" id="qc3-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>利益＝2500−2000＝500。<b>原価×χ＝利益</b>、つまり <b>2000×χ＝500</b></p></div>
+<div class="exp-box amber" id="qc3-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>χ＝500÷2000＝0.25＝<b>25％</b></p></div>
+<div class="exp-box" id="qc3-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>原価2,000円の25％＝500円。利益と一致します。</p></div>
+<button class="reveal-btn" id="rb-qc3" onclick="reveal('qc3',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">4</div><span>確認問題 4 / 6</span></div>
+<div class="card" id="card-qc4"><div class="clabel cf">確認問題</div>
+<div class="q-text">原価3,000円の品物を3,900円で売った。原価に対する利益率は何％か。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc4-1" onclick="hint('qc4',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc4-2" disabled onclick="hint('qc4',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc4-3" disabled onclick="hint('qc4',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc4" onclick="later('qc4')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-qc4-1"><b>ヒント1</b>求めるもの＝<b>利益率</b>を χ とおきます。</div>
+<div class="hint-box" id="hint-qc4-2"><b>ヒント2</b>売値＝原価×(1＋利益率) です。</div>
+<div class="hint-box" id="hint-qc4-3"><b>ヒント3</b>式は <b>3000×(1＋χ)＝3900</b>。両辺を 3000 でわります。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc4" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc4">60</div></div><div class="timer-msg" id="tmsg-qc4"><span class="goal">目標 60秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc4"><button class="ch" onclick="ans('qc4',0,2)"><span class="cnum">A</span>20％</button><button class="ch" onclick="ans('qc4',1,2)"><span class="cnum">B</span>23％</button><button class="ch" onclick="ans('qc4',2,2)"><span class="cnum">C</span>30％</button><button class="ch" onclick="ans('qc4',3,2)"><span class="cnum">D</span>40％</button></div>
+<div class="fb-ok" id="fb-ok-qc4"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc4"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc4')">もう一度</button></div>
+<div id="qc4-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>利益率の式は <b>原価×(1＋χ)＝売値</b>。基準（分母）は<b>原価</b>です。売値でわってしまわないように。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc4-mA" onclick="setMark('qc4-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc4-mB" onclick="setMark('qc4-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc4-mC" onclick="setMark('qc4-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc4"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc4"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc4-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>求めるのは利益率なので、<b>χ＝利益率</b>とおきます。</p></div>
+<div class="exp-box blue" id="qc4-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝原価×(1＋利益率) に入れて、<b>3000×(1＋χ)＝3900</b></p></div>
+<div class="exp-box amber" id="qc4-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>1＋χ＝3900÷3000＝1.3　→　<b>χ＝0.3＝30％</b></p></div>
+<div class="exp-box" id="qc4-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>原価3,000円の30％＝900円。売値−原価＝900円 と一致します。</p></div>
+<button class="reveal-btn" id="rb-qc4" onclick="reveal('qc4',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">5</div><span>確認問題 5 / 6</span></div>
+<div class="card" id="card-qc5"><div class="clabel cf">確認問題</div>
+<div class="q-text">定価は原価の2倍、売値は原価の1.8倍だった。定価の何％引きで売ったか。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc5-1" onclick="hint('qc5',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc5-2" disabled onclick="hint('qc5',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc5-3" disabled onclick="hint('qc5',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc5" onclick="later('qc5')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-qc5-1"><b>ヒント1</b>原価を χ とおくと、定価は 2χ、売値は 1.8χ です。求めるもの＝<b>割引率</b>を y とおきます。</div>
+<div class="hint-box" id="hint-qc5-2"><b>ヒント2</b>売値＝定価×(1−y) の式に、χ を使った値を入れます。</div>
+<div class="hint-box" id="hint-qc5-3"><b>ヒント3</b>式は <b>2χ×(1−y)＝1.8χ</b>。両辺の χ が消えます。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc5" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc5">75</div></div><div class="timer-msg" id="tmsg-qc5"><span class="goal">目標 75秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc5"><button class="ch" onclick="ans('qc5',0,0)"><span class="cnum">A</span>10％</button><button class="ch" onclick="ans('qc5',1,0)"><span class="cnum">B</span>11％</button><button class="ch" onclick="ans('qc5',2,0)"><span class="cnum">C</span>15％</button><button class="ch" onclick="ans('qc5',3,0)"><span class="cnum">D</span>20％</button></div>
+<div class="fb-ok" id="fb-ok-qc5"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc5"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は A です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc5')">もう一度</button></div>
+<div id="qc5-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>「原価の○倍」で全部を χ の式にそろえると、<b>基準がそろって</b>割合だけの式になります。割引率の基準は定価です。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc5-mA" onclick="setMark('qc5-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc5-mB" onclick="setMark('qc5-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc5-mC" onclick="setMark('qc5-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc5"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc5"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc5-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>原価＝<b>χ</b>。定価＝<b>2χ</b>、売値＝<b>1.8χ</b>。割引率を <b>y</b> とおきます。</p></div>
+<div class="exp-box blue" id="qc5-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝定価×(1−y) より <b>2χ×(1−y)＝1.8χ</b></p></div>
+<div class="exp-box amber" id="qc5-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>両辺を χ でわって 2×(1−y)＝1.8。1−y＝1.8÷2＝0.9、<b>y＝0.1＝10％</b></p></div>
+<div class="exp-box" id="qc5-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>定価2 の10％引き＝2×0.9＝1.8。売値と一致します。</p></div>
+<button class="reveal-btn" id="rb-qc5" onclick="reveal('qc5',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div class="prob-n"><div class="n n-cf">6</div><span>確認問題 6 / 6</span></div>
+<div class="card" id="card-qc6"><div class="clabel cf">確認問題</div>
+<div class="q-text">原価1,200円の品物を1,440円で売った。原価に対する利益率は何％か。</div>
+<div class="hint-row"><button class="hint-btn" id="hb-qc6-1" onclick="hint('qc6',1)">💡 ヒント1</button><button class="hint-btn" id="hb-qc6-2" disabled onclick="hint('qc6',2)">💡 ヒント2</button><button class="hint-btn" id="hb-qc6-3" disabled onclick="hint('qc6',3)">💡 ヒント3</button><button class="later-btn" id="lb-qc6" onclick="later('qc6')">🔖 あとで復習</button></div>
+<div class="hint-box" id="hint-qc6-1"><b>ヒント1</b>求めるもの＝<b>利益率</b>を χ とおきます。</div>
+<div class="hint-box" id="hint-qc6-2"><b>ヒント2</b>売値＝原価×(1＋利益率) です。</div>
+<div class="hint-box" id="hint-qc6-3"><b>ヒント3</b>式は <b>1200×(1＋χ)＝1440</b>。両辺を 1200 でわります。</div>
+<div class="timer-wrap"><div class="timer-ring"><svg viewBox="0 0 48 48"><circle class="tbg" cx="24" cy="24" r="20"/><circle class="tfg" id="ring-qc6" cx="24" cy="24" r="20"/></svg><div class="tcenter" id="t-qc6">60</div></div><div class="timer-msg" id="tmsg-qc6"><span class="goal">目標 60秒</span> で解いてみましょう</div></div>
+<div class="choices" id="ch-qc6"><button class="ch" onclick="ans('qc6',0,2)"><span class="cnum">A</span>10％</button><button class="ch" onclick="ans('qc6',1,2)"><span class="cnum">B</span>17％</button><button class="ch" onclick="ans('qc6',2,2)"><span class="cnum">C</span>20％</button><button class="ch" onclick="ans('qc6',3,2)"><span class="cnum">D</span>30％</button></div>
+<div class="fb-ok" id="fb-ok-qc6"><span class="fb-icon">⭕</span><span class="fb-text">正解です！<span class="fb-sub">解説でやり方を確認しましょう</span></span></div>
+<div class="fb-ng" id="fb-ng-qc6"><span class="fb-icon">❌</span><span class="fb-text">おしい！正解は C です<span class="fb-sub">解説を読んでからもう一度挑戦できます</span></span><button class="reset-btn" onclick="resetQ('qc6')">もう一度</button></div>
+<div id="qc6-res" style="display:none"><div class="point-box"><strong>🔑 解法のカギ</strong>利益率の式は <b>原価×(1＋χ)＝売値</b>。基準（分母）は<b>原価</b>です。売値でわってしまわないように。</div><div class="abc-wrap"><div class="abc-lbl">この問題の理解度は？</div><div class="abc-row"><button class="abc-btn abc-A" id="qc6-mA" onclick="setMark('qc6-m','A')">A<span>わかった</span></button><button class="abc-btn abc-B" id="qc6-mB" onclick="setMark('qc6-m','B')">B<span>復習する</span></button><button class="abc-btn abc-C" id="qc6-mC" onclick="setMark('qc6-m','C')">C<span>くり返す</span></button></div></div></div></div>
+<div class="connector" id="cn-qc6"><div class="connector-line"></div><div class="connector-arrow"></div></div>
+<div class="card kai-card" id="kai-qc6"><div class="clabel kai">解説</div>
+<div class="exp-box" id="qc6-s0" style="display:block"><h4>STEP 1　χ（エックス）を決める</h4><p>求めるのは利益率なので、<b>χ＝利益率</b>とおきます。</p></div>
+<div class="exp-box blue" id="qc6-s1" style="display:none"><h4>STEP 2　式をつくる</h4><p>売値＝原価×(1＋利益率) に入れて、<b>1200×(1＋χ)＝1440</b></p></div>
+<div class="exp-box amber" id="qc6-s2" style="display:none"><h4>STEP 3　χを解く</h4><p>1＋χ＝1440÷1200＝1.2　→　<b>χ＝0.2＝20％</b></p></div>
+<div class="exp-box" id="qc6-s3" style="display:none"><h4>STEP 4　答えを確かめる</h4><p>原価1,200円の20％＝240円。売値−原価＝240円 と一致します。</p></div>
+<button class="reveal-btn" id="rb-qc6" onclick="reveal('qc6',4)">次のSTEPを見る (2/4)</button>
+</div>
+<hr class="prob-divider">
+<div id="done-cf" class="teal-box" style="display:none;text-align:center"><strong>🏆 確認問題 完了！</strong><span class="sc"></span><br>この単元をクリアしました！</div>
+<div class="unit-nav" id="unit-nav"><div class="unit-nav-row"><a class="unav-btn unav-next" href="SPI_sx_x5.html">次：χ⑤ 個数・総利益 →</a><a class="unav-btn" style="border-color:#bcb8ae;color:#58544c;background:#fff" href="SPI_sx_index.html">単元一覧へ戻る</a></div></div>
+</div>
+<div class="page" id="page-rv"><div id="rv-root"></div></div>
+</main>
+<script>
+var UNIT="x4",LS='spi_sx_',COURSE='sx',UTITLE="χ④ 金額がない問題",RV_FILTER=function(x){return x.u===COURSE+':'+UNIT;};
+var PR_IDS=["q1", "q2", "q3", "q4", "q5"],CF_IDS=["qc1", "qc2", "qc3", "qc4", "qc5", "qc6"],TM={"q1": 90, "q2": 75, "q3": 60, "q4": 90, "q5": 75, "qc1": 90, "qc2": 75, "qc3": 60, "qc4": 60, "qc5": 75, "qc6": 60},MWHY={"m1_1": "<b>χ（エックス）を決める</b>　原価＝<b>χ</b>、定価＝<b>(1＋y)χ</b>（yが求める増し率）とおきます。<br><b>式をつくる</b>　売値＝定価×0.75＝原価×1.05 なので、<b>(1＋y)χ×0.75＝1.05χ</b><br><b>χを解く</b>　両辺を χ でわって <b>(1＋y)×0.75＝1.05</b>。1＋y＝1.4、<b>y＝0.4＝40％</b><br><b>答えを確かめる</b>　原価100のとき定価140、その25％引きは105。原価の5％増しになっています。", "m2_1": "<b>χ（エックス）を決める</b>　原価＝<b>χ</b>。定価＝<b>2χ</b>、売値＝<b>1.2χ</b>。割引率を <b>y</b> とおきます。<br><b>式をつくる</b>　売値＝定価×(1−y) より <b>2χ×(1−y)＝1.2χ</b><br><b>χを解く</b>　両辺を χ でわって 2×(1−y)＝1.2。1−y＝1.2÷2＝0.6、<b>y＝0.4＝40％</b><br><b>答えを確かめる</b>　定価2 の40％引き＝2×0.6＝1.2。売値と一致します。", "m3_1": "<b>χ（エックス）を決める</b>　求めるのは利益率なので、<b>χ＝利益率（原価基準）</b>とおきます。<br><b>式をつくる</b>　利益＝1000−800＝200。<b>原価×χ＝利益</b>、つまり <b>800×χ＝200</b><br><b>χを解く</b>　χ＝200÷800＝0.25＝<b>25％</b><br><b>答えを確かめる</b>　原価800円の25％＝200円。利益と一致します。"};
+/* ===== 復習（まちがい・あとで復習）===== */
+var RVK='spi_review_v1';
+function rvLoad(){try{return JSON.parse(localStorage.getItem(RVK)||'{}');}catch(e){return {};}}
+function rvSave(o){try{localStorage.setItem(RVK,JSON.stringify(o));}catch(e){}}
+function rvAdd(id,item){var o=rvLoad();if(o[id]){o[id].streak=0;if(item.why==='later')o[id].why='later';}else{item.streak=0;o[id]=item;}rvSave(o);rvBadge();}
+function rvDel(id){var o=rvLoad();delete o[id];rvSave(o);rvBadge();}
+function rvItems(f){var o=rvLoad();return Object.keys(o).map(function(k){var x=o[k];x.id=k;return x;}).filter(function(x){return !f||f(x);});}
+function rvBadge(){var b=document.getElementById('rvbadge');if(!b||typeof RV_FILTER==='undefined')return;var n=rvItems(RV_FILTER).length;b.textContent=n?n:'';b.style.display=n?'inline-flex':'none';}
+function rvCapture(q,why){
+  try{
+    var card=document.getElementById('card-'+q),chw=document.getElementById('ch-'+q);if(!card||!chw)return;
+    var bs=chw.querySelectorAll('.ch');
+    var a=+bs[0].getAttribute('onclick').match(/,(\d+)\)/)[1];
+    var ch=[].map.call(bs,function(b){return b.innerHTML.replace(/<span class="cnum">.*?<\/span>/,'');});
+    var steps=[].map.call(document.getElementById('kai-'+q).querySelectorAll('.exp-box'),function(e){var c=e.cloneNode(true);var h=c.querySelector('h4');var t=h.innerHTML.replace(/^STEP \d+　/,'');h.remove();return [t,c.innerHTML];});
+    var hints=[1,2,3].map(function(k){var h=document.getElementById('hint-'+q+'-'+k);return h?h.innerHTML.replace(/^<b>ヒント\d<\/b>/,''):'';});
+    var kp=document.getElementById(q+'-res').querySelector('.point-box');
+    rvAdd(COURSE+':'+UNIT+':'+q,{u:COURSE+':'+UNIT,ut:UTITLE,why:why,q:card.querySelector('.q-text').innerHTML,ch:ch,a:a,steps:steps,hints:hints,key:kp?kp.innerHTML.replace(/^<strong>.*?<\/strong>/,''):''});
+  }catch(e){}
+}
+function later(q){
+  var id=COURSE+':'+UNIT+':'+q,b=document.getElementById('lb-'+q),o=rvLoad();
+  if(o[id]&&o[id].why==='later'){rvDel(id);b.classList.remove('on');b.textContent='🔖 あとで復習';return;}
+  rvCapture(q,'later');b.classList.add('on');b.textContent='🔖 復習リストに入れました（もう一度押すと取り消し）';
+}
+var RVS={queue:[],i:0,ok:0,grad:0,root:null,filter:null,cur:null};
+var RVWHY={wrong:'まちがい',later:'あとで復習',mark:'理解度B・C',mogi:'模擬試験'};
+function rvEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
+function rvMount(rootId,filter){
+  RVS.root=document.getElementById(rootId);RVS.filter=filter||null;rvList();
+}
+function rvList(){
+  var items=rvItems(RVS.filter),r=RVS.root;
+  if(!items.length){r.innerHTML='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題</div><p class="body-text">いまは、復習する問題がありません。🎉<br>演習・確認問題でまちがえた問題や、「🔖 あとで復習」を押した問題が、ここに集まります。</p></div>';return;}
+  var g={};items.forEach(function(x){(g[x.ut]=g[x.ut]||[]).push(x);});
+  var h='<div class="card"><div class="sec-head"><div class="sec-num">復</div>復習する問題（'+items.length+'問）</div><p class="body-text">まちがえた問題と、「あとで復習」「理解度B・C」にした問題です。<b>2回続けて正解すると、リストから外れます。</b></p><button class="start-btn" onclick="rvStart(null)">ぜんぶ復習する（'+items.length+'問）</button></div>';
+  Object.keys(g).forEach(function(t,gi){
+    h+='<div class="card"><div class="rv-gh"><b>'+rvEsc(t)+'</b><span>'+g[t].length+'問</span><button class="m-btn" onclick="rvStart('+gi+')">この単元を復習</button></div>';
+    g[t].forEach(function(x){h+='<div class="rv-row"><span class="rv-tag">'+RVWHY[x.why||'wrong']+'</span><span class="rv-st">'+(x.streak?'あと1回で卒業':'')+'</span><button class="rv-del" onclick="rvRemove(\''+x.id.replace(/'/g,"\\'")+'\')">リストから外す</button></div>';});
+    h+='</div>';
+  });
+  r.innerHTML=h;RVS.groups=Object.keys(g);
+}
+function rvRemove(id){if(!confirm('この問題を復習リストから外しますか？'))return;rvDel(id);rvList();}
+function rvStart(gi){
+  var items=rvItems(RVS.filter);
+  if(gi!==null&&RVS.groups)items=items.filter(function(x){return x.ut===RVS.groups[gi];});
+  for(var i=items.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=items[i];items[i]=items[j];items[j]=t;}
+  RVS.queue=items;RVS.i=0;RVS.ok=0;RVS.grad=0;rvShow();
+}
+function rvShow(){
+  var r=RVS.root,x=RVS.queue[RVS.i];
+  if(!x){
+    var left=rvItems(RVS.filter).length;
+    r.innerHTML='<div class="m-sum"><div>復習おつかれさまでした</div><div class="big">'+RVS.ok+' / '+RVS.queue.length+'</div><div class="sub">正解 '+RVS.ok+'問　／　リストから卒業 '+RVS.grad+'問<br>のこり '+left+'問</div></div><div class="m-tools"><button onclick="rvList();window.scrollTo(0,0)">一覧へ</button>'+(left?'<button onclick="rvStart(null)">のこりをもう一度</button>':'')+'</div>';
+    window.scrollTo(0,0);return;
+  }
+  RVS.cur=x;RVS.hint=0;
+  var h='<div class="prog-wrap"><div class="pb-w"><div class="pb pb-pr" style="width:'+(RVS.i/RVS.queue.length*100)+'%"></div></div><div class="pb-txt">'+(RVS.i+1)+' / '+RVS.queue.length+'</div></div>';
+  h+='<div class="card"><div class="clabel pr">復習　'+rvEsc(x.ut)+'</div><div class="q-text">'+x.q+'</div>';
+  var hs=(x.hints||[]).filter(function(t){return t;});
+  if(hs.length){h+='<div class="hint-row">';for(var k=1;k<=hs.length;k++)h+='<button class="hint-btn" id="rh-'+k+'"'+(k>1?' disabled':'')+' onclick="rvHint('+k+')">💡 ヒント'+k+'</button>';h+='</div>';hs.forEach(function(t,k){h+='<div class="hint-box" id="rhb-'+(k+1)+'"><b>ヒント'+(k+1)+'</b>'+t+'</div>';});}
+  h+='<div class="choices" id="rch">';
+  x.ch.forEach(function(c,i){h+='<button class="ch" onclick="rvAns('+i+')"><span class="cnum">'+'ABCDEFG'.charAt(i)+'</span>'+c+'</button>';});
+  h+='</div><div id="rfb"></div></div>';
+  r.innerHTML=h;window.scrollTo(0,0);
+}
+function rvHint(k){document.getElementById('rhb-'+k).style.display='block';document.getElementById('rh-'+k).classList.add('used');var n=document.getElementById('rh-'+(k+1));if(n)n.disabled=false;}
+function rvAns(i){
+  var x=RVS.cur,bs=document.querySelectorAll('#rch .ch');
+  bs.forEach(function(b){b.disabled=true;});bs[x.a].classList.add('ok');
+  var o=rvLoad(),it=o[x.id],msg;
+  if(i===x.a){
+    RVS.ok++;var s=(it&&it.streak||0)+1;
+    if(s>=2){rvDel(x.id);RVS.grad++;msg='⭕ 正解！2回続けて正解したので、<b>リストから卒業</b>です。🎓';}
+    else{if(it){it.streak=s;rvSave(o);}msg='⭕ 正解！あと<b>1回</b>正解すると卒業です。';}
+  }else{bs[i].classList.add('ng');if(it){it.streak=0;rvSave(o);}msg='❌ 正解は <b>'+'ABCDEFG'.charAt(x.a)+'</b> です。解説を読んで、もう一度挑戦しましょう。';}
+  var h='<div class="'+(i===x.a?'fb-ok':'fb-ng')+'" style="display:flex"><span class="fb-text">'+msg+'</span></div>';
+  x.steps.forEach(function(s,k){h+='<div class="exp-box'+['',' blue',' amber'][k%3]+'" style="display:block"><h4>STEP '+(k+1)+'　'+s[0]+'</h4>'+s[1]+'</div>';});
+  if(x.key)h+='<div class="point-box"><strong>🔑 解法のカギ</strong>'+x.key+'</div>';
+  h+='<button class="start-btn" onclick="RVS.i++;rvShow()">'+(RVS.i+1>=RVS.queue.length?'結果を見る':'次の問題へ')+'</button>';
+  document.getElementById('rfb').innerHTML=h;rvBadge();
+  setTimeout(function(){var e=document.getElementById('rfb');if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'start'});},100);
+}
+
+var answered={},stepRev={},timers={},miniAnswered={},correctN={};
+function $(i){return document.getElementById(i);}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function switchTab(n){
+  ['ex','pr','cf','rv'].forEach(function(t){
+    $('page-'+t).classList.toggle('active',t===n);
+    var b=$('tab-'+t);b.classList.remove('active-ex','active-pr','active-cf','active-rv');
+    if(t===n)b.classList.add('active-'+t);
+  });
+  window.scrollTo(0,0);
+  if(n==='pr')startNext(PR_IDS);
+  if(n==='cf')startNext(CF_IDS);
+  if(n==='rv')rvMount('rv-root',RV_FILTER);
+}
+function startNext(ids){for(var i=0;i<ids.length;i++){if(!answered[ids[i]]){startTimer(ids[i]);return;}}}
+function startTimer(q){
+  if(answered[q]||timers[q]!==undefined)return;
+  var tm=TM[q]||60,left=tm,ring=$('ring-'+q),tx=$('t-'+q);
+  if(!ring)return;
+  tx.textContent=left;
+  timers[q]=setInterval(function(){
+    left--;tx.textContent=Math.max(left,0);
+    ring.style.strokeDashoffset=126*(1-Math.max(left,0)/tm);
+    if(left/tm<0.34)ring.classList.add('warn');
+    if(left<=0){clearInterval(timers[q]);var m=$('tmsg-'+q);if(m)m.innerHTML='<span style="color:#d93652">時間オーバー。でも最後まで解いてみましょう</span>';}
+  },1000);
+}
+function stopTimer(q){if(timers[q])clearInterval(timers[q]);}
+function hint(q,k){
+  $('hint-'+q+'-'+k).style.display='block';
+  $('hb-'+q+'-'+k).classList.add('used');
+  var n=$('hb-'+q+'-'+(k+1));if(n)n.disabled=false;
+}
+function miniAns(m,i,c){
+  if(miniAnswered[m])return;miniAnswered[m]=true;
+  var bs=$('mc-'+m).querySelectorAll('.mch');
+  bs.forEach(function(b){b.disabled=true;});
+  bs[c].classList.add('ok');
+  var fb=$('mfb-'+m);
+  if(i===c){fb.className='mini-fb ok';fb.innerHTML='⭕ 正解です！<br>'+MWHY[m];}
+  else{bs[i].classList.add('ng');fb.className='mini-fb ng';fb.innerHTML='❌ 正解は '+bs[c].querySelector('.mcnum').textContent+' です。<br>'+MWHY[m];}
+  fb.style.display='block';
+}
+function ans(q,i,c){
+  if(answered[q])return;
+  var cf=q.indexOf('qc')===0,ids=cf?CF_IDS:PR_IDS;
+  var bs=$('ch-'+q).querySelectorAll('.ch');
+  bs.forEach(function(b){b.disabled=true;});
+  bs[c].classList.add('ok');
+  stopTimer(q);
+  if(i===c){$('fb-ok-'+q).style.display='flex';correctN[q]=1;}
+  else{bs[i].classList.add('ng');$('fb-ng-'+q).style.display='flex';correctN[q]=0;}
+  if(i!==c)setTimeout(function(){rvCapture(q,'wrong');},0);
+  answered[q]=true;
+  $(q+'-res').style.display='block';
+  $('cn-'+q).style.display='flex';
+  $('kai-'+q).style.display='block';
+  var n=0,ok=0;ids.forEach(function(x){if(answered[x])n++;if(correctN[x])ok++;});
+  var pb=$((cf?'pbcf':'pbpr')),pt=$((cf?'pbcf-t':'pbpr-t'));
+  pb.style.width=(n/ids.length*100)+'%';pt.textContent=n+' / '+ids.length;
+  if(n===ids.length){
+    $(cf?'done-cf':'done-pr').style.display='block';
+    $((cf?'done-cf':'done-pr')).querySelector('.sc').textContent='正解 '+ok+' / '+ids.length;
+    $('tabdone-'+(cf?'cf':'pr')).style.display='flex';
+    if(cf){$('unit-nav').style.display='flex';lsSet(LS+UNIT,'1');if(ok>=ids.length-1)launchConfetti();}
+  }else{startNext(ids);}
+  setTimeout(function(){var e=$('cn-'+q);if(e&&e.scrollIntoView)e.scrollIntoView({behavior:'smooth',block:'center'});},120);
+}
+function resetQ(q){
+  var bs=$('ch-'+q).querySelectorAll('.ch');
+  bs.forEach(function(b){b.disabled=false;b.classList.remove('ok','ng');});
+  ['fb-ok-','fb-ng-'].forEach(function(p){$(p+q).style.display='none';});
+  $(q+'-res').style.display='none';$('cn-'+q).style.display='none';$('kai-'+q).style.display='none';
+  answered[q]=false;correctN[q]=0;delete timers[q];
+  var cf=q.indexOf('qc')===0,ids=cf?CF_IDS:PR_IDS,n=0;
+  ids.forEach(function(x){if(answered[x])n++;});
+  $(cf?'pbcf':'pbpr').style.width=(n/ids.length*100)+'%';$(cf?'pbcf-t':'pbpr-t').textContent=n+' / '+ids.length;
+  startTimer(q);
+}
+function reveal(q,t){
+  var i=stepRev[q]||0;$(q+'-s'+i).style.display='block';i++;stepRev[q]=i;
+  var rb=$('rb-'+q);
+  if(i>=t){rb.style.display='none';var f=$(q+'-fin');if(f)f.style.display='block';}
+  else rb.textContent='次のSTEPを見る ('+(i+1)+'/'+t+')';
+}
+function setMark(p,m){
+  var mm=p.match(/^(qc?\d+)-m$/);if(mm&&(m==='B'||m==='C'))rvCapture(mm[1],'mark');['A','B','C'].forEach(function(x){var b=$(p+x);if(b)b.classList.toggle('on',x===m);});}
+function launchConfetti(){
+  var c=document.createElement('canvas');c.style.cssText='position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:999';
+  c.width=innerWidth;c.height=innerHeight;document.body.appendChild(c);
+  var g=c.getContext('2d'),cols=['#d93652','#0d9478','#2055b0','#a86000','#6b21a8'],ps=[];
+  for(var i=0;i<110;i++)ps.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,v:2+Math.random()*3,r:3+Math.random()*4,c:cols[i%5],a:Math.random()*6});
+  var f=0;(function t(){g.clearRect(0,0,c.width,c.height);ps.forEach(function(p){p.y+=p.v;p.x+=Math.sin(p.a+f/20);g.fillStyle=p.c;g.fillRect(p.x,p.y,p.r,p.r*1.6);});f++;if(f<170)requestAnimationFrame(t);else c.remove();})();
+}
+window.addEventListener('load',function(){window.scrollTo(0,0);});
+
+for(var k in TM){stepRev[k]=1;}
+rvBadge();
+</script></body></html>
